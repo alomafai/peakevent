@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>International Public Holidays Calendar</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);min-height:100vh;padding:20px;color:#fff}
+.calendar-container{max-width:1000px;margin:0 auto}
+.calendar-header{text-align:center;margin-bottom:30px}
+.calendar-header h1{font-size:2.5em;margin-bottom:10px;background:linear-gradient(90deg,#e94560,#0f3460);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.calendar-header p{color:#8892b0;font-size:1.1em}
+.country-selector{display:flex;justify-content:center;align-items:center;gap:15px;margin-bottom:30px;flex-wrap:wrap}
+.country-selector label{font-size:1.1em;color:#8892b0}
+.country-selector select{padding:12px 20px;font-size:1em;border-radius:25px;border:2px solid #e94560;background:#0f3460;color:white;cursor:pointer;min-width:220px}
+.country-flag{font-size:2em}
+.year-navigation{display:flex;justify-content:center;align-items:center;gap:20px;margin-bottom:30px;flex-wrap:wrap}
+.year-navigation button{background:#e94560;border:none;color:white;padding:10px 20px;border-radius:25px;cursor:pointer;font-size:1em;transition:all 0.3s ease}
+.year-navigation button:hover{background:#ff6b6b;transform:scale(1.05)}
+.year-navigation span{font-size:2em;font-weight:bold;color:#e94560}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin-bottom:30px}
+.stat-card{background:rgba(15,52,96,0.5);padding:15px;border-radius:15px;text-align:center}
+.stat-card h3{font-size:1.8em;color:#e94560;margin-bottom:5px}
+.stat-card p{color:#8892b0;font-size:0.8em}
+.holiday-card{background:linear-gradient(135deg,rgba(15,52,96,0.8),rgba(26,26,46,0.9));border-radius:15px;padding:20px;margin-bottom:15px;border-left:4px solid #e94560;transition:all 0.3s ease;display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:20px}
+.holiday-card:hover{transform:translateX(10px);box-shadow:0 10px 30px rgba(233,69,96,0.2)}
+.holiday-card.past{opacity:0.5;border-left-color:#666}
+.holiday-card.upcoming{border-left-color:#00d9ff;box-shadow:0 0 20px rgba(0,217,255,0.1)}
+.holiday-card.placeholder{border-left-color:#ffc107;background:linear-gradient(135deg,rgba(255,193,7,0.1),rgba(26,26,46,0.9))}
+.holiday-info{min-width:0}
+.holiday-info h3{font-size:1.2em;margin-bottom:5px;color:#fff;display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+.holiday-info .local-name{color:#e94560;font-size:0.95em;font-style:italic;margin-bottom:5px}
+.holiday-info p{color:#8892b0;font-size:0.9em}
+.holiday-info .note{color:#ffc107;font-size:0.85em;margin-top:5px}
+.duration-badge{display:inline-flex;padding:4px 10px;border-radius:12px;font-size:0.7em;font-weight:bold;text-transform:uppercase}
+.duration-badge.single-day{background:rgba(76,175,80,0.2);color:#4caf50;border:1px solid #4caf50}
+.duration-badge.multi-day{background:rgba(156,39,176,0.2);color:#ce93d8;border:1px solid #9c27b0}
+.duration-badge.tbd{background:rgba(255,193,7,0.2);color:#ffc107;border:1px solid #ffc107}
+.holiday-date{text-align:right;min-width:160px}
+.holiday-date .date{font-size:1.3em;font-weight:bold;color:#e94560}
+.holiday-date .day-name{color:#8892b0;font-size:0.85em}
+.holiday-date .date-range{color:#ce93d8;font-size:0.85em;margin-top:5px;padding:5px 10px;background:rgba(156,39,176,0.1);border-radius:8px;display:inline-block}
+.countdown{background:rgba(233,69,96,0.2);padding:8px 15px;border-radius:20px;font-size:0.8em;color:#ff6b6b;white-space:nowrap;min-width:100px;text-align:center}
+.countdown.now{background:rgba(0,217,255,0.2);color:#00d9ff}
+.countdown.tbd{background:rgba(255,193,7,0.2);color:#ffc107}
+.legend{display:flex;justify-content:center;gap:20px;margin-top:30px;padding:20px;background:rgba(15,52,96,0.3);border-radius:10px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:0.85em}
+.legend-color{width:20px;height:20px;border-radius:5px}
+.legend-color.upcoming{border:2px solid #00d9ff;background:rgba(0,217,255,0.2)}
+.legend-color.past{background:rgba(102,102,102,0.3);border:1px solid #666}
+.legend-color.placeholder{background:rgba(255,193,7,0.3);border:1px solid #ffc107}
+.legend-color.single-day{background:rgba(76,175,80,0.3);border:1px solid #4caf50}
+.legend-color.multi-day{background:rgba(156,39,176,0.3);border:1px solid #9c27b0}
+@media(max-width:768px){
+.calendar-header h1{font-size:1.6em}
+.holiday-card{grid-template-columns:1fr;text-align:center;gap:10px}
+.holiday-info h3{justify-content:center}
+.holiday-date{text-align:center}
+.stats{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="calendar-container">
+<div class="calendar-header"><h1>🌍 International Holidays Calendar</h1><p>Public holidays and important dates by country</p></div>
+<div class="country-selector">
+<label>Select Country:</label>
+<span class="country-flag" id="countryFlag">🇺🇸</span>
+<select id="countrySelect" onchange="changeCountry()">
+<option value="US">🇺🇸 United States</option>
+<option value="AU">🇦🇺 Australia</option>
+<option value="BR">🇧🇷 Brazil</option>
+<option value="CA">🇨🇦 Canada</option>
+<option value="FR">🇫🇷 France</option>
+<option value="DE">🇩🇪 Germany</option>
+<option value="IT">🇮🇹 Italy</option>
+<option value="JP">🇯🇵 Japan</option>
+<option value="MX">🇲🇽 Mexico</option>
+<option value="NL">🇳🇱 Netherlands</option>
+<option value="ES">🇪🇸 Spain</option>
+<option value="SE">🇸🇪 Sweden</option>
+<option value="UK">🇬🇧 United Kingdom</option>
+</select>
+</div>
+<div class="year-navigation">
+<button onclick="changeYear(-1)">◀ Previous Year</button>
+<span id="currentYear"></span>
+<button onclick="changeYear(1)">Next Year ▶</button>
+</div>
+<div class="stats" id="stats"></div>
+<div id="holidayList"></div>
+<div class="legend">
+<div class="legend-item"><div class="legend-color upcoming"></div><span>Upcoming</span></div>
+<div class="legend-item"><div class="legend-color past"></div><span>Passed</span></div>
+<div class="legend-item"><div class="legend-color placeholder"></div><span>TBD</span></div>
+<div class="legend-item"><div class="legend-color single-day"></div><span>Single Day</span></div>
+<div class="legend-item"><div class="legend-color multi-day"></div><span>Multi-Day</span></div>
+</div>
+</div>
+<script>
+let currentYear = new Date().getFullYear();
+let currentCountry = 'US';
+const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const countryFlags = {US:'🇺🇸',AU:'🇦🇺',BR:'🇧🇷',CA:'🇨🇦',FR:'🇫🇷',DE:'🇩🇪',IT:'🇮🇹',JP:'🇯🇵',MX:'🇲🇽',NL:'🇳🇱',ES:'🇪🇸',SE:'🇸🇪',UK:'🇬🇧'};
+const D = 86400000; // milliseconds in a day
+
+// Get nth weekday of month (e.g., 3rd Monday)
+function nthDay(y, m, dow, n) {
+    const f = new Date(y, m, 1);
+    return new Date(y, m, 1 + (dow - f.getDay() + 7) % 7 + (n - 1) * 7);
+}
+
+// Get last weekday of month
+function lastDay(y, m, dow) {
+    const l = new Date(y, m + 1, 0);
+    return new Date(y, m + 1, -((l.getDay() - dow + 7) % 7));
+}
+
+// Get Monday before a specific date
+function monBefore(y, m, d) {
+    const dt = new Date(y, m, d);
+    const diff = dt.getDay() === 0 ? 6 : dt.getDay() - 1;
+    return new Date(y, m, d - diff);
+}
+
+// Calculate Easter Sunday
+function easter(y) {
+    const a = y % 19;
+    const b = Math.floor(y / 100);
+    const c = y % 100;
+    const d = Math.floor(b / 4);
+    const e = b % 4;
+    const f = Math.floor((b + 8) / 25);
+    const g = Math.floor((b - f + 1) / 3);
+    const h = (19 * a + b - d - g + 15) % 30;
+    const i = Math.floor(c / 4);
+    const k = c % 4;
+    const l = (32 + 2 * e + 2 * i - h - k) % 7;
+    const m = Math.floor((a + 11 * h + 22 * l) / 451);
+    const month = Math.floor((h + l - 7 * m + 114) / 31) - 1;
+    const day = ((h + l - 7 * m + 114) % 31) + 1;
+    return new Date(y, month, day);
+}
+
+// Easter-related dates
+function goodFri(y) { return new Date(easter(y).getTime() - 2 * D); }
+function easterMon(y) { return new Date(easter(y).getTime() + D); }
+function ascension(y) { return new Date(easter(y).getTime() + 39 * D); }
+function whitMon(y) { return new Date(easter(y).getTime() + 50 * D); }
+function corpus(y) { return new Date(easter(y).getTime() + 60 * D); }
+function pentecost(y) { return new Date(easter(y).getTime() + 49 * D); }
+
+// Carnival dates
+function carnival(y) {
+    const e = easter(y);
+    return { start: new Date(e.getTime() - 49 * D), end: new Date(e.getTime() - 47 * D) };
+}
+function brCarnival(y) {
+    const e = easter(y);
+    return { start: new Date(e.getTime() - 51 * D), end: new Date(e.getTime() - 47 * D) };
+}
+
+// Holy Week
+function holyWeek(y) {
+    const e = easter(y);
+    return { start: new Date(e.getTime() - 7 * D), end: e };
+}
+
+// Lunar New Year dates
+function lunar(y) {
+    const dates = {
+        2024: new Date(2024, 1, 10), 2025: new Date(2025, 0, 29), 2026: new Date(2026, 1, 17),
+        2027: new Date(2027, 1, 6), 2028: new Date(2028, 0, 26), 2029: new Date(2029, 1, 13),
+        2030: new Date(2030, 1, 3)
+    };
+    return dates[y] || new Date(y, 1, 1);
+}
+
+// Ramadan dates
+function ramadan(y) {
+    const dates = {
+        2024: { s: new Date(2024, 2, 10), e: new Date(2024, 3, 9) },
+        2025: { s: new Date(2025, 1, 28), e: new Date(2025, 2, 29) },
+        2026: { s: new Date(2026, 1, 17), e: new Date(2026, 2, 19) },
+        2027: { s: new Date(2027, 1, 7), e: new Date(2027, 2, 8) },
+        2028: { s: new Date(2028, 0, 27), e: new Date(2028, 1, 25) },
+        2029: { s: new Date(2029, 0, 15), e: new Date(2029, 1, 13) },
+        2030: { s: new Date(2030, 0, 5), e: new Date(2030, 1, 3) }
+    };
+    const d = dates[y];
+    return d ? { start: d.s, end: d.e } : { start: new Date(y, 2, 1), end: new Date(y, 2, 30) };
+}
+
+// Eid al-Fitr
+function eid(y) {
+    const r = ramadan(y);
+    const e = new Date(r.end.getTime() + D);
+    return { start: e, end: new Date(e.getTime() + 2 * D) };
+}
+
+// Diwali dates
+function diwali(y) {
+    const dates = {
+        2024: new Date(2024, 10, 1), 2025: new Date(2025, 9, 20), 2026: new Date(2026, 10, 8),
+        2027: new Date(2027, 9, 29), 2028: new Date(2028, 9, 17), 2029: new Date(2029, 10, 5),
+        2030: new Date(2030, 9, 26)
+    };
+    return dates[y] || new Date(y, 9, 25);
+}
+
+// Hanukkah dates
+function hanukkah(y) {
+    const dates = {
+        2024: { s: new Date(2024, 11, 25), e: new Date(2025, 0, 2) },
+        2025: { s: new Date(2025, 11, 14), e: new Date(2025, 11, 22) },
+        2026: { s: new Date(2026, 11, 4), e: new Date(2026, 11, 12) },
+        2027: { s: new Date(2027, 11, 24), e: new Date(2028, 0, 1) },
+        2028: { s: new Date(2028, 11, 12), e: new Date(2028, 11, 20) },
+        2029: { s: new Date(2029, 11, 1), e: new Date(2029, 11, 9) },
+        2030: { s: new Date(2030, 11, 20), e: new Date(2030, 11, 28) }
+    };
+    const d = dates[y];
+    return d ? { start: d.s, end: d.e } : { start: new Date(y, 11, 15), end: new Date(y, 11, 23) };
+}
+
+// France Mother's Day (last Sunday of May, unless it's Pentecost)
+function frMother(y) {
+    const l = lastDay(y, 4, 0);
+    const p = pentecost(y);
+    return l.toDateString() === p.toDateString() ? nthDay(y, 5, 0, 1) : l;
+}
+
+// Netherlands King's Day (April 27, or April 26 if Sunday)
+function kingsDay(y) {
+    const d = new Date(y, 3, 27);
+    return d.getDay() === 0 ? new Date(y, 3, 26) : d;
+}
+
+// Germany Day of Prayer and Repentance
+function bettag(y) {
+    const n = new Date(y, 10, 23);
+    const dow = n.getDay();
+    return new Date(y, 10, 23 - (dow >= 3 ? dow - 3 : dow + 4));
+}
+
+// UK Mother's Day (4th Sunday of Lent)
+function ukMother(y) {
+    return new Date(easter(y).getTime() - 21 * D);
+}
+
+// Equinox dates
+function vernal(y) {
+    const dates = { 2024: 20, 2025: 20, 2026: 20, 2027: 21, 2028: 20, 2029: 20, 2030: 20 };
+    return new Date(y, 2, dates[y] || 20);
+}
+function autumnal(y) {
+    const dates = { 2024: 22, 2025: 23, 2026: 23, 2027: 23, 2028: 22, 2029: 22, 2030: 23 };
+    return new Date(y, 8, dates[y] || 22);
+}
+
+// Calculate duration between dates
+function duration(s, e) {
+    return Math.ceil(Math.abs(new Date(e) - new Date(s)) / D) + 1;
+}
+// Get holidays for a specific country and year
+function getHolidays(c, y) {
+    const r = ramadan(y), ei = eid(y), h = hanukkah(y), hw = holyWeek(y), ca = carnival(y), bc = brCarnival(y);
+
+    const holidays = {
+        US: [
+            {name: "New Year's Day", description: "First day of the year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Martin Luther King Jr. Day", description: "Honors civil rights leader", start: nthDay(y, 0, 1, 3), end: nthDay(y, 0, 1, 3)},
+            {name: "Valentine's Day", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "Presidents' Day", description: "Honors U.S. presidents", start: nthDay(y, 1, 1, 3), end: nthDay(y, 1, 1, 3)},
+            {name: "St. Patrick's Day", description: "Irish celebration", start: new Date(y, 2, 17), end: new Date(y, 2, 17)},
+            {name: "Ramadan", description: "Islamic holy month", start: r.start, end: r.end},
+            {name: "Easter", description: "Christian celebration", start: easter(y), end: easter(y)},
+            {name: "Mother's Day", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Memorial Day", description: "Honors fallen military", start: lastDay(y, 4, 1), end: lastDay(y, 4, 1)},
+            {name: "Father's Day", description: "Celebrates fathers", start: nthDay(y, 5, 0, 3), end: nthDay(y, 5, 0, 3)},
+            {name: "Juneteenth", description: "End of slavery", start: new Date(y, 5, 19), end: new Date(y, 5, 19)},
+            {name: "Independence Day", description: "Declaration of Independence", start: new Date(y, 6, 4), end: new Date(y, 6, 4)},
+            {name: "Labor Day Weekend", description: "Honors labor movement", start: nthDay(y, 8, 1, 1), end: nthDay(y, 8, 1, 1)},
+            {name: "Columbus Day / Indigenous Peoples' Day", description: "Commemorates Columbus / Honors Native peoples", start: nthDay(y, 9, 1, 2), end: nthDay(y, 9, 1, 2)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Veterans Day", description: "Honors military veterans", start: new Date(y, 10, 11), end: new Date(y, 10, 11)},
+            {name: "Thanksgiving Day", description: "Harvest festival", start: nthDay(y, 10, 4, 4), end: nthDay(y, 10, 4, 4)},
+            {name: "Hanukkah", description: "Jewish festival of lights", start: h.start, end: h.end},
+            {name: "Christmas Day", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)},
+            {name: "Kwanzaa", description: "African American celebration", start: new Date(y, 11, 26), end: new Date(y + 1, 0, 1)},
+            {name: "Eid al-Fitr", description: "End of Ramadan", start: ei.start, end: ei.end}
+        ],
+
+        AU: [
+            {name: "New Year's Day", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Australia Day", description: "National day", start: new Date(y, 0, 26), end: new Date(y, 0, 26)},
+            {name: "Lunar New Year", description: "Traditional celebration", start: lunar(y), end: lunar(y)},
+            {name: "Valentine's Day", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "Labor Day (WA)", description: "Workers' rights", note: "WA - 1st Mon Mar", start: nthDay(y, 2, 1, 1), end: nthDay(y, 2, 1, 1)},
+            {name: "Labor Day (VIC)", description: "Workers' rights", note: "VIC - 2nd Mon Mar", start: nthDay(y, 2, 1, 2), end: nthDay(y, 2, 1, 2)},
+            {name: "St. Patrick's Day", description: "Irish celebration", start: new Date(y, 2, 17), end: new Date(y, 2, 17)},
+            {name: "Ramadan", description: "Islamic holy month", start: r.start, end: r.end},
+            {name: "Good Friday", description: "Christian observance", start: goodFri(y), end: goodFri(y)},
+            {name: "Easter", description: "Christian celebration", start: easter(y), end: easterMon(y)},
+            {name: "Eid al-Fitr", description: "End of Ramadan", start: ei.start, end: ei.end},
+            {name: "Anzac Day", description: "Commemorates ANZAC", start: new Date(y, 3, 25), end: new Date(y, 3, 25)},
+            {name: "Labor Day (QLD)", description: "Workers' rights", note: "QLD - 1st Mon May", start: nthDay(y, 4, 1, 1), end: nthDay(y, 4, 1, 1)},
+            {name: "Mother's Day", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Reconciliation Day", description: "Aboriginal cultures", start: new Date(y, 4, 27), end: new Date(y, 4, 27)},
+            {name: "Queen's Birthday (QLD, SA, ACT)", description: "Official celebration", note: "QLD, SA, ACT - 2nd Mon June", start: nthDay(y, 5, 1, 2), end: nthDay(y, 5, 1, 2)},
+            {name: "King's Birthday (NSW, VIC)", description: "Official celebration", note: "NSW, VIC - 2nd Mon June", start: nthDay(y, 5, 1, 2), end: nthDay(y, 5, 1, 2)},
+            {name: "NAIDOC Week", description: "Indigenous observance", start: nthDay(y, 6, 0, 1), end: new Date(nthDay(y, 6, 0, 1).getTime() + 6 * D)},
+            {name: "Father's Day", description: "Celebrates fathers", start: nthDay(y, 8, 0, 1), end: nthDay(y, 8, 0, 1)},
+            {name: "King's Birthday (WA)", description: "Official celebration", note: "WA - 4th Mon Sept", start: nthDay(y, 8, 1, 4), end: nthDay(y, 8, 1, 4)},
+            {name: "Labor Day (NSW, SA, ACT)", description: "Workers' rights", note: "NSW, SA, ACT - 1st Mon Oct", start: nthDay(y, 9, 1, 1), end: nthDay(y, 9, 1, 1)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Diwali", description: "Hindu festival of lights", start: diwali(y), end: diwali(y)},
+            {name: "Melbourne Cup", description: "Famous horse race", start: nthDay(y, 10, 2, 1), end: nthDay(y, 10, 2, 1)},
+            {name: "Christmas Day", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)},
+            {name: "Boxing Day", description: "Day after Christmas", start: new Date(y, 11, 26), end: new Date(y, 11, 26)}
+        ],
+
+        BR: [
+            {name: "New Year's Day", localName: "Ano Novo", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Carnival", localName: "Carnaval", description: "Brazilian carnival", start: bc.start, end: bc.end},
+            {name: "International Women's Day", localName: "Dia da Mulher", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Consumer Week", localName: "Semana do Consumidor", description: "Consumer promotional week", placeholder: true, start: null, end: null},
+            {name: "Good Friday", localName: "Sexta-feira Santa", description: "Christian observance", start: goodFri(y), end: goodFri(y)},
+            {name: "Easter", localName: "Páscoa", description: "Christian celebration", start: easter(y), end: easter(y)},
+            {name: "Tiradentes Day", localName: "Tiradentes", description: "National hero day", start: new Date(y, 3, 21), end: new Date(y, 3, 21)},
+            {name: "App Day", description: "App promotional day", placeholder: true, start: null, end: null},
+            {name: "Labour Day", localName: "Dia do Trabalho", description: "Workers' Day", start: new Date(y, 4, 1), end: new Date(y, 4, 1)},
+            {name: "Mother's Day", localName: "Dia das Mães", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Book Friday", description: "Book promotional event", placeholder: true, start: null, end: null},
+            {name: "Valentine's Day", localName: "Dia dos Namorados", description: "Day of love (Brazil)", start: new Date(y, 5, 12), end: new Date(y, 5, 12)},
+            {name: "June Festival", localName: "Festa Junina", description: "Traditional June festival", start: new Date(y, 5, 13), end: new Date(y, 5, 29)},
+            {name: "Corpus Christi", description: "Christian feast day", start: corpus(y), end: corpus(y)},
+            {name: "Father's Day", localName: "Dia dos Pais", description: "Celebrates fathers", start: nthDay(y, 7, 0, 2), end: nthDay(y, 7, 0, 2)},
+            {name: "Customer Sale", localName: "Saldão do Cliente", description: "Customer appreciation sale", placeholder: true, start: null, end: null},
+            {name: "Independence Day", localName: "Dia da Independência", description: "Brazilian Independence", start: new Date(y, 8, 7), end: new Date(y, 8, 7)},
+            {name: "Children's Day", localName: "Dia das Crianças", description: "Celebrates children", start: new Date(y, 9, 12), end: new Date(y, 9, 12)},
+            {name: "Holiday Gift Guide", localName: "Guia de Presentes", description: "Gift promotional period", placeholder: true, start: null, end: null},
+            {name: "All Souls' Day", localName: "Finados", description: "Honor the deceased", start: new Date(y, 10, 2), end: new Date(y, 10, 2)},
+            {name: "Republic Day", localName: "Proclamação da República", description: "Republic proclamation", start: new Date(y, 10, 15), end: new Date(y, 10, 15)},
+            {name: "Black Consciousness Day", localName: "Dia da Consciência Negra", description: "Black awareness", start: new Date(y, 10, 20), end: new Date(y, 10, 20)},
+            {name: "Back to School", localName: "Volta às Aulas", description: "Back to school period", placeholder: true, start: null, end: null},
+            {name: "Christmas Day", localName: "Natal", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)}
+        ],
+
+        CA: [
+            {name: "New Year's Day", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Valentine's Day", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "Family Day / Louis Riel Day / Nova Scotia Heritage Day / Islander Day", description: "Provincial family holiday", note: "Excluding Quebec", start: nthDay(y, 1, 1, 3), end: nthDay(y, 1, 1, 3)},
+            {name: "International Women's Day", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "St. Patrick's Day", description: "Irish celebration", start: new Date(y, 2, 17), end: new Date(y, 2, 17)},
+            {name: "Good Friday", description: "Christian observance", start: goodFri(y), end: goodFri(y)},
+            {name: "Easter", description: "Christian celebration", start: easter(y), end: easterMon(y)},
+            {name: "Mother's Day", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Victoria Day", description: "Queen Victoria's birthday", note: "Excludes NS, PE, QC", start: monBefore(y, 4, 25), end: monBefore(y, 4, 25)},
+            {name: "National Patriots' Day", description: "Patriots of Lower Canada", note: "QC only", start: monBefore(y, 4, 25), end: monBefore(y, 4, 25)},
+            {name: "Father's Day", description: "Celebrates fathers", start: nthDay(y, 5, 0, 3), end: nthDay(y, 5, 0, 3)},
+            {name: "St. Jean Baptiste Day", description: "Quebec national holiday", note: "QC only", start: new Date(y, 5, 24), end: new Date(y, 5, 24)},
+            {name: "Canada Day", description: "National day of Canada", start: new Date(y, 6, 1), end: new Date(y, 6, 1)},
+            {name: "Civic Holiday", description: "Provincial holiday", note: "Excludes QC, PE, NL", start: nthDay(y, 7, 1, 1), end: nthDay(y, 7, 1, 1)},
+            {name: "Regatta Day", description: "Newfoundland civic holiday", note: "NL only", start: nthDay(y, 7, 3, 1), end: nthDay(y, 7, 3, 1)},
+            {name: "Labour Day Weekend", description: "Honors labor movement", start: nthDay(y, 8, 1, 1), end: nthDay(y, 8, 1, 1)},
+            {name: "National Day for Truth and Reconciliation", description: "Honors Indigenous peoples", start: new Date(y, 8, 30), end: new Date(y, 8, 30)},
+            {name: "Thanksgiving Day", description: "Harvest festival", start: nthDay(y, 9, 1, 2), end: nthDay(y, 9, 1, 2)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Remembrance Day", description: "Honors military veterans", start: new Date(y, 10, 11), end: new Date(y, 10, 11)},
+            {name: "Hanukkah", description: "Jewish festival of lights", start: h.start, end: h.end},
+            {name: "Christmas Eve", description: "Evening before Christmas", start: new Date(y, 11, 24), end: new Date(y, 11, 24)},
+            {name: "Christmas Day", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)},
+            {name: "Boxing Day", description: "Day after Christmas", start: new Date(y, 11, 26), end: new Date(y, 11, 26)},
+            {name: "Boxing Week", description: "Post-Christmas sales", start: new Date(y, 11, 26), end: new Date(y, 11, 31)},
+            {name: "New Year's Eve", description: "Last day of the year", start: new Date(y, 11, 31), end: new Date(y, 11, 31)}
+        ],
+                FR: [
+            {name: "New Year's Day", localName: "Nouvel An", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Epiphany", localName: "Épiphanie", description: "Christian feast day", start: new Date(y, 0, 6), end: new Date(y, 0, 6)},
+            {name: "Valentine's Day", localName: "Saint Valentin", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "International Women's Day", localName: "La Journée Internationale de la Femme", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Easter", localName: "Pâques", description: "Christian celebration", start: easter(y), end: easter(y)},
+            {name: "Easter Monday", localName: "Lundi de Pâques", description: "Day after Easter", start: easterMon(y), end: easterMon(y)},
+            {name: "Labour Day", localName: "Fête du Travail", description: "Workers' Day", start: new Date(y, 4, 1), end: new Date(y, 4, 1)},
+            {name: "Liberation Day", localName: "Fête de la Victoire", description: "Victory in Europe Day", start: new Date(y, 4, 8), end: new Date(y, 4, 8)},
+            {name: "Ascension Day", localName: "Jeudi de l'Ascension", description: "Christian observance", start: ascension(y), end: ascension(y)},
+            {name: "Pentecost", localName: "Pentecôte", description: "Christian observance", start: pentecost(y), end: pentecost(y)},
+            {name: "Mother's Day", localName: "Fête des Mères", description: "Celebrates mothers", start: frMother(y), end: frMother(y)},
+            {name: "Father's Day", localName: "Fête des Pères", description: "Celebrates fathers", start: nthDay(y, 5, 0, 3), end: nthDay(y, 5, 0, 3)},
+            {name: "Republic Day", localName: "Fête Nationale", description: "Bastille Day", start: new Date(y, 6, 14), end: new Date(y, 6, 14)},
+            {name: "Assumption of the Virgin", localName: "Assomption", description: "Christian observance", start: new Date(y, 7, 15), end: new Date(y, 7, 15)},
+            {name: "Halloween", localName: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "All Saints' Day", localName: "La Toussaint", description: "Honors all saints", start: new Date(y, 10, 1), end: new Date(y, 10, 1)},
+            {name: "Armistice Day", localName: "Armistice", description: "End of World War I", start: new Date(y, 10, 11), end: new Date(y, 10, 11)},
+            {name: "Christmas", localName: "Noël", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)}
+        ],
+
+        DE: [
+            {name: "New Year's Day", localName: "Neujahr", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Holy Three Kings", localName: "Heilige Drei Könige", description: "Epiphany", start: new Date(y, 0, 6), end: new Date(y, 0, 6)},
+            {name: "Valentine's Day", localName: "Valentinstag", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "International Women's Day", localName: "Internationaler Frauentag", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Easter", localName: "Karfreitag und Ostermontag", description: "Good Friday to Easter Monday", start: goodFri(y), end: easterMon(y)},
+            {name: "Labor Day", localName: "Tag der Arbeit", description: "Workers' Day", start: new Date(y, 4, 1), end: new Date(y, 4, 1)},
+            {name: "Mother's Day", localName: "Muttertag", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Father's Day / Ascension Day", localName: "Vatertag / Christi Himmelfahrt", description: "Father's Day and Ascension", start: ascension(y), end: ascension(y)},
+            {name: "Whit Monday", localName: "Pfingstmontag", description: "Day after Pentecost", start: whitMon(y), end: whitMon(y)},
+            {name: "Corpus Christi", localName: "Fronleichnam", description: "Catholic feast day", start: corpus(y), end: corpus(y)},
+            {name: "World Children's Day", localName: "Weltkindertag", description: "Celebrates children", start: new Date(y, 8, 20), end: new Date(y, 8, 20)},
+            {name: "German Unity Day", localName: "Tag der deutschen Einheit", description: "National Day", start: new Date(y, 9, 3), end: new Date(y, 9, 3)},
+            {name: "Reformation Day", localName: "Reformationstag", description: "Protestant commemoration", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "All Saints' Day", localName: "Allerheiligen", description: "Honors all saints", start: new Date(y, 10, 1), end: new Date(y, 10, 1)},
+            {name: "Day of Prayer and Repentance", localName: "Buß- und Bettag", description: "Protestant day of prayer", start: bettag(y), end: bettag(y)},
+            {name: "St. Nicholas Day", localName: "Nikolaus", description: "Traditional gift-giving", start: new Date(y, 11, 6), end: new Date(y, 11, 6)},
+            {name: "Christmas", localName: "Weihnachten sowie 1. und 2. Weihnachtstag", description: "Christmas and Boxing Day", start: new Date(y, 11, 25), end: new Date(y, 11, 26)}
+        ],
+
+        IT: [
+            {name: "New Year's Day", localName: "Capodanno", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Epiphany", localName: "Epifania", description: "Christian feast day", start: new Date(y, 0, 6), end: new Date(y, 0, 6)},
+            {name: "Valentine's Day", localName: "San Valentino", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "Father's Day", localName: "Festa del papà", description: "Celebrates fathers", start: new Date(y, 2, 19), end: new Date(y, 2, 19)},
+            {name: "Easter", localName: "Pasqua", description: "Christian celebration", start: easter(y), end: easter(y)},
+            {name: "Easter Monday", localName: "Pasquetta", description: "Day after Easter", start: easterMon(y), end: easterMon(y)},
+            {name: "Liberation Day", localName: "Festa della liberazione", description: "Liberation from Nazi occupation", start: new Date(y, 3, 25), end: new Date(y, 3, 25)},
+            {name: "Labour Day", localName: "Festa del Lavoro", description: "Workers' Day", start: new Date(y, 4, 1), end: new Date(y, 4, 1)},
+            {name: "Mother's Day", localName: "Festa della Mamma", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Republic Day", localName: "Festa della Repubblica", description: "Italian National Day", start: new Date(y, 5, 2), end: new Date(y, 5, 2)},
+            {name: "Ferragosto", localName: "Ferragosto", description: "Mid-August holiday", start: new Date(y, 7, 15), end: new Date(y, 7, 15)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "All Saints' Day", localName: "Ognissanti", description: "Honors all saints", start: new Date(y, 10, 1), end: new Date(y, 10, 1)},
+            {name: "Christmas", localName: "Natale e Santo Stefano", description: "Christmas and St. Stephen's Day", start: new Date(y, 11, 25), end: new Date(y, 11, 26)}
+        ],
+
+        JP: [
+            {name: "New Year's Day", localName: "元日", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "New Year Holiday", localName: "お正月", description: "New Year celebration", start: new Date(y, 0, 1), end: new Date(y, 0, 3)},
+            {name: "Coming of Age Day", localName: "成人の日", description: "Celebrates young adults", start: nthDay(y, 0, 1, 2), end: nthDay(y, 0, 1, 2)},
+            {name: "National Foundation Day", localName: "建国記念の日", description: "Celebrates Japan's founding", start: new Date(y, 1, 11), end: new Date(y, 1, 11)},
+            {name: "Valentine's Day", localName: "バレンタインデー", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "The Emperor's Birthday", localName: "天皇誕生日", description: "Emperor's birthday", start: new Date(y, 1, 23), end: new Date(y, 1, 23)},
+            {name: "White Day", localName: "ホワイトデー", description: "Return gift day", start: new Date(y, 2, 14), end: new Date(y, 2, 14)},
+            {name: "Vernal Equinox Day", localName: "春分の日", description: "Spring equinox", start: vernal(y), end: vernal(y)},
+            {name: "Shōwa Day", localName: "昭和の日", description: "Honors Emperor Shōwa", start: new Date(y, 3, 29), end: new Date(y, 3, 29)},
+            {name: "Constitution Memorial Day", localName: "憲法記念日", description: "Constitution anniversary", start: new Date(y, 4, 3), end: new Date(y, 4, 3)},
+            {name: "Greenery Day", localName: "みどりの日", description: "Nature appreciation", start: new Date(y, 4, 4), end: new Date(y, 4, 4)},
+            {name: "Children's Day", localName: "子供の日", description: "Celebrates children", start: new Date(y, 4, 5), end: new Date(y, 4, 5)},
+            {name: "Mother's Day", localName: "母の日", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Father's Day", localName: "父の日", description: "Celebrates fathers", start: nthDay(y, 5, 0, 3), end: nthDay(y, 5, 0, 3)},
+            {name: "Marine Day", localName: "海の日", description: "Ocean appreciation", start: nthDay(y, 6, 1, 3), end: nthDay(y, 6, 1, 3)},
+            {name: "Mountain Day", localName: "山の日", description: "Mountain appreciation", start: new Date(y, 7, 11), end: new Date(y, 7, 11)},
+            {name: "Respect for the Aged Day", localName: "敬老の日", description: "Honors elderly", start: nthDay(y, 8, 1, 3), end: nthDay(y, 8, 1, 3)},
+            {name: "Autumnal Equinox Day", localName: "秋分の日", description: "Autumn equinox", start: autumnal(y), end: autumnal(y)},
+            {name: "Health and Sports Day", localName: "スポーツの日", description: "Promotes sports", start: nthDay(y, 9, 1, 2), end: nthDay(y, 9, 1, 2)},
+            {name: "Halloween", localName: "ハロウィーン", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Culture Day", localName: "文化の日", description: "Promotes culture", start: new Date(y, 10, 3), end: new Date(y, 10, 3)},
+            {name: "Labour Thanksgiving Day", localName: "勤労感謝の日", description: "Thanks for labor", start: new Date(y, 10, 23), end: new Date(y, 10, 23)},
+            {name: "Christmas", localName: "クリスマス", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)},
+            {name: "New Year's Eve", localName: "大晦日", description: "Last day of year", start: new Date(y, 11, 31), end: new Date(y, 11, 31)}
+        ],
+                MX: [
+            {name: "New Year's Day", localName: "Año Nuevo", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Constitution Day", localName: "Día de la Constitución Mexicana", description: "Constitution anniversary", start: nthDay(y, 1, 1, 1), end: nthDay(y, 1, 1, 1)},
+            {name: "Valentine's Day", localName: "San Valentín", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "International Women's Day", localName: "Día Internacional de la Mujer", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Birth of Benito Juárez", localName: "Natalicio de Benito Juárez", description: "Honors Benito Juárez", start: nthDay(y, 2, 1, 3), end: nthDay(y, 2, 1, 3)},
+            {name: "Holy Week", localName: "Semana Santa", description: "Easter week", start: hw.start, end: hw.end},
+            {name: "Children's Day", localName: "Día del Niño", description: "Celebrates children", start: new Date(y, 3, 30), end: new Date(y, 3, 30)},
+            {name: "Labour Day", localName: "Día del Trabajo", description: "Workers' Day", start: new Date(y, 4, 1), end: new Date(y, 4, 1)},
+            {name: "Mother's Day", localName: "Día de la Madre", description: "Celebrates mothers", start: new Date(y, 4, 10), end: new Date(y, 4, 10)},
+            {name: "Hot Sale", description: "Online sales event", placeholder: true, start: null, end: null},
+            {name: "Father's Day", localName: "Día del Padre", description: "Celebrates fathers", start: nthDay(y, 5, 0, 3), end: nthDay(y, 5, 0, 3)},
+            {name: "Independence Day", localName: "Día de la Independencia", description: "Mexican Independence", start: new Date(y, 8, 16), end: new Date(y, 8, 16)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Day of the Dead", localName: "Día de Muertos", description: "Honors the deceased", start: new Date(y, 10, 1), end: new Date(y, 10, 2)},
+            {name: "Anniversary of the Mexican Revolution", localName: "Aniversario de la Revolución Mexicana", description: "Revolution anniversary", start: nthDay(y, 10, 1, 3), end: nthDay(y, 10, 1, 3)},
+            {name: "Day of the Virgin of Guadalupe", localName: "Día de la Virgen de Guadalupe", description: "Religious celebration", start: new Date(y, 11, 12), end: new Date(y, 11, 12)},
+            {name: "Christmas", localName: "Navidad", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)}
+        ],
+
+        NL: [
+            {name: "New Year's Day", localName: "Nieuwjaarsdag", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Electronics Deals", description: "Electronics promotional period", placeholder: true, start: null, end: null},
+            {name: "Carnival", localName: "Carnaval", description: "Pre-Lenten festival", start: ca.start, end: ca.end},
+            {name: "Valentine's Day", localName: "Valentijnsdag", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "International Women's Day", localName: "Internationale Vrouwendag", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Spring Deal Days", description: "Spring promotional period", placeholder: true, start: null, end: null},
+            {name: "Good Friday & Easter", localName: "Pasen", description: "Christian observance", start: goodFri(y), end: easterMon(y)},
+            {name: "King's Day", localName: "Koningsdag", description: "King's birthday celebration", start: kingsDay(y), end: kingsDay(y)},
+            {name: "Gaming Week (Spring)", description: "Gaming promotional period", placeholder: true, start: null, end: null},
+            {name: "Mother's Day", localName: "Moederdag", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Early Summer Deals", description: "Early summer promotional period", placeholder: true, start: null, end: null},
+            {name: "Father's Day", localName: "Vaderdag", description: "Celebrates fathers", start: nthDay(y, 5, 0, 3), end: nthDay(y, 5, 0, 3)},
+            {name: "Back to School", description: "Back to school shopping period", placeholder: true, start: null, end: null},
+            {name: "Gaming Week (Fall)", description: "Gaming promotional period", placeholder: true, start: null, end: null},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Sinterklaas", localName: "Sinterklaas", description: "Traditional gift-giving celebration", start: new Date(y, 11, 5), end: new Date(y, 11, 5)},
+            {name: "Christmas", localName: "Kerst", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 26)},
+            {name: "Last Minute Deals", description: "End of year promotional period", placeholder: true, start: null, end: null}
+        ],
+
+        ES: [
+            {name: "New Year's Day", localName: "Año Nuevo", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Holy Three Kings", localName: "Reyes Magos", description: "Epiphany", start: new Date(y, 0, 6), end: new Date(y, 0, 6)},
+            {name: "Valentine's Day", localName: "San Valentín", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "International Women's Day", localName: "Día Internacional de la Mujer", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Father's Day", localName: "Día del Padre", description: "Celebrates fathers", start: new Date(y, 2, 19), end: new Date(y, 2, 19)},
+            {name: "Easter", localName: "Semana Santa", description: "Holy Week", start: hw.start, end: hw.end},
+            {name: "Labor Day", localName: "Día del Trabajo", description: "Workers' Day", start: new Date(y, 4, 1), end: new Date(y, 4, 1)},
+            {name: "Community of Madrid Day", localName: "Fiestas del 2 de Mayo", description: "Madrid community day", start: new Date(y, 4, 2), end: new Date(y, 4, 2)},
+            {name: "Mother's Day", localName: "Día de la Madre", description: "Celebrates mothers", start: nthDay(y, 4, 0, 1), end: nthDay(y, 4, 0, 1)},
+            {name: "City of Madrid Day", localName: "San Isidro", description: "Madrid patron saint", start: new Date(y, 4, 15), end: new Date(y, 4, 15)},
+            {name: "Saint John", localName: "San Juan", description: "Midsummer celebration", start: new Date(y, 5, 24), end: new Date(y, 5, 24)},
+            {name: "San Fermín", localName: "San Fermín", description: "Running of the bulls", start: new Date(y, 6, 6), end: new Date(y, 6, 14)},
+            {name: "St. James's Day", localName: "Santiago Apóstol", description: "Patron saint of Spain", start: new Date(y, 6, 25), end: new Date(y, 6, 25)},
+            {name: "Assumption of the Virgin", localName: "Asunción de la Virgen", description: "Christian observance", start: new Date(y, 7, 15), end: new Date(y, 7, 15)},
+            {name: "Catalonia Day", localName: "La Diada", description: "Catalonia National Day", start: new Date(y, 8, 11), end: new Date(y, 8, 11)},
+            {name: "National Day", localName: "Día de la Hispanidad", description: "Spanish National Day", start: new Date(y, 9, 12), end: new Date(y, 9, 12)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "All Saints' Day", localName: "Día de Todos los Santos", description: "Honors all saints", start: new Date(y, 10, 1), end: new Date(y, 10, 1)},
+            {name: "Madrid Local Day", localName: "Día de la Almudena", description: "Madrid patron saint day", start: new Date(y, 10, 9), end: new Date(y, 10, 9)},
+            {name: "Constitution Day", localName: "Día de la Constitución", description: "Spanish Constitution Day", start: new Date(y, 11, 6), end: new Date(y, 11, 6)},
+            {name: "Immaculate Conception", localName: "Inmaculada Concepción", description: "Catholic feast day", start: new Date(y, 11, 8), end: new Date(y, 11, 8)},
+            {name: "Christmas", localName: "Día de Navidad", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)}
+        ],
+
+        SE: [
+            {name: "New Year's Day", localName: "Nyårsdagen", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Valentine's Day", localName: "Alla hjärtans dag", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "International Women's Day", localName: "Internationella kvinnodagen", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Spring Deal Days", description: "Seasonal promotional period", placeholder: true, start: null, end: null},
+            {name: "Good Friday & Easter", localName: "Påsk (långfredag)", description: "Christian observance", start: goodFri(y), end: easterMon(y)},
+            {name: "Mother's Day", localName: "Morsdag", description: "Celebrates mothers", start: lastDay(y, 4, 0), end: lastDay(y, 4, 0)},
+            {name: "Back to School", description: "Back to school shopping period", placeholder: true, start: null, end: null},
+            {name: "Gaming Week", description: "Gaming promotional period", placeholder: true, start: null, end: null},
+            {name: "Halloween", localName: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Father's Day", localName: "Farsdag", description: "Celebrates fathers", start: nthDay(y, 10, 0, 2), end: nthDay(y, 10, 0, 2)},
+            {name: "Christmas", localName: "Jul", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)}
+        ],
+
+        UK: [
+            {name: "New Year's Day", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Valentine's Day", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "International Women's Day", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Mother's Day", description: "Mothering Sunday", start: ukMother(y), end: ukMother(y)},
+            {name: "St. Patrick's Day", description: "Irish celebration", start: new Date(y, 2, 17), end: new Date(y, 2, 17)},
+            {name: "Good Friday", description: "Christian observance", start: goodFri(y), end: goodFri(y)},
+            {name: "Easter Monday", description: "Day after Easter", start: easterMon(y), end: easterMon(y)},
+            {name: "Early May Bank Holiday", description: "First Monday of May", start: nthDay(y, 4, 1, 1), end: nthDay(y, 4, 1, 1)},
+            {name: "Spring Bank Holiday", description: "Last Monday of May", start: lastDay(y, 4, 1), end: lastDay(y, 4, 1)},
+            {name: "Father's Day", description: "Celebrates fathers", start: nthDay(y, 5, 0, 3), end: nthDay(y, 5, 0, 3)},
+            {name: "Summer Bank Holiday", description: "Last Monday of August", start: lastDay(y, 7, 1), end: lastDay(y, 7, 1)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Christmas", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)},
+            {name: "Boxing Day", description: "Day after Christmas", start: new Date(y, 11, 26), end: new Date(y, 11, 26)}
+        ]
+    };
+
+    // Return holidays for the selected country, sorted by date
+    const list = holidays[c] || holidays.US;
+    return list.sort((a, b) => {
+        if (!a.start) return 1;
+        if (!b.start) return -1;
+        return a.start - b.start;
+    });
+}
+// Format date for display
+function formatDate(d) {
+    return d ? `${monthNames[d.getMonth()]} ${d.getDate()}` : 'TBD';
+}
+
+// Calculate days until a date
+function daysUntil(d) {
+    if (!d) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const target = new Date(d);
+    target.setHours(0, 0, 0, 0);
+    return Math.ceil((target - today) / D);
+}
+
+// Render statistics cards
+function renderStats() {
+    const holidays = getHolidays(currentCountry, currentYear);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const dated = holidays.filter(h => !h.placeholder && h.start);
+    const upcoming = dated.filter(h => h.start >= today);
+    const next = upcoming[0];
+    const days = next ? daysUntil(next.start) : null;
+    const placeholders = holidays.filter(h => h.placeholder).length;
+    const multi = dated.filter(h => h.start.toDateString() !== h.end.toDateString()).length;
+
+    document.getElementById('stats').innerHTML = `
+        <div class="stat-card">
+            <h3>${holidays.length}</h3>
+            <p>Total Events</p>
+        </div>
+        <div class="stat-card">
+            <h3>${upcoming.length}</h3>
+            <p>Upcoming</p>
+        </div>
+        <div class="stat-card">
+            <h3>${days !== null ? (days === 0 ? '🎉' : days) : 'N/A'}</h3>
+            <p>${next ? (days === 0 ? 'Today: ' + next.name : 'Days until ' + next.name) : 'No upcoming'}</p>
+        </div>
+        <div class="stat-card">
+            <h3>${multi}</h3>
+            <p>Multi-Day</p>
+        </div>
+        <div class="stat-card">
+            <h3>${placeholders}</h3>
+            <p>TBD</p>
+        </div>
+    `;
+}
+
+// Render holiday list
+function renderList() {
+    const holidays = getHolidays(currentCountry, currentYear);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let html = '';
+
+    holidays.forEach(h => {
+        const isTBD = h.placeholder || !h.start;
+        const isPast = !isTBD && h.end < today;
+        const isToday = !isTBD && today >= h.start && today <= h.end;
+        const days = isTBD ? null : daysUntil(h.start);
+        const isMulti = !isTBD && h.start.toDateString() !== h.end.toDateString();
+        const dur = isMulti ? duration(h.start, h.end) : 1;
+
+        // Card class
+        let cls = 'holiday-card';
+        if (isTBD) cls += ' placeholder';
+        else if (isPast) cls += ' past';
+        else if (days <= 30 && days > 0) cls += ' upcoming';
+
+        // Duration badge
+        let badge;
+        if (isTBD) {
+            badge = '<span class="duration-badge tbd">📅 TBD</span>';
+        } else if (isMulti) {
+            badge = `<span class="duration-badge multi-day">📆 ${dur} Days</span>`;
+        } else {
+            badge = '<span class="duration-badge single-day">📌 Single Day</span>';
+        }
+
+        // Countdown text
+        let countdown;
+        if (isTBD) {
+            countdown = '<span class="countdown tbd">Date TBD</span>';
+        } else if (isToday) {
+            countdown = '<span class="countdown now">🎉 Today!</span>';
+        } else if (isPast) {
+            countdown = '<span class="countdown">Passed</span>';
+        } else if (days === 1) {
+            countdown = '<span class="countdown">Tomorrow!</span>';
+        } else {
+            countdown = `<span class="countdown">${days} days away</span>`;
+        }
+
+        // Date display
+        const dateStr = isTBD ? 'TBD' : formatDate(h.start);
+        const dayName = isTBD ? '' : dayNames[h.start.getDay()];
+
+        // Date range for multi-day events
+        let dateRange = '';
+        if (isMulti) {
+            dateRange = `<div class="date-range">${formatDate(h.start)} → ${formatDate(h.end)}</div>`;
+        }
+
+        // Build card HTML
+        html += `
+            <div class="${cls}">
+                <div class="holiday-info">
+                    <h3>${h.name} ${badge}</h3>
+                    ${h.localName ? `<div class="local-name">${h.localName}</div>` : ''}
+                    <p>${h.description}</p>
+                    ${h.note ? `<div class="note">📍 ${h.note}</div>` : ''}
+                </div>
+                <div class="holiday-date">
+                    <div class="date">${dateStr}</div>
+                    <div class="day-name">${dayName}</div>
+                    ${dateRange}
+                </div>
+                ${countdown}
+            </div>
+        `;
+    });
+
+    document.getElementById('holidayList').innerHTML = html;
+}
+
+// Change year
+function changeYear(delta) {
+    currentYear += delta;
+    renderAll();
+}
+
+// Change country
+function changeCountry() {
+    currentCountry = document.getElementById('countrySelect').value;
+    document.getElementById('countryFlag').textContent = countryFlags[currentCountry];
+    renderAll();
+}
+
+// Render everything
+function renderAll() {
+    document.getElementById('currentYear').textContent = currentYear;
+    document.getElementById('countryFlag').textContent = countryFlags[currentCountry];
+    renderStats();
+    renderList();
+}
+
+// Initialize on page load
+renderAll();
+
+// Auto-update at midnight
+function scheduleUpdate() {
+    const now = new Date();
+    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const msUntilMidnight = tomorrow - now;
+    
+    setTimeout(() => {
+        renderAll();
+        scheduleUpdate();
+    }, msUntilMidnight);
+}
+scheduleUpdate();
+</script>
+</body>
+</html>
