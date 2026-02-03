@@ -1,0 +1,1 @@
+This is a peak events calendar used by ATO/Sales to determine the dates of the events. To modify it, simply copy paste the code into an AI chat bot (Claude preferred) and ask it to make specific updates to the code.
