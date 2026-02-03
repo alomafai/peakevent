@@ -274,7 +274,7 @@ function getTBDDate(country, year, eventName) {
             return {
                 start: new Date(year, config.start[0], config.start[1]),
                 end: new Date(year, config.end[0], config.end[1]),
-                placeholder: false
+                placeholder: true  // CHANGED: Always true so retail events stay yellow
             };
         }
     }
@@ -449,7 +449,7 @@ function getHolidays(c, y) {
             {name: "Valentine's Day", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
             {name: "Presidents' Day", description: "Honors U.S. presidents", start: nthDay(y, 1, 1, 3), end: nthDay(y, 1, 1, 3)},
             {name: "St. Patrick's Day", description: "Irish celebration", start: new Date(y, 2, 17), end: new Date(y, 2, 17)},
-            {name: "Ramadan", description: "Islamic holy month", start: r.start, end: r.end},
+            {name: "Ramadan - Actual dates may vary", description: "Islamic holy month", start: r.start, end: r.end},
             {name: "Easter", description: "Christian celebration", start: easter(y), end: easter(y)},
             {name: "Mother's Day", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
             {name: "Memorial Day", description: "Honors fallen military", start: lastDay(y, 4, 1), end: lastDay(y, 4, 1)},
@@ -464,7 +464,7 @@ function getHolidays(c, y) {
             {name: "Hanukkah", description: "Jewish festival of lights", start: h.start, end: h.end},
             {name: "Christmas Day", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)},
             {name: "Kwanzaa", description: "African American celebration", start: new Date(y, 11, 26), end: new Date(y + 1, 0, 1)},
-            {name: "Eid al-Fitr", description: "End of Ramadan", start: ei.start, end: ei.end}
+            {name: "Eid al-Fitr - Actual dates may vary", description: "End of Ramadan", start: ei.start, end: ei.end}
         ],
 
         AU: [
@@ -475,10 +475,10 @@ function getHolidays(c, y) {
             {name: "Labor Day (WA)", description: "Workers' rights", note: "WA - 1st Mon Mar", start: nthDay(y, 2, 1, 1), end: nthDay(y, 2, 1, 1)},
             {name: "Labor Day (VIC)", description: "Workers' rights", note: "VIC - 2nd Mon Mar", start: nthDay(y, 2, 1, 2), end: nthDay(y, 2, 1, 2)},
             {name: "St. Patrick's Day", description: "Irish celebration", start: new Date(y, 2, 17), end: new Date(y, 2, 17)},
-            {name: "Ramadan", description: "Islamic holy month", start: r.start, end: r.end},
+            {name: "Ramadan - Actual dates may vary", description: "Islamic holy month", start: r.start, end: r.end},
             {name: "Good Friday", description: "Christian observance", start: goodFri(y), end: goodFri(y)},
             {name: "Easter", description: "Christian celebration", start: easter(y), end: easterMon(y)},
-            {name: "Eid al-Fitr", description: "End of Ramadan", start: ei.start, end: ei.end},
+            {name: "Eid al-Fitr - Actual dates may vary", description: "End of Ramadan", start: ei.start, end: ei.end},
             {name: "Anzac Day", description: "Commemorates ANZAC", start: new Date(y, 3, 25), end: new Date(y, 3, 25)},
             {name: "Labor Day (QLD)", description: "Workers' rights", note: "QLD - 1st Mon May", start: nthDay(y, 4, 1, 1), end: nthDay(y, 4, 1, 1)},
             {name: "Mother's Day", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
@@ -501,7 +501,7 @@ function getHolidays(c, y) {
             {name: "Back to School", localName: "Volta às Aulas", description: "Back to school period", ...getTBDDate('BR', y, 'Back to School')},
             {name: "Carnival", localName: "Carnaval", description: "Brazilian carnival", start: bc.start, end: bc.end},
             {name: "International Women's Day", localName: "Dia da Mulher", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
-            {name: "Consumer Week", localName: "Semana do Consumidor", description: "Consumer promotional week", ...getTBDDate('BR', y, 'Consumer Week')},
+            {name: "Consumer Week", localName: "Semana do Consumidor", description: "Retail Event", ...getTBDDate('BR', y, 'Consumer Week')},
             {name: "Good Friday", localName: "Sexta-feira Santa", description: "Christian observance", start: goodFri(y), end: goodFri(y)},
             {name: "Easter", localName: "Páscoa", description: "Christian celebration", start: easter(y), end: easter(y)},
             {name: "Tiradentes Day", localName: "Tiradentes", description: "National hero day", start: new Date(y, 3, 21), end: new Date(y, 3, 21)},
@@ -555,7 +555,7 @@ function getHolidays(c, y) {
             {name: "New Year's Day", localName: "Nouvel An", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
             {name: "Epiphany", localName: "Épiphanie", description: "Christian feast day", start: new Date(y, 0, 6), end: new Date(y, 0, 6)},
             {name: "Valentine's Day", localName: "Saint Valentin", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
-            {name: "Spring Deal Days", localName: "--", description: "Retail Event", ...getTBDDate('FR', y, 'Spring Deal Days')},
+            {name: "Spring Deal Days", description: "Retail Event", ...getTBDDate('FR', y, 'Spring Deal Days')},
             {name: "International Women's Day", localName: "La Journée Internationale de la Femme", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
             {name: "Easter", localName: "Pâques", description: "Christian celebration", start: easter(y), end: easter(y)},
             {name: "Easter Monday", localName: "Lundi de Pâques", description: "Day after Easter", start: easterMon(y), end: easterMon(y)},
@@ -576,7 +576,7 @@ function getHolidays(c, y) {
         DE: [
             {name: "New Year's Day", localName: "Neujahr", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
             {name: "Holy Three Kings", localName: "Heilige Drei Könige", description: "Epiphany", start: new Date(y, 0, 6), end: new Date(y, 0, 6)},
-            {name: "Spring Deal Days", localName: "--", description: "Spring promotional period", ...getTBDDate('FR', y, 'Spring Deal Days')},
+            {name: "Spring Deal Days", description: "Retail Event", ...getTBDDate('FR', y, 'Spring Deal Days')},
             {name: "Valentine's Day", localName: "Valentinstag", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
             {name: "International Women's Day", localName: "Internationaler Frauentag", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
             {name: "Easter", localName: "Karfreitag und Ostermontag", description: "Good Friday to Easter Monday", start: goodFri(y), end: easterMon(y)},
@@ -599,7 +599,7 @@ function getHolidays(c, y) {
             {name: "New Year's Day", localName: "Capodanno", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
             {name: "Epiphany", localName: "Epifania", description: "Christian feast day", start: new Date(y, 0, 6), end: new Date(y, 0, 6)},
             {name: "Valentine's Day", localName: "San Valentino", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
-            {name: "Spring Deal Days", localName: "--", description: "Spring promotional period", ...getTBDDate('FR', y, 'Spring Deal Days')},
+            {name: "Spring Deal Days", description: "Retail Event", ...getTBDDate('FR', y, 'Spring Deal Days')},
             {name: "Father's Day", localName: "Festa del papà", description: "Celebrates fathers", start: new Date(y, 2, 19), end: new Date(y, 2, 19)},
             {name: "Easter", localName: "Pasqua", description: "Christian celebration", start: easter(y), end: easter(y)},
             {name: "Easter Monday", localName: "Pasquetta", description: "Day after Easter", start: easterMon(y), end: easterMon(y)},
@@ -687,7 +687,7 @@ function getHolidays(c, y) {
             {name: "Valentine's Day", localName: "San Valentín", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
             {name: "International Women's Day", localName: "Día Internacional de la Mujer", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
             {name: "Father's Day", localName: "Día del Padre", description: "Celebrates fathers", start: new Date(y, 2, 19), end: new Date(y, 2, 19)},
-            {name: "Spring Deal Days", localName: "--", description: "Retail Event", ...getTBDDate('FR', y, 'Spring Deal Days')},
+            {name: "Spring Deal Days", description: "Retail Event", ...getTBDDate('FR', y, 'Spring Deal Days')},
             {name: "Easter", localName: "Semana Santa", description: "Holy Week", start: hw.start, end: hw.end},
             {name: "Labor Day", localName: "Día del Trabajo", description: "Workers' Day", start: new Date(y, 4, 1), end: new Date(y, 4, 1)},
             {name: "Community of Madrid Day", localName: "Fiestas del 2 de Mayo", description: "Madrid community day", start: new Date(y, 4, 2), end: new Date(y, 4, 2)},
@@ -725,7 +725,7 @@ function getHolidays(c, y) {
             {name: "New Year's Day", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
             {name: "Valentine's Day", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
             {name: "International Women's Day", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
-            {name: "Spring Deal Days", localName: "--", description: "Retail Event", ...getTBDDate('FR', y, 'Spring Deal Days')},
+            {name: "Spring Deal Days", description: "Retail Event", ...getTBDDate('FR', y, 'Spring Deal Days')},
             {name: "Mother's Day", description: "Mothering Sunday", start: ukMother(y), end: ukMother(y)},
             {name: "St. Patrick's Day", description: "Irish celebration", start: new Date(y, 2, 17), end: new Date(y, 2, 17)},
             {name: "Good Friday", description: "Christian observance", start: goodFri(y), end: goodFri(y)},
@@ -809,22 +809,27 @@ function renderList() {
     let html = '';
 
     holidays.forEach(h => {
-        const isTBD = h.placeholder || !h.start;
-        const isPast = !isTBD && h.end < today;
-        const isToday = !isTBD && today >= h.start && today <= h.end;
-        const days = isTBD ? null : daysUntil(h.start);
-        const isMulti = !isTBD && h.start.toDateString() !== h.end.toDateString();
+        const isPlaceholderType = h.placeholder === true;  // For yellow styling (always)
+        const hasNoDates = !h.start;                       // For TBD text display
+        const isPast = !hasNoDates && h.end < today;
+        const isToday = !hasNoDates && today >= h.start && today <= h.end;
+        const days = hasNoDates ? null : daysUntil(h.start);
+        const isMulti = !hasNoDates && h.start.toDateString() !== h.end.toDateString();
         const dur = isMulti ? duration(h.start, h.end) : 1;
 
-        // Card class
+        // Card class - placeholder events ALWAYS get yellow styling
         let cls = 'holiday-card';
-        if (isTBD) cls += ' placeholder';
-        else if (isPast) cls += ' past';
-        else if (days <= 30 && days > 0) cls += ' upcoming';
+        if (isPlaceholderType) {
+            cls += ' placeholder';  // Always yellow for promotional/placeholder events
+        } else if (isPast) {
+            cls += ' past';
+        } else if (days <= 30 && days > 0) {
+            cls += ' upcoming';
+        }
 
         // Duration badge
         let badge;
-        if (isTBD) {
+        if (hasNoDates) {
             badge = '<span class="duration-badge tbd">📅 TBD</span>';
         } else if (isMulti) {
             badge = `<span class="duration-badge multi-day">📆 ${dur} Days</span>`;
@@ -834,7 +839,7 @@ function renderList() {
 
         // Countdown text
         let countdown;
-        if (isTBD) {
+        if (hasNoDates) {
             countdown = '<span class="countdown tbd">Date TBD</span>';
         } else if (isToday) {
             countdown = '<span class="countdown now">🎉 Today!</span>';
@@ -847,8 +852,8 @@ function renderList() {
         }
 
         // Date display
-        const dateStr = isTBD ? 'TBD' : formatDate(h.start);
-        const dayName = isTBD ? '' : dayNames[h.start.getDay()];
+        const dateStr = hasNoDates ? 'TBD' : formatDate(h.start);
+        const dayName = hasNoDates ? '' : dayNames[h.start.getDay()];
 
         // Date range for multi-day events
         let dateRange = '';
