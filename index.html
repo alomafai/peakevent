@@ -201,7 +201,7 @@ body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-g
     <div class="legend-item"><div class="legend-color single-day"></div><span>Single Day</span></div>
     <div class="legend-item"><div class="legend-color multi-day"></div><span>Multi-Day</span></div>
     <p>Note: This calendar does not include any confidential High Velocity Event references or dates</p>
-    <p>Questions? Reach out to @alomafai</p>
+    <p>Questions? Please reach out to @alomafai</p>
 </div>
 </div>
 <script>
@@ -404,12 +404,16 @@ const tbdDates = {
             "Back to School": { start: [0, 13], end: [1, 14] }       // Jan 13 - Feb 14
         },
         2026: {
-            "Consumer Week": { start: [2, 3], end: [2, 15] },       // March 3-16
-            "App Day": null,
-            "Book Friday": null,
-            "Customer Sale": null,
-            "Holiday Gift Guide": null,
-            "Back to School": null
+            "Consumer Week": { start: [2, 2], end: [2, 15] },       // March 3-16
+            "App Day - April": { start: [3, 3], end: [3, 4] },
+            "App Day - September": { start: [8, 8], end: [8, 9] },
+            "App Day - Fathers Day": { start: [7, 7], end: [7, 8] },
+            "App Day Goleada de Ofertas - May": { start: [4, 4], end: [4, 5] },
+            "App Day Goleada de Ofertas - June": { start: [5, 5], end: [5, 6] },
+            "App Day - Natal": { start: [11, 11], end: [11, 12] },
+            "Book Friday": { start: [4, 11], end: [4, 18] },
+            "Holiday Gift Guide": { start: [10, 16], end: [11, 25] },
+            "Back to School": { start: [11, 7], end: [1, 28] },
         }
     },
     MX: {
@@ -442,15 +446,6 @@ const tbdDates = {
             "Gaming Week (Fall)": null,
             "Last Minute Deals": null
         },
-        2026: {
-            "Electronics Deals": null,
-            "Spring Deal Days": null,
-            "Gaming Week (Spring)": null,
-            "Early Summer Deals": null,
-            "Back to School": null,
-            "Gaming Week (Fall)": null,
-            "Last Minute Deals": null
-        }
     },
     SE: {
         2024: {
@@ -463,11 +458,6 @@ const tbdDates = {
             "Back to School": null,
             "Gaming Week": null
         },
-        2026: {
-            "Spring Deal Days": null,
-            "Back to School": null,
-            "Gaming Week": null
-        }
     }
 };
 
@@ -708,21 +698,25 @@ function getHolidays(c, y) {
             {name: "Back to School", localName: "Volta às Aulas", description: "Back to school period", ...getTBDDate('BR', y, 'Back to School')},
             {name: "Carnival", localName: "Carnaval", description: "Brazilian carnival", start: bc.start, end: bc.end},
             {name: "International Women's Day", localName: "Dia da Mulher", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
-            {name: "Consumer Week", localName: "Semana do Consumidor", description: "Retail Event", ...getTBDDate('BR', y, 'Consumer Week')},
+            {name: "Consumer Week", localName: "Semana do Consumidor", description: "'Consumer Day' references can only be used on March 15th </br> 'Consumer Week Warm Up' references can only be used between March 2nd - March 9th </br> 'Consumer Month' references can be used anytime during the month of March", ...getTBDDate('BR', y, 'Consumer Week')},
             {name: "Good Friday", localName: "Sexta-feira Santa", description: "Christian observance", start: goodFri(y), end: goodFri(y)},
             {name: "Easter", localName: "Páscoa", description: "Christian celebration", start: easter(y), end: easter(y)},
             {name: "Tiradentes Day", localName: "Tiradentes", description: "National hero day", start: new Date(y, 3, 21), end: new Date(y, 3, 21)},
-            {name: "App Day", description: "App promotional day", ...getTBDDate('BR', y, 'App Day')},
+            {name: "App Day - April", description: "Retail event", ...getTBDDate('BR', y, 'App Day - April')},
+            {name: "App Day - September", description: "Retail event", ...getTBDDate('BR', y, 'App Day - September')},
+            {name: "App Day - Father's Day", description: "Retail event", ...getTBDDate('BR', y, 'App Day - Fathers Day')},
+            {name: "App Day - Natal", description: "Retail event", ...getTBDDate('BR', y, 'App Day - Natal')},
+            {name: "App Day Goleada de Ofertas - May", description: "Retail event", ...getTBDDate('BR', y, 'App Day Goleada de Ofertas - May')},
+            {name: "App Day Goleada de Ofertas - June", description: "Retail event", ...getTBDDate('BR', y, 'App Day Goleada de Ofertas - June')},
             {name: "Labour Day", localName: "Dia do Trabalho", description: "Workers' Day", start: new Date(y, 4, 1), end: new Date(y, 4, 1)},
-            {name: "Mother's Day", localName: "Dia das Mães", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Mother's Day", localName: "Dia das Mães", description: "'Mother's Day' references can only be used between April 27th - May 10th </br> 'Mother's Day Week' references can only be used between May 4th - May 10th </br> 'Mother's Day Month' references can be used anytime during the month of May </br> 'Mother's Day Warm Up' references are not allowed", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
             {name: "Book Friday", description: "Book promotional event", ...getTBDDate('BR', y, 'Book Friday')},
-            {name: "Valentine's Day", localName: "Dia dos Namorados", description: "Day of love (Brazil)", start: new Date(y, 5, 12), end: new Date(y, 5, 12)},
-            {name: "June Festival", localName: "Festa Junina", description: "Traditional June festival", start: new Date(y, 5, 13), end: new Date(y, 5, 29)},
+            {name: "Valentine's Day", localName: "Dia dos Namorados", description: "'Valentine Day' references can only be used between June 1st - June 12th </br> 'Valentine's Day Week' references can only be used between June 6th - June 12th </br> 'Valentine's Day Month' references can be used anytime during the month of June </br> 'Valentine's Day Warm Up' references are not allowed", start: new Date(y, 5, 12), end: new Date(y, 5, 12)},
+            {name: "June Festival", localName: "Festa Junina", description: "Traditional June festival", start: new Date(y, 5, 1), end: new Date(y, 5, 30)},
             {name: "Corpus Christi", description: "Christian feast day", start: corpus(y), end: corpus(y)},
-            {name: "Father's Day", localName: "Dia dos Pais", description: "Celebrates fathers", start: nthDay(y, 7, 0, 2), end: nthDay(y, 7, 0, 2)},
-            {name: "Customer Sale", localName: "Saldão do Cliente", description: "Customer appreciation sale", ...getTBDDate('BR', y, 'Customer Sale')},
+            {name: "Father's Day", localName: "Dia dos Pais", description: "'Father's Day' references can only be used between July 27th - August 9th </br> 'Father's Day Week' references can only be used between August 3rd - August 9th </br> 'Father's Day Month' references can be used anytime during the month of August </br> 'Father's Day Warm Up' references are not allowed", start: nthDay(y, 7, 0, 2), end: nthDay(y, 7, 0, 2)},
             {name: "Independence Day", localName: "Dia da Independência", description: "Brazilian Independence", start: new Date(y, 8, 7), end: new Date(y, 8, 7)},
-            {name: "Children's Day", localName: "Dia das Crianças", description: "Celebrates children", start: new Date(y, 9, 12), end: new Date(y, 9, 12)},
+            {name: "Children's Day", localName: "Dia das Crianças", description: "'Children's Day' references can only be used between September 21st - October 12th </br> 'Children's Day Week' references can only be used between October 5th - October 12th </br> 'Children's Day Month' references can be used anytime during the month of October </br> 'Children's Day Warm Up' references are not allowed", start: new Date(y, 8, 21), end: new Date(y, 9, 12)},
             {name: "Holiday Gift Guide", localName: "Guia de Presentes", description: "Gift promotional period", ...getTBDDate('BR', y, 'Holiday Gift Guide')},
             {name: "All Souls' Day", localName: "Finados", description: "Honor the deceased", start: new Date(y, 10, 2), end: new Date(y, 10, 2)},
             {name: "Republic Day", localName: "Proclamação da República", description: "Republic proclamation", start: new Date(y, 10, 15), end: new Date(y, 10, 15)},
@@ -869,23 +863,18 @@ function getHolidays(c, y) {
 
         NL: [
             {name: "New Year's Day", localName: "Nieuwjaarsdag", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
-            {name: "Electronics Deals", description: "Electronics promotional period", ...getTBDDate('NL', y, 'Electronics Deals')},
+            
             {name: "Carnival", localName: "Carnaval", description: "Pre-Lenten festival", start: ca.start, end: ca.end},
             {name: "Valentine's Day", localName: "Valentijnsdag", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
             {name: "International Women's Day", localName: "Internationale Vrouwendag", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
-            {name: "Spring Deal Days", description: "Retail Event", ...getTBDDate('NL', y, 'Spring Deal Days')},
             {name: "Good Friday & Easter", localName: "Pasen", description: "Christian observance", start: goodFri(y), end: easterMon(y)},
             {name: "King's Day", localName: "Koningsdag", description: "King's birthday celebration", start: kingsDay(y), end: kingsDay(y)},
-            {name: "Gaming Week (Spring)", description: "Gaming promotional period", ...getTBDDate('NL', y, 'Gaming Week (Spring)')},
             {name: "Mother's Day", localName: "Moederdag", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
-            {name: "Early Summer Deals", description: "Early summer promotional period", ...getTBDDate('NL', y, 'Early Summer Deals')},
             {name: "Father's Day", localName: "Vaderdag", description: "Celebrates fathers", start: nthDay(y, 5, 0, 3), end: nthDay(y, 5, 0, 3)},
-            {name: "Back to School", description: "Back to school shopping period", ...getTBDDate('NL', y, 'Back to School')},
-            {name: "Gaming Week (Fall)", description: "Gaming promotional period", ...getTBDDate('NL', y, 'Gaming Week (Fall)')},
             {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
             {name: "Sinterklaas", localName: "Sinterklaas", description: "Traditional gift-giving celebration", start: new Date(y, 11, 5), end: new Date(y, 11, 5)},
             {name: "Christmas", localName: "Kerst", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 26)},
-            {name: "Last Minute Deals", description: "End of year promotional period", ...getTBDDate('NL', y, 'Last Minute Deals')}
+            
         ],
 
         ES: [
@@ -918,11 +907,8 @@ function getHolidays(c, y) {
             {name: "New Year's Day", localName: "Nyårsdagen", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
             {name: "Valentine's Day", localName: "Alla hjärtans dag", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
             {name: "International Women's Day", localName: "Internationella kvinnodagen", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
-            {name: "Spring Deal Days", description: "Retail Event", ...getTBDDate('SE', y, 'Spring Deal Days')},
             {name: "Good Friday & Easter", localName: "Påsk (långfredag)", description: "Christian observance", start: goodFri(y), end: easterMon(y)},
             {name: "Mother's Day", localName: "Morsdag", description: "Celebrates mothers", start: lastDay(y, 4, 0), end: lastDay(y, 4, 0)},
-            {name: "Back to School", description: "Back to school shopping period", ...getTBDDate('SE', y, 'Back to School')},
-            {name: "Gaming Week", description: "Gaming promotional period", ...getTBDDate('SE', y, 'Gaming Week')},
             {name: "Halloween", localName: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
             {name: "Father's Day", localName: "Farsdag", description: "Celebrates fathers", start: nthDay(y, 10, 0, 2), end: nthDay(y, 10, 0, 2)},
             {name: "Christmas", localName: "Jul", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)}
