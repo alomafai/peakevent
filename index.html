@@ -151,11 +151,11 @@ body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-g
 
 <div class="calendar-container">
 <div class="calendar-header">
-    <h1>🌍 International Peak Events Calendar</h1>
-    <p>Multi-Day events start 8 weeks before the first day of the event and last 1 week following the last day of the event</p>
-    <p>Single-Day events start 8 weeks before the first day of the event and last 24 hours</p>
-    <p>If next day is a public/bank holiday then it can end 48 hours after</p>
-    </div>
+    <h1 id="calendarTitle">🌍 International Peak Events Calendar</h1>
+    <p id="calendarSubtitle1">Multi-Day events start 8 weeks before the first day of the event and last 1 week following the last day of the event</p>
+    <p id="calendarSubtitle2">Single-Day events start 8 weeks before the first day of the event and last 24 hours</p>
+    <p id="calendarSubtitle3">If next day is a public/bank holiday then it can end 48 hours after</p>
+</div>
 
 <div class="top-controls">
     <div class="country-selector">
@@ -253,6 +253,12 @@ const translations = {
         NL: "Netherlands",
         SE: "Sweden"
 },
+        // Titles
+        calendarTitle: "🌍 International Peak Events Calendar",
+        calendarSubtitle1: "Multi-Day events start 8 weeks before the first day of the event and last 1 week following the last day of the event",
+        calendarSubtitle2: "Single-Day events start 8 weeks before the first day of the event and last 24 hours",
+        calendarSubtitle3: "If next day is a public/bank holiday then it can end 48 hours after",
+
         // UI Labels
         selectCountry: "Select Country:",
         language: "🌐 Language:",
@@ -452,6 +458,12 @@ const translations = {
         NL: "Países Bajos",
         SE: "Suecia"
 },
+        // Titles
+        calendarTitle: "🌍 Calendario Internacional de Eventos Principales",
+        calendarSubtitle1: "Los eventos de varios días comienzan 8 semanas antes del primer día del evento y duran 1 semana después del último día del evento",
+        calendarSubtitle2: "Los eventos de un solo día comienzan 8 semanas antes del primer día del evento y duran 24 horas",
+        calendarSubtitle3: "Si el día siguiente es un día festivo/feriado bancario, puede terminar 48 horas después",
+        
         // UI Labels
         selectCountry: "Seleccionar País:",
         language: "🌐 Idioma:",
@@ -474,7 +486,7 @@ const translations = {
         legendRetail: "Evento Comercial",
         legendSingle: "Un Solo Día",
         legendMulti: "Multi-Día",
-        legendNote: "Nota: Este calendario no incluye referencias o fechas de eventos de alta velocidad confidenciales",
+        legendNote: "Nota: Este calendario no incluye referencias ni fechas de High Velocity Event confidenciales",
         
         // Countdown
         daysAway: "días restantes",
@@ -651,6 +663,12 @@ const translations = {
         NL: "Países Baixos",
         SE: "Suécia"
 },
+        // Titles
+        calendarTitle: "🌍 Calendário Internacional de Eventos Principais",
+        calendarSubtitle1: "Eventos de vários dias começam 8 semanas antes do primeiro dia do evento e duram 1 semana após o último dia do evento",
+        calendarSubtitle2: "Eventos de um único dia começam 8 semanas antes do primeiro dia do evento e duram 24 horas",
+        calendarSubtitle3: "Se o dia seguinte for um feriado público/bancário, pode terminar 48 horas depois",
+
         // UI Labels
         selectCountry: "Selecionar País:",
         language: "🌐 Idioma:",
@@ -673,7 +691,7 @@ const translations = {
         legendRetail: "Evento de Varejo",
         legendSingle: "Dia Único",
         legendMulti: "Multi-Dia",
-        legendNote: "Nota: Este calendário não inclui referências ou datas de eventos de alta velocidade confidenciais",
+        legendNote: "Nota: Este calendário não inclui referências ou datas confidenciais de High Velocity Event",
         
         // Countdown
         daysAway: "dias restantes",
@@ -850,11 +868,20 @@ const translations = {
         NL: "Pays-Bas",
         SE: "Suède"
 },
+        // Titles
+        calendarTitle: "🌍 Calendrier International des Événements Principaux",
+        calendarSubtitle1: "Les événements de plusieurs jours commencent 8 semaines avant le premier jour de l'événement et durent 1 semaine après le dernier jour de l'événement",
+        calendarSubtitle2: "Les événements d'une journée commencent 8 semaines avant le premier jour de l'événement et durent 24 heures",
+        calendarSubtitle3: "Si le jour suivant est un jour férié, l'événement peut se terminer 48 heures après",
+        
+        // UI Labels
         selectCountry: "Sélectionner le pays:",
         language: "🌐 Langue:",
         searchPlaceholder: "Rechercher des jours fériés...",
         previousYear: "◀ Année Précédente",
         nextYear: "Année Suivante ▶",
+        
+        // Stats
         totalEvents: "Total des Événements",
         upcoming: "À Venir",
         daysUntil: "Jours jusqu'à",
@@ -862,27 +889,41 @@ const translations = {
         multiDay: "Multi-Jours",
         tbd: "À Définir",
         noUpcoming: "Aucun à venir",
+        
+        // Legend
         legendUpcoming: "À Venir",
         legendPassed: "Passé",
         legendRetail: "Événement Commercial",
         legendSingle: "Jour Unique",
         legendMulti: "Multi-Jours",
-        legendNote: "Note: Ce calendrier n'inclut pas de références ou dates d'événements confidentiels",
+        legendNote: "Remarque: Ce calendrier n'inclut aucune référence ou date confidentielle de High Velocity Event",
+        
+        // Countdown
         daysAway: "jours restants",
         tomorrow: "Demain!",
         todayExclaim: "🎉 Aujourd'hui!",
         passed: "Passé",
         dateTBD: "Date À Définir",
+        
+        // Duration badges
         badgeTBD: "📅 À Définir",
         badgeSingle: "📌 Jour Unique",
         badgeMulti: "📆 {days} Jours",
+        
+        // Search
         foundResults: "Trouvé",
         resultFor: "résultat pour",
         resultsFor: "résultats pour",
         noResultsFor: "Aucun résultat pour",
         showingAll: "— affichant tous les jours fériés",
+        
+        // Day names
         days: ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
+        
+        // Month names
         months: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
+        
+        // Holiday descriptions
         descriptions: {
             "First day of the year": "Premier jour de l'année",
             "First day of year": "Premier jour de l'année",
@@ -933,11 +974,20 @@ const translations = {
         NL: "Niederlande",
         SE: "Schweden"
 },
+        // Titles
+        calendarTitle: "🌍 Internationaler Kalender für Hauptereignisse",
+        calendarSubtitle1: "Mehrtägige Veranstaltungen beginnen 8 Wochen vor dem ersten Tag der Veranstaltung und dauern 1 Woche nach dem letzten Tag der Veranstaltung",
+        calendarSubtitle2: "Eintägige Veranstaltungen beginnen 8 Wochen vor dem ersten Tag der Veranstaltung und dauern 24 Stunden",
+        calendarSubtitle3: "Wenn der nächste Tag ein Feiertag ist, kann die Veranstaltung 48 Stunden später enden",
+        
+        // UI Labels
         selectCountry: "Land auswählen:",
         language: "🌐 Sprache:",
         searchPlaceholder: "Feiertage suchen...",
         previousYear: "◀ Vorheriges Jahr",
         nextYear: "Nächstes Jahr ▶",
+        
+        // Stats
         totalEvents: "Gesamte Ereignisse",
         upcoming: "Bevorstehend",
         daysUntil: "Tage bis",
@@ -945,27 +995,41 @@ const translations = {
         multiDay: "Mehrtägig",
         tbd: "Noch Offen",
         noUpcoming: "Keine bevorstehenden",
+        
+        // Legend
         legendUpcoming: "Bevorstehend",
         legendPassed: "Vergangen",
         legendRetail: "Verkaufsereignis",
         legendSingle: "Einzeltag",
         legendMulti: "Mehrtägig",
-        legendNote: "Hinweis: Dieser Kalender enthält keine vertraulichen Ereignisreferenzen oder -daten",
+        legendNote: "Hinweis: Dieser Kalender enthält keine vertraulichen High Velocity Event Referenzen oder Daten",
+        
+        // Countdown
         daysAway: "Tage entfernt",
         tomorrow: "Morgen!",
         todayExclaim: "🎉 Heute!",
         passed: "Vergangen",
         dateTBD: "Datum Noch Offen",
+        
+        // Duration badges
         badgeTBD: "📅 Noch Offen",
         badgeSingle: "📌 Einzeltag",
         badgeMulti: "📆 {days} Tage",
+        
+        // Search
         foundResults: "Gefunden",
         resultFor: "Ergebnis für",
         resultsFor: "Ergebnisse für",
         noResultsFor: "Keine Ergebnisse für",
         showingAll: "— zeigt alle Feiertage",
+        
+        // Day names
         days: ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],
+        
+        // Month names
         months: ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],
+        
+        // Holiday descriptions
         descriptions: {
             "First day of the year": "Erster Tag des Jahres",
             "First day of year": "Erster Tag des Jahres",
@@ -1010,11 +1074,21 @@ const translations = {
         NL: "Paesi Bassi",
         SE: "Svezia"
 },
+
+        // Title
+        calendarTitle: "🌍 Calendario Internazionale degli Eventi Principali",
+        calendarSubtitle1: "Gli eventi di più giorni iniziano 8 settimane prima del primo giorno dell'evento e durano 1 settimana dopo l'ultimo giorno dell'evento",
+        calendarSubtitle2: "Gli eventi di un solo giorno iniziano 8 settimane prima del primo giorno dell'evento e durano 24 ore",
+        calendarSubtitle3: "Se il giorno successivo è un giorno festivo, l'evento può terminare 48 ore dopo",
+        
+        // UI Labels
         selectCountry: "Seleziona Paese:",
         language: "🌐 Lingua:",
         searchPlaceholder: "Cerca festività...",
         previousYear: "◀ Anno Precedente",
         nextYear: "Anno Successivo ▶",
+        
+        // Stats
         totalEvents: "Eventi Totali",
         upcoming: "In Arrivo",
         daysUntil: "Giorni fino a",
@@ -1022,27 +1096,41 @@ const translations = {
         multiDay: "Multi-Giorno",
         tbd: "Da Definire",
         noUpcoming: "Nessuno in arrivo",
+        
+        // Legend
         legendUpcoming: "In Arrivo",
         legendPassed: "Passato",
         legendRetail: "Evento Commerciale",
         legendSingle: "Giorno Singolo",
         legendMulti: "Multi-Giorno",
-        legendNote: "Nota: Questo calendario non include riferimenti o date di eventi riservati",
+        legendNote: "Nota: Questo calendario non include riferimenti o date riservate di High Velocity Event",
+        
+        // Countdown
         daysAway: "giorni mancanti",
         tomorrow: "Domani!",
         todayExclaim: "🎉 Oggi!",
         passed: "Passato",
         dateTBD: "Data Da Definire",
+        
+        // Duration badges
         badgeTBD: "📅 Da Definire",
         badgeSingle: "📌 Giorno Singolo",
         badgeMulti: "📆 {days} Giorni",
+        
+        // Search
         foundResults: "Trovato",
         resultFor: "risultato per",
         resultsFor: "risultati per",
         noResultsFor: "Nessun risultato per",
         showingAll: "— mostrando tutte le festività",
+        
+        // Day names
         days: ['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'],
+        
+        // Month names
         months: ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'],
+        
+        // Holiday descriptions
         descriptions: {
             "First day of the year": "Primo giorno dell'anno",
             "First day of year": "Primo giorno dell'anno",
@@ -1087,11 +1175,21 @@ const translations = {
         NL: "オランダ",
         SE: "スウェーデン"
 },
+
+        // Titles
+        calendarTitle: "🌍 国際ピークイベントカレンダー",
+        calendarSubtitle1: "複数日イベントはイベント初日の8週間前に開始し、最終日から1週間後まで続きます",
+        calendarSubtitle2: "単日イベントはイベント初日の8週間前に開始し、24時間続きます",
+        calendarSubtitle3: "翌日が祝日の場合、48時間後に終了することができます",
+        
+        // UI Labels
         selectCountry: "国を選択:",
         language: "🌐 言語:",
         searchPlaceholder: "祝日を検索...",
         previousYear: "◀ 前年",
         nextYear: "翌年 ▶",
+        
+        // Stats
         totalEvents: "イベント総数",
         upcoming: "今後",
         daysUntil: "日後",
@@ -1099,27 +1197,41 @@ const translations = {
         multiDay: "複数日",
         tbd: "未定",
         noUpcoming: "予定なし",
+        
+        // Legend
         legendUpcoming: "今後",
         legendPassed: "過去",
         legendRetail: "小売イベント",
         legendSingle: "単日",
         legendMulti: "複数日",
-        legendNote: "注：このカレンダーには機密イベントの参照や日付は含まれていません",
+        legendNote: "</br>注：このカレンダーには機密のHigh Velocity Eventの参照や日付は含まれていません",
+        
+        // Countdown
         daysAway: "日後",
         tomorrow: "明日！",
         todayExclaim: "🎉 今日！",
         passed: "過去",
         dateTBD: "日付未定",
+        
+        // Duration badges
         badgeTBD: "📅 未定",
         badgeSingle: "📌 単日",
         badgeMulti: "📆 {days}日間",
+        
+        // Search
         foundResults: "見つかりました",
         resultFor: "件の結果",
         resultsFor: "件の結果",
         noResultsFor: "結果なし",
         showingAll: "— すべての祝日を表示",
+        
+        // Day names
         days: ['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日'],
+        
+        // Month names
         months: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+        
+        // Holiday descriptions
         descriptions: {
             "First day of the year": "年の最初の日",
             "First day of year": "年の最初の日",
@@ -1163,11 +1275,21 @@ const translations = {
         NL: "Nederland",
         SE: "Zweden"
 },
+
+        // Titles
+        calendarTitle: "🌍 Internationale Kalender voor Belangrijke Evenementen",
+        calendarSubtitle1: "Meerdaagse evenementen beginnen 8 weken voor de eerste dag van het evenement en duren 1 week na de laatste dag van het evenement",
+        calendarSubtitle2: "Eendaagse evenementen beginnen 8 weken voor de eerste dag van het evenement en duren 24 uur",
+        calendarSubtitle3: "Als de volgende dag een feestdag is, kan het evenement 48 uur later eindigen",
+        
+        // UI Labels
         selectCountry: "Selecteer Land:",
         language: "🌐 Taal:",
         searchPlaceholder: "Zoek feestdagen...",
         previousYear: "◀ Vorig Jaar",
         nextYear: "Volgend Jaar ▶",
+        
+        // Stats
         totalEvents: "Totaal Evenementen",
         upcoming: "Aankomend",
         daysUntil: "Dagen tot",
@@ -1175,27 +1297,41 @@ const translations = {
         multiDay: "Meerdaags",
         tbd: "Nog Te Bepalen",
         noUpcoming: "Geen aankomende",
+        
+        // Legend
         legendUpcoming: "Aankomend",
         legendPassed: "Voorbij",
         legendRetail: "Winkel Evenement",
         legendSingle: "Enkele Dag",
         legendMulti: "Meerdaags",
-        legendNote: "Opmerking: Deze kalender bevat geen vertrouwelijke evenementreferenties of datums",
+        legendNote: "Opmerking: Deze kalender bevat geen vertrouwelijke High Velocity Event referenties of datums",
+        
+        // Countdown
         daysAway: "dagen te gaan",
         tomorrow: "Morgen!",
         todayExclaim: "🎉 Vandaag!",
         passed: "Voorbij",
         dateTBD: "Datum Nog Te Bepalen",
+        
+        // Duration badges
         badgeTBD: "📅 Nog Te Bepalen",
         badgeSingle: "📌 Enkele Dag",
         badgeMulti: "📆 {days} Dagen",
+        
+        // Search
         foundResults: "Gevonden",
         resultFor: "resultaat voor",
         resultsFor: "resultaten voor",
         noResultsFor: "Geen resultaten voor",
         showingAll: "— alle feestdagen weergeven",
+        
+        // Day names
         days: ['Zondag','Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag','Zaterdag'],
+        
+        // Month names
         months: ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'],
+        
+        // Holiday descriptions
         descriptions: {
             "First day of the year": "Eerste dag van het jaar",
             "First day of year": "Eerste dag van het jaar",
@@ -1238,11 +1374,21 @@ const translations = {
         NL: "Nederländerna",
         SE: "Sverige"
 },
+
+        // Title
+        calendarTitle: "🌍 Internationell Kalender för Huvudevenemang",
+        calendarSubtitle1: "Flerdagars evenemang börjar 8 veckor före evenemangets första dag och varar 1 vecka efter evenemangets sista dag",
+        calendarSubtitle2: "Endags evenemang börjar 8 veckor före evenemangets första dag och varar 24 timmar",
+        calendarSubtitle3: "Om nästa dag är en helgdag kan evenemanget sluta 48 timmar senare",
+        
+        // UI Labels
         selectCountry: "Välj Land:",
         language: "🌐 Språk:",
         searchPlaceholder: "Sök helgdagar...",
         previousYear: "◀ Föregående År",
         nextYear: "Nästa År ▶",
+        
+        // Stats
         totalEvents: "Totalt Antal Händelser",
         upcoming: "Kommande",
         daysUntil: "Dagar till",
@@ -1250,27 +1396,41 @@ const translations = {
         multiDay: "Flerdagars",
         tbd: "Ej Bestämt",
         noUpcoming: "Inga kommande",
+        
+        // Legend
         legendUpcoming: "Kommande",
         legendPassed: "Passerat",
         legendRetail: "Detaljhandelsevent",
         legendSingle: "Enskild Dag",
         legendMulti: "Flerdagars",
-        legendNote: "Obs: Denna kalender innehåller inte konfidentiella händelsereferenser eller datum",
+        legendNote: "Obs: Denna kalender innehåller inga konfidentiella High Velocity Event referenser eller datum",
+        
+        // Countdown
         daysAway: "dagar kvar",
         tomorrow: "Imorgon!",
         todayExclaim: "🎉 Idag!",
         passed: "Passerat",
         dateTBD: "Datum Ej Bestämt",
+        
+        // Duration badges
         badgeTBD: "📅 Ej Bestämt",
         badgeSingle: "📌 Enskild Dag",
         badgeMulti: "📆 {days} Dagar",
+        
+        // Search
         foundResults: "Hittade",
         resultFor: "resultat för",
         resultsFor: "resultat för",
         noResultsFor: "Inga resultat för",
         showingAll: "— visar alla helgdagar",
+        
+        // Day names
         days: ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'],
+        
+        // Month names
         months: ['Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','September','Oktober','November','December'],
+        
+        // Holiday descriptions
         descriptions: {
             "First day of the year": "Första dagen på året",
             "First day of year": "Första dagen på året",
@@ -1425,6 +1585,19 @@ function updateUILanguage() {
     const legendNote = document.getElementById('legendNote');
     if (legendNote) legendNote.textContent = t('legendNote');
     
+    // Update calendar title and subtitles
+    const calendarTitle = document.getElementById('calendarTitle');
+    if (calendarTitle) calendarTitle.textContent = t('calendarTitle');
+
+    const calendarSubtitle1 = document.getElementById('calendarSubtitle1');
+    if (calendarSubtitle1) calendarSubtitle1.textContent = t('calendarSubtitle1');
+
+    const calendarSubtitle2 = document.getElementById('calendarSubtitle2');
+    if (calendarSubtitle2) calendarSubtitle2.textContent = t('calendarSubtitle2');
+
+    const calendarSubtitle3 = document.getElementById('calendarSubtitle3');
+    if (calendarSubtitle3) calendarSubtitle3.textContent = t('calendarSubtitle3');
+
     // Update country dropdown
     updateCountryDropdown();
 }
