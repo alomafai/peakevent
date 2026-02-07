@@ -1,0 +1,3508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>International Public Holidays Calendar</title>
+<style>
+/* Language Selector */
+.language-selector{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.language-selector label{font-size:1.1em;color:var(--text-secondary)}
+.language-selector select{padding:10px 15px;font-size:0.95em;border-radius:25px;border:2px solid var(--border-input);background:var(--bg-input);color:var(--text-primary);cursor:pointer;min-width:150px;transition:all 0.3s ease}
+.language-selector select:focus{outline:none;border-color:var(--accent-upcoming)}
+
+:root {
+    /* Dark Theme (Default) */
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
+    --bg-card: rgba(15,52,96,0.8);
+    --bg-card-secondary: rgba(26,26,46,0.9);
+    --bg-stat: rgba(15,52,96,0.5);
+    --bg-legend: rgba(15,52,96,0.3);
+    --text-primary: #fff;
+    --text-secondary: #8892b0;
+    --accent-primary: #e94560;
+    --accent-secondary: #0f3460;
+    --accent-upcoming: #00d9ff;
+    --accent-past: #666;
+    --accent-placeholder: #ffc107;
+    --accent-single: #4caf50;
+    --accent-multi: #9c27b0;
+    --border-input: #e94560;
+    --bg-input: #0f3460;
+    --shadow-color: rgba(233,69,96,0.2);
+}
+
+[data-theme="light"] {
+    --bg-primary: #f0f4f8;
+    --bg-secondary: #e2e8f0;
+    --bg-card: rgba(255,255,255,0.95);
+    --bg-card-secondary: rgba(241,245,249,0.95);
+    --bg-stat: rgba(255,255,255,0.8);
+    --bg-legend: rgba(255,255,255,0.6);
+    --text-primary: #1a202c;
+    --text-secondary: #4a5568;
+    --accent-primary: #e94560;
+    --accent-secondary: #3182ce;
+    --accent-upcoming: #0077b6;
+    --accent-past: #a0aec0;
+    --accent-placeholder: #d69e2e;
+    --accent-single: #38a169;
+    --accent-multi: #805ad5;
+    --border-input: #e94560;
+    --bg-input: #fff;
+    --shadow-color: rgba(0,0,0,0.1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,var(--bg-primary) 0%,var(--bg-secondary) 100%);min-height:100vh;padding:20px;color:var(--text-primary);transition:all 0.3s ease}
+.calendar-container{max-width:1000px;margin:0 auto}
+.calendar-header{text-align:center;margin-bottom:30px}
+.calendar-header h1{font-size:2em;margin-bottom:10px;background:linear-gradient(90deg,var(--accent-primary),var(--accent-secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.calendar-header p{color:var(--text-secondary);font-size:1.1em}
+
+/* Theme Toggle */
+.theme-toggle{position:fixed;top:20px;right:20px;background:var(--accent-primary);border:none;color:white;width:50px;height:50px;border-radius:50%;cursor:pointer;font-size:1.5em;transition:all 0.3s ease;box-shadow:0 4px 15px var(--shadow-color);z-index:1000;display:flex;align-items:center;justify-content:center}
+.theme-toggle:hover{transform:scale(1.1);background:#ff6b6b}
+
+/* Controls Container */
+.controls-container{display:flex;flex-direction:column;gap:20px;margin-bottom:30px}
+.top-controls{display:flex;justify-content:center;align-items:center;gap:15px;flex-wrap:wrap}
+.country-selector{display:flex;align-items:center;gap:15px;flex-wrap:wrap}
+.country-selector label{font-size:1.1em;color:var(--text-secondary)}
+.country-selector select{padding:12px 20px;font-size:1em;border-radius:25px;border:2px solid var(--border-input);background:var(--bg-input);color:var(--text-primary);cursor:pointer;min-width:220px;transition:all 0.3s ease}
+.country-selector select:focus{outline:none;border-color:var(--accent-upcoming)}
+.country-flag{font-size:2em}
+
+/* Search Box */
+.search-container{display:flex;justify-content:center;width:100%}
+.search-box{position:relative;width:100%;max-width:500px;margin-top:20px}
+.search-box input{width:100%;padding:12px 20px 12px 45px;font-size:1em;border-radius:25px;border:2px solid var(--border-input);background:var(--bg-input);color:var(--text-primary);transition:all 0.3s ease}
+.search-box input:focus{outline:none;border-color:var(--accent-upcoming);box-shadow:0 0 20px rgba(0,217,255,0.2)}
+.search-box input::placeholder{color:var(--text-secondary)}
+.search-box .search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:1.2em;color:var(--text-secondary)}
+.search-box .clear-search{position:absolute;right:15px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:1.2em;color:var(--text-secondary);cursor:pointer;display:none;transition:color 0.3s ease}
+.search-box .clear-search:hover{color:var(--accent-primary)}
+.search-box .clear-search.visible{display:block}
+
+/* Search Results Info */
+.search-results-info{text-align:center;padding:10px;color:var(--text-secondary);font-size:0.9em}
+.search-results-info .highlight{color:var(--accent-primary);font-weight:bold}
+.no-results{text-align:center;padding:40px;color:var(--text-secondary)}
+.no-results .emoji{font-size:3em;margin-bottom:15px}
+.no-results h3{color:var(--text-primary);margin-bottom:10px}
+
+.year-navigation{display:flex;justify-content:center;align-items:center;gap:20px;margin-top:20px;margin-bottom:30px;flex-wrap:wrap}
+.year-navigation button{background:var(--accent-primary);border:none;color:white;padding:10px 20px;border-radius:25px;cursor:pointer;font-size:1em;transition:all 0.3s ease}
+.year-navigation button:hover{background:#ff6b6b;transform:scale(1.05)}
+.year-navigation span{font-size:2em;font-weight:bold;color:var(--accent-primary)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin-bottom:30px}
+.stat-card{background:var(--bg-stat);padding:15px;border-radius:15px;text-align:center;transition:all 0.3s ease}
+.stat-card h3{font-size:1.8em;color:var(--accent-primary);margin-bottom:5px}
+.stat-card p{color:var(--text-secondary);font-size:0.8em}
+.holiday-card{background:linear-gradient(135deg,var(--bg-card),var(--bg-card-secondary));border-radius:15px;padding:20px;margin-bottom:15px;border-left:4px solid var(--accent-primary);transition:all 0.3s ease;display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:20px}
+.holiday-card:hover{transform:translateX(10px);box-shadow:0 10px 30px var(--shadow-color)}
+.holiday-card.past{opacity:0.5;border-left-color:var(--accent-past)}
+.holiday-card.upcoming{border-left-color:var(--accent-upcoming);box-shadow:0 0 20px rgba(0,217,255,0.1)}
+.holiday-card.placeholder{border-left-color:var(--accent-placeholder);background:linear-gradient(135deg,rgba(255,193,7,0.1),var(--bg-card-secondary))}
+.holiday-info{min-width:0}
+.holiday-info h3{font-size:1.2em;margin-bottom:5px;color:var(--text-primary);display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+.holiday-info .local-name{color:var(--accent-primary);font-size:0.95em;font-style:italic;margin-bottom:5px}
+.holiday-info p{color:var(--text-secondary);font-size:0.9em}
+.holiday-info .note{color:var(--accent-placeholder);font-size:0.85em;margin-top:5px}
+
+/* Search Highlight */
+.holiday-info .search-match{background:rgba(233,69,96,0.3);padding:0 3px;border-radius:3px}
+[data-theme="light"] .holiday-info .search-match{background:rgba(233,69,96,0.2)}
+
+.duration-badge{display:inline-flex;padding:4px 10px;border-radius:12px;font-size:0.7em;font-weight:bold;text-transform:uppercase}
+.duration-badge.single-day{background:rgba(76,175,80,0.2);color:var(--accent-single);border:1px solid var(--accent-single)}
+.duration-badge.multi-day{background:rgba(156,39,176,0.2);color:#ce93d8;border:1px solid var(--accent-multi)}
+.duration-badge.tbd{background:rgba(255,193,7,0.2);color:var(--accent-placeholder);border:1px solid var(--accent-placeholder)}
+.holiday-date{text-align:right;min-width:160px}
+.holiday-date .date{font-size:1.3em;font-weight:bold;color:var(--accent-primary)}
+.holiday-date .day-name{color:var(--text-secondary);font-size:0.85em}
+.holiday-date .date-range{color:#ce93d8;font-size:0.85em;margin-top:5px;padding:5px 10px;background:rgba(156,39,176,0.1);border-radius:8px;display:inline-block}
+.countdown{background:rgba(233,69,96,0.2);padding:8px 15px;border-radius:20px;font-size:0.8em;color:#ff6b6b;white-space:nowrap;min-width:100px;text-align:center}
+.countdown.now{background:rgba(0,217,255,0.2);color:var(--accent-upcoming)}
+.countdown.tbd{background:rgba(255,193,7,0.2);color:var(--accent-placeholder)}
+.legend{display:flex;justify-content:center;gap:20px;margin-top:30px;padding:20px;background:var(--bg-legend);border-radius:10px;flex-wrap:wrap;transition:all 0.3s ease}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:0.85em}
+.legend-color{width:20px;height:20px;border-radius:5px}
+.legend-color.upcoming{border:2px solid var(--accent-upcoming);background:rgba(0,217,255,0.2)}
+.legend-color.past{background:rgba(102,102,102,0.3);border:1px solid var(--accent-past)}
+.legend-color.placeholder{background:rgba(255,193,7,0.3);border:1px solid var(--accent-placeholder)}
+.legend-color.single-day{background:rgba(76,175,80,0.3);border:1px solid var(--accent-single)}
+.legend-color.multi-day{background:rgba(156,39,176,0.3);border:1px solid var(--accent-multi)}
+.legend p{width:100%;flex-basis:100%;text-align:center;margin-top:15px;font-size:0.85em;color:var(--text-secondary)}
+
+@media(max-width:768px){
+.calendar-header h1{font-size:1.6em}
+.holiday-card{grid-template-columns:1fr;text-align:center;gap:10px}
+.holiday-info h3{justify-content:center}
+.holiday-date{text-align:center}
+.stats{grid-template-columns:repeat(2,1fr)}
+.theme-toggle{top:10px;right:10px;width:40px;height:40px;font-size:1.2em}
+.search-box{max-width:100%}
+}
+</style>
+</head>
+<body>
+<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌙</button>
+
+<div class="calendar-container">
+<div class="calendar-header">
+    <h1 id="calendarTitle">🌍 International Peak Events Calendar</h1>
+    <p id="calendarSubtitle1">Multi-Day events start 8 weeks before the first day of the event and last 1 week following the last day of the event</p>
+    <p id="calendarSubtitle2">Single-Day events start 8 weeks before the first day of the event and last 24 hours</p>
+    <p id="calendarSubtitle3">If next day is a public/bank holiday then it can end 48 hours after</p>
+</div>
+
+<div class="top-controls">
+    <div class="country-selector">
+        <label id="labelCountry">Select Country:</label>
+        <span class="country-flag" id="countryFlag">🇺🇸</span>
+        <select id="countrySelect" onchange="changeCountry()">
+            <option value="US">🇺🇸 United States</option>
+            <option value="CA">🇨🇦 Canada</option>
+            <option value="MX">🇲🇽 Mexico</option>
+            <option value="BR">🇧🇷 Brazil</option>
+            <option value="UK">🇬🇧 United Kingdom</option>
+            <option value="ES">🇪🇸 Spain</option>
+            <option value="FR">🇫🇷 France</option>
+            <option value="DE">🇩🇪 Germany</option>
+            <option value="IT">🇮🇹 Italy</option>
+            <option value="JP">🇯🇵 Japan</option>
+            <option value="AU">🇦🇺 Australia</option>
+            <option value="NL">🇳🇱 Netherlands</option>
+            <option value="SE">🇸🇪 Sweden</option>
+        </select>
+    </div>
+    <div class="language-selector">
+        <label id="labelLanguage">🌐 Language:</label>
+        <select id="languageSelect" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="pt">Português</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="it">Italiano</option>
+            <option value="ja">日本語</option>
+            <option value="nl">Nederlands</option>
+            <option value="sv">Svenska</option>
+        </select>
+    </div>
+</div>
+    
+    <div class="search-container">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search holidays..." oninput="handleSearch()" />
+            <button class="clear-search" id="clearSearch" onclick="clearSearch()">✕</button>
+        </div>
+    </div>
+</div>
+
+<div class="year-navigation">
+    <button onclick="changeYear(-1)">◀ Previous Year</button>
+    <span id="currentYear"></span>
+    <button onclick="changeYear(1)">Next Year ▶</button>
+</div>
+
+<div class="stats" id="stats"></div>
+<div id="searchResultsInfo"></div>
+<div id="holidayList"></div>
+
+<div class="legend">
+    <div class="legend-item"><div class="legend-color upcoming"></div><span id="legendUpcoming">Upcoming</span></div>
+    <div class="legend-item"><div class="legend-color past"></div><span id="legendPassed">Passed</span></div>
+    <div class="legend-item"><div class="legend-color placeholder"></div><span id="legendRetail">Retail Event</span></div>
+    <div class="legend-item"><div class="legend-color single-day"></div><span id="legendSingle">Single Day</span></div>
+    <div class="legend-item"><div class="legend-color multi-day"></div><span id="legendMulti">Multi-Day</span></div>
+    <p id="legendNote">Note: This calendar does not include any confidential High Velocity Event references or dates</p>
+</div>
+<script>
+let currentYear = new Date().getFullYear();
+let currentCountry = 'US';
+let currentSearch = '';
+const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const countryFlags = {US:'🇺🇸',AU:'🇦🇺',BR:'🇧🇷',CA:'🇨🇦',FR:'🇫🇷',DE:'🇩🇪',IT:'🇮🇹',JP:'🇯🇵',MX:'🇲🇽',NL:'🇳🇱',ES:'🇪🇸',SE:'🇸🇪',UK:'🇬🇧'};
+const D = 86400000; // milliseconds in a day
+
+// ============================================
+// TRANSLATIONS
+// ============================================
+let currentLanguage = 'en';
+
+const translations = {
+    en: {
+        // Country names
+        countries: {
+        US: "United States",
+        CA: "Canada",
+        MX: "Mexico",
+        BR: "Brazil",
+        UK: "United Kingdom",
+        ES: "Spain",
+        FR: "France",
+        DE: "Germany",
+        IT: "Italy",
+        JP: "Japan",
+        AU: "Australia",
+        NL: "Netherlands",
+        SE: "Sweden"
+},
+        // Titles
+        calendarTitle: "🌍 International Peak Events Calendar",
+        calendarSubtitle1: "Multi-Day events start 8 weeks before the first day of the event and last 1 week following the last day of the event",
+        calendarSubtitle2: "Single-Day events start 8 weeks before the first day of the event and last 24 hours",
+        calendarSubtitle3: "If next day is a public/bank holiday then it can end 48 hours after",
+
+        // UI Labels
+        selectCountry: "Select Country:",
+        language: "🌐 Language:",
+        searchPlaceholder: "Search holidays...",
+        previousYear: "◀ Previous Year",
+        nextYear: "Next Year ▶",
+        
+        // Stats
+        totalEvents: "Total Events",
+        upcoming: "Upcoming",
+        daysUntil: "Days until",
+        today: "Today",
+        multiDay: "Multi-Day",
+        tbd: "TBD",
+        noUpcoming: "No upcoming",
+        
+        // Legend
+        legendUpcoming: "Upcoming",
+        legendPassed: "Passed",
+        legendRetail: "Retail Event",
+        legendSingle: "Single Day",
+        legendMulti: "Multi-Day",
+        legendNote: "Note: This calendar does not include any confidential High Velocity Event references or dates",
+        
+        // Countdown
+        daysAway: "days away",
+        tomorrow: "Tomorrow!",
+        todayExclaim: "🎉 Today!",
+        passed: "Passed",
+        dateTBD: "Date TBD",
+        
+        // Duration badges
+        badgeTBD: "📅 TBD",
+        badgeSingle: "📌 Single Day",
+        badgeMulti: "📆 {days} Days",
+        
+        // Search
+        foundResults: "Found",
+        resultFor: "result for",
+        resultsFor: "results for",
+        noResultsFor: "No results for",
+        showingAll: "— showing all holidays",
+        
+        // Day names
+        days: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+        
+        // Month names
+        months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+        
+        // Holiday names
+        ramadanNote: "- Actual dates may vary",
+        
+        // Holiday descriptions
+        descriptions: {
+    // Canadian province notes
+    "Excluding Quebec": "Excluding Quebec",
+    "Excludes Nova Scotia, Prince Edward Island, Quebec": "Excludes Nova Scotia, Prince Edward Island, Quebec",
+    "Quebec only": "Quebec only",
+    "Excludes Quebec, Prince Edward Island, Newfoundland and Labrador": "Excludes Quebec, Prince Edward Island, Newfoundland and Labrador",
+    "Newfoundland and Labrador only": "Newfoundland and Labrador only",        
+    // General
+    "First day of the year": "First day of the year",
+    "First day of year": "First day of year",
+    "Day of love": "Day of love",
+    "Celebrates mothers": "Celebrates mothers",
+    "Celebrates fathers": "Celebrates fathers",
+    "Celebrates women": "Celebrates women",
+    "Celebrates children": "Celebrates children",
+    "Festival of costumes": "Festival of costumes",
+    "Birth of Jesus": "Birth of Jesus",
+    "Last day of the year": "Last day of the year",
+    "Last day of year": "Last day of year",
+    
+    // Religious
+    "Christian celebration": "Christian celebration",
+    "Christian observance": "Christian observance",
+    "Christian feast day": "Christian feast day",
+    "Catholic feast day": "Catholic feast day",
+    "Islamic holy month": "Islamic holy month",
+    "End of Ramadan": "End of Ramadan",
+    "Jewish festival of lights": "Jewish festival of lights",
+    "Hindu festival of lights": "Hindu festival of lights",
+    "Honors all saints": "Honors all saints",
+    "Honor the deceased": "Honor the deceased",
+    "Honors the deceased": "Honors the deceased",
+    "Day after Easter": "Day after Easter",
+    "Good Friday to Easter Monday": "Good Friday to Easter Monday",
+    "Day after Pentecost": "Day after Pentecost",
+    "Epiphany": "Epiphany",
+    "Easter week": "Easter week",
+    "Holy Week": "Holy Week",
+    "Religious celebration": "Religious celebration",
+    "Pre-Lenten festival": "Pre-Lenten festival",
+    "Protestant commemoration": "Protestant commemoration",
+    "Protestant day of prayer": "Protestant day of prayer",
+    
+    // US Specific
+    "Honors civil rights leader": "Honors civil rights leader",
+    "Honors U.S. presidents": "Honors U.S. presidents",
+    "Irish celebration": "Irish celebration",
+    "Honors fallen military": "Honors fallen military",
+    "End of slavery": "End of slavery",
+    "Declaration of Independence": "Declaration of Independence",
+    "Honors labor movement": "Honors labor movement",
+    "Commemorates Columbus / Honors Native peoples": "Commemorates Columbus / Honors Native peoples",
+    "Honors military veterans": "Honors military veterans",
+    "Harvest festival": "Harvest festival",
+    "African American celebration": "African American celebration",
+    
+    // Australia Specific
+    "National day": "National day",
+    "Traditional celebration": "Traditional celebration",
+    "Workers' rights": "Workers' rights",
+    "Commemorates ANZAC": "Commemorates ANZAC",
+    "Aboriginal cultures": "Aboriginal cultures",
+    "Official celebration": "Official celebration",
+    "Indigenous observance": "Indigenous observance",
+    "Famous horse race": "Famous horse race",
+    "Day after Christmas": "Day after Christmas",
+    
+    // Brazil Specific
+    "Back to school period": "Back to school period",
+    "Brazilian carnival": "Brazilian carnival",
+    "National hero day": "National hero day",
+    "Workers' Day": "Workers' Day",
+    "Book promotional event": "Book promotional event",
+    "Traditional June festival": "Traditional June festival",
+    "Brazilian Independence": "Brazilian Independence",
+    "Gift promotional period": "Gift promotional period",
+    "Republic proclamation": "Republic proclamation",
+    "Retail event": "Retail event",
+    "Retail Event": "Retail Event",
+    
+    // Canada Specific
+    "Provincial family holiday": "Provincial family holiday",
+    "Queen Victoria's birthday": "Queen Victoria's birthday",
+    "Patriots of Lower Canada": "Patriots of Lower Canada",
+    "Quebec national holiday": "Quebec national holiday",
+    "National day of Canada": "National day of Canada",
+    "Provincial holiday": "Provincial holiday",
+    "Newfoundland civic holiday": "Newfoundland civic holiday",
+    "Honors Indigenous peoples": "Honors Indigenous peoples",
+    "Evening before Christmas": "Evening before Christmas",
+    "Post-Christmas sales": "Post-Christmas sales",
+    
+    // France Specific
+    "Victory in Europe Day": "Victory in Europe Day",
+    "Bastille Day": "Bastille Day",
+    "End of World War I": "End of World War I",
+    
+    // Germany Specific
+    "Father's Day and Ascension": "Father's Day and Ascension",
+    "National Day": "National Day",
+    "Traditional gift-giving": "Traditional gift-giving",
+    "Christmas and Boxing Day": "Christmas and Boxing Day",
+    
+    // Italy Specific
+    "Liberation from Nazi occupation": "Liberation from Nazi occupation",
+    "Italian National Day": "Italian National Day",
+    "Mid-August holiday": "Mid-August holiday",
+    "Christmas and St. Stephen's Day": "Christmas and St. Stephen's Day",
+    
+    // Japan Specific
+    "New Year celebration": "New Year celebration",
+    "Celebrates young adults": "Celebrates young adults",
+    "Celebrates Japan's founding": "Celebrates Japan's founding",
+    "Emperor's birthday": "Emperor's birthday",
+    "Return gift day": "Return gift day",
+    "Spring equinox": "Spring equinox",
+    "Honors Emperor Shōwa": "Honors Emperor Shōwa",
+    "Constitution anniversary": "Constitution anniversary",
+    "Nature appreciation": "Nature appreciation",
+    "Ocean appreciation": "Ocean appreciation",
+    "Mountain appreciation": "Mountain appreciation",
+    "Honors elderly": "Honors elderly",
+    "Autumn equinox": "Autumn equinox",
+    "Promotes sports": "Promotes sports",
+    "Promotes culture": "Promotes culture",
+    "Thanks for labor": "Thanks for labor",
+    
+    // Mexico Specific
+    "Honors Benito Juárez": "Honors Benito Juárez",
+    "Mexican Independence": "Mexican Independence",
+    "Revolution anniversary": "Revolution anniversary",
+    
+    // Netherlands Specific
+    "King's birthday celebration": "King's birthday celebration",
+    "Traditional gift-giving celebration": "Traditional gift-giving celebration",
+    
+    // Spain Specific
+    "Madrid community day": "Madrid community day",
+    "Madrid patron saint": "Madrid patron saint",
+    "Midsummer celebration": "Midsummer celebration",
+    "Running of the bulls": "Running of the bulls",
+    "Patron saint of Spain": "Patron saint of Spain",
+    "Catalonia National Day": "Catalonia National Day",
+    "Spanish National Day": "Spanish National Day",
+    "Madrid patron saint day": "Madrid patron saint day",
+    "Spanish Constitution Day": "Spanish Constitution Day",
+    
+    // UK Specific
+    "First Monday of May": "First Monday of May",
+    "Last Monday of May": "Last Monday of May",
+    "Last Monday of August": "Last Monday of August",
+    "Mothering Sunday": "Mothering Sunday",
+    
+    // Brazil special descriptions
+    "'Consumer Day' references can only be used on March 15th </br> 'Consumer Week Warm Up' references can only be used between March 2nd - March 9th </br> 'Consumer Month' references can be used anytime during the month of March": "'Consumer Day' references can only be used on March 15th </br> 'Consumer Week Warm Up' references can only be used between March 2nd - March 9th </br> 'Consumer Month' references can be used anytime during the month of March",
+    "'Mother's Day' references can only be used between April 27th - May 10th </br> 'Mother's Day Week' references can only be used between May 4th - May 10th </br> 'Mother's Day Month' references can be used anytime during the month of May </br> 'Mother's Day Warm Up' references are not allowed": "'Mother's Day' references can only be used between April 27th - May 10th </br> 'Mother's Day Week' references can only be used between May 4th - May 10th </br> 'Mother's Day Month' references can be used anytime during the month of May </br> 'Mother's Day Warm Up' references are not allowed",
+    "'Valentine Day' references can only be used between June 1st - June 12th </br> 'Valentine's Day Week' references can only be used between June 6th - June 12th </br> 'Valentine's Day Month' references can be used anytime during the month of June </br> 'Valentine's Day Warm Up' references are not allowed": "'Valentine Day' references can only be used between June 1st - June 12th </br> 'Valentine's Day Week' references can only be used between June 6th - June 12th </br> 'Valentine's Day Month' references can be used anytime during the month of June </br> 'Valentine's Day Warm Up' references are not allowed",
+    "'Father's Day' references can only be used between July 27th - August 9th </br> 'Father's Day Week' references can only be used between August 3rd - August 9th </br> 'Father's Day Month' references can be used anytime during the month of August </br> 'Father's Day Warm Up' references are not allowed": "'Father's Day' references can only be used between July 27th - August 9th </br> 'Father's Day Week' references can only be used between August 3rd - August 9th </br> 'Father's Day Month' references can be used anytime during the month of August </br> 'Father's Day Warm Up' references are not allowed",
+    "'Children's Day' references can only be used between September 21st - October 12th </br> 'Children's Day Week' references can only be used between October 5th - October 12th </br> 'Children's Day Month' references can be used anytime during the month of October </br> 'Children's Day Warm Up' references are not allowed": "'Children's Day' references can only be used between September 21st - October 12th </br> 'Children's Day Week' references can only be used between October 5th - October 12th </br> 'Children's Day Month' references can be used anytime during the month of October </br> 'Children's Day Warm Up' references are not allowed"
+        }
+},
+    
+    es: {
+        // Country names
+    countries: {
+        US: "Estados Unidos",
+        CA: "Canadá",
+        MX: "México",
+        BR: "Brasil",
+        UK: "Reino Unido",
+        ES: "España",
+        FR: "Francia",
+        DE: "Alemania",
+        IT: "Italia",
+        JP: "Japón",
+        AU: "Australia",
+        NL: "Países Bajos",
+        SE: "Suecia"
+},
+        // Titles
+        calendarTitle: "🌍 Calendario Internacional de Eventos Principales",
+        calendarSubtitle1: "Los eventos de varios días comienzan 8 semanas antes del primer día del evento y duran 1 semana después del último día del evento",
+        calendarSubtitle2: "Los eventos de un solo día comienzan 8 semanas antes del primer día del evento y duran 24 horas",
+        calendarSubtitle3: "Si el día siguiente es un día festivo/feriado bancario, puede terminar 48 horas después",
+        
+        // UI Labels
+        selectCountry: "Seleccionar País:",
+        language: "🌐 Idioma:",
+        searchPlaceholder: "Buscar días festivos...",
+        previousYear: "◀ Año Anterior",
+        nextYear: "Año Siguiente ▶",
+        
+        // Stats
+        totalEvents: "Total de Eventos",
+        upcoming: "Próximos",
+        daysUntil: "Días hasta",
+        today: "Hoy",
+        multiDay: "Multi-Día",
+        tbd: "Por Definir",
+        noUpcoming: "Sin próximos",
+        
+        // Legend
+        legendUpcoming: "Próximo",
+        legendPassed: "Pasado",
+        legendRetail: "Evento Comercial",
+        legendSingle: "Un Solo Día",
+        legendMulti: "Multi-Día",
+        legendNote: "Nota: Este calendario no incluye referencias ni fechas de High Velocity Event confidenciales",
+        
+        // Countdown
+        daysAway: "días restantes",
+        tomorrow: "¡Mañana!",
+        todayExclaim: "🎉 ¡Hoy!",
+        passed: "Pasado",
+        dateTBD: "Fecha Por Definir",
+        
+        // Duration badges
+        badgeTBD: "📅 Por Definir",
+        badgeSingle: "📌 Un Solo Día",
+        badgeMulti: "📆 {days} Días",
+        
+        // Search
+        foundResults: "Encontrado",
+        resultFor: "resultado para",
+        resultsFor: "resultados para",
+        noResultsFor: "Sin resultados para",
+        showingAll: "— mostrando todos los días festivos",
+        
+        // Day names
+        days: ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
+        
+        // Month names
+        months: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+        
+        // Holiday names
+        ramadanNote: "- Las fechas reales pueden variar",
+        
+        // Holiday descriptions
+        descriptions: {
+    // Canadian province notes
+    "Excluding Quebec": "Excluyendo Quebec",
+    "Excludes Nova Scotia, Prince Edward Island, Quebec": "Excluye Nueva Escocia, Isla del Príncipe Eduardo, Quebec",
+    "Quebec only": "Solo Quebec",
+    "Excludes Quebec, Prince Edward Island, Newfoundland and Labrador": "Excluye Quebec, Isla del Príncipe Eduardo, Terranova y Labrador",
+    "Newfoundland and Labrador only": "Solo Terranova y Labrador",
+        
+    // General
+    "First day of the year": "Primer día del año",
+    "First day of year": "Primer día del año",
+    "Day of love": "Día del amor",
+    "Celebrates mothers": "Celebra a las madres",
+    "Celebrates fathers": "Celebra a los padres",
+    "Celebrates women": "Celebra a las mujeres",
+    "Celebrates children": "Celebra a los niños",
+    "Festival of costumes": "Festival de disfraces",
+    "Birth of Jesus": "Nacimiento de Jesús",
+    "Last day of the year": "Último día del año",
+    "Last day of year": "Último día del año",
+    
+    // Religious
+    "Christian celebration": "Celebración cristiana",
+    "Christian observance": "Observancia cristiana",
+    "Christian feast day": "Día de fiesta cristiana",
+    "Catholic feast day": "Día de fiesta católica",
+    "Islamic holy month": "Mes sagrado islámico",
+    "End of Ramadan": "Fin del Ramadán",
+    "Jewish festival of lights": "Festival judío de las luces",
+    "Hindu festival of lights": "Festival hindú de las luces",
+    "Honors all saints": "Honra a todos los santos",
+    "Honor the deceased": "Honrar a los fallecidos",
+    "Honors the deceased": "Honra a los fallecidos",
+    "Day after Easter": "Día después de Pascua",
+    "Good Friday to Easter Monday": "Viernes Santo a Lunes de Pascua",
+    "Day after Pentecost": "Día después de Pentecostés",
+    "Epiphany": "Epifanía",
+    "Easter week": "Semana Santa",
+    "Holy Week": "Semana Santa",
+    "Religious celebration": "Celebración religiosa",
+    "Pre-Lenten festival": "Festival pre-cuaresmal",
+    "Protestant commemoration": "Conmemoración protestante",
+    "Protestant day of prayer": "Día protestante de oración",
+    
+    // US Specific
+    "Honors civil rights leader": "Honra al líder de derechos civiles",
+    "Honors U.S. presidents": "Honra a los presidentes de EE.UU.",
+    "Irish celebration": "Celebración irlandesa",
+    "Honors fallen military": "Honra a los militares caídos",
+    "End of slavery": "Fin de la esclavitud",
+    "Declaration of Independence": "Declaración de Independencia",
+    "Honors labor movement": "Honra al movimiento laboral",
+    "Commemorates Columbus / Honors Native peoples": "Conmemora a Colón / Honra a los pueblos nativos",
+    "Honors military veterans": "Honra a los veteranos militares",
+    "Harvest festival": "Festival de la cosecha",
+    "African American celebration": "Celebración afroamericana",
+    
+    // Australia Specific
+    "National day": "Día nacional",
+    "Traditional celebration": "Celebración tradicional",
+    "Workers' rights": "Derechos de los trabajadores",
+    "Commemorates ANZAC": "Conmemora ANZAC",
+    "Aboriginal cultures": "Culturas aborígenes",
+    "Official celebration": "Celebración oficial",
+    "Indigenous observance": "Observancia indígena",
+    "Famous horse race": "Famosa carrera de caballos",
+    "Day after Christmas": "Día después de Navidad",
+    
+    // Brazil Specific
+    "Back to school period": "Período de regreso a clases",
+    "Brazilian carnival": "Carnaval brasileño",
+    "National hero day": "Día del héroe nacional",
+    "Workers' Day": "Día de los trabajadores",
+    "Book promotional event": "Evento promocional de libros",
+    "Traditional June festival": "Festival tradicional de junio",
+    "Brazilian Independence": "Independencia brasileña",
+    "Gift promotional period": "Período promocional de regalos",
+    "Republic proclamation": "Proclamación de la República",
+    "Retail event": "Evento comercial",
+    "Retail Event": "Evento Comercial",
+    
+    // Canada Specific
+    "Provincial family holiday": "Día familiar provincial",
+    "Queen Victoria's birthday": "Cumpleaños de la Reina Victoria",
+    "Patriots of Lower Canada": "Patriotas del Bajo Canadá",
+    "Quebec national holiday": "Fiesta nacional de Quebec",
+    "National day of Canada": "Día nacional de Canadá",
+    "Provincial holiday": "Día festivo provincial",
+    "Newfoundland civic holiday": "Día cívico de Terranova",
+    "Honors Indigenous peoples": "Honra a los pueblos indígenas",
+    "Evening before Christmas": "Víspera de Navidad",
+    "Post-Christmas sales": "Ventas post-navideñas",
+    
+    // France Specific
+    "Victory in Europe Day": "Día de la Victoria en Europa",
+    "Bastille Day": "Día de la Bastilla",
+    "End of World War I": "Fin de la Primera Guerra Mundial",
+    
+    // Germany Specific
+    "Father's Day and Ascension": "Día del Padre y Ascensión",
+    "National Day": "Día Nacional",
+    "Traditional gift-giving": "Entrega tradicional de regalos",
+    "Christmas and Boxing Day": "Navidad y Boxing Day",
+    
+    // Italy Specific
+    "Liberation from Nazi occupation": "Liberación de la ocupación nazi",
+    "Italian National Day": "Día Nacional de Italia",
+    "Mid-August holiday": "Fiesta de mediados de agosto",
+    "Christmas and St. Stephen's Day": "Navidad y Día de San Esteban",
+    
+    // Japan Specific
+    "New Year celebration": "Celebración de Año Nuevo",
+    "Celebrates young adults": "Celebra a los jóvenes adultos",
+    "Celebrates Japan's founding": "Celebra la fundación de Japón",
+    "Emperor's birthday": "Cumpleaños del Emperador",
+    "Return gift day": "Día de regalo de retorno",
+    "Spring equinox": "Equinoccio de primavera",
+    "Honors Emperor Shōwa": "Honra al Emperador Shōwa",
+    "Constitution anniversary": "Aniversario de la Constitución",
+    "Nature appreciation": "Apreciación de la naturaleza",
+    "Ocean appreciation": "Apreciación del océano",
+    "Mountain appreciation": "Apreciación de la montaña",
+    "Honors elderly": "Honra a los ancianos",
+    "Autumn equinox": "Equinoccio de otoño",
+    "Promotes sports": "Promueve el deporte",
+    "Promotes culture": "Promueve la cultura",
+    "Thanks for labor": "Agradecimiento por el trabajo",
+    
+    // Mexico Specific
+    "Honors Benito Juárez": "Honra a Benito Juárez",
+    "Mexican Independence": "Independencia mexicana",
+    "Revolution anniversary": "Aniversario de la Revolución",
+    
+    // Netherlands Specific
+    "King's birthday celebration": "Celebración del cumpleaños del Rey",
+    "Traditional gift-giving celebration": "Celebración tradicional de regalos",
+    
+    // Spain Specific
+    "Madrid community day": "Día de la comunidad de Madrid",
+    "Madrid patron saint": "Santo patrón de Madrid",
+    "Midsummer celebration": "Celebración de verano",
+    "Running of the bulls": "Encierro de toros",
+    "Patron saint of Spain": "Santo patrón de España",
+    "Catalonia National Day": "Día Nacional de Cataluña",
+    "Spanish National Day": "Día Nacional de España",
+    "Madrid patron saint day": "Día del santo patrón de Madrid",
+    "Spanish Constitution Day": "Día de la Constitución Española",
+    
+    // UK Specific
+    "First Monday of May": "Primer lunes de mayo",
+    "Last Monday of May": "Último lunes de mayo",
+    "Last Monday of August": "Último lunes de agosto",
+    "Mothering Sunday": "Domingo de las Madres",
+    
+    // Brazil special descriptions
+    "'Consumer Day' references can only be used on March 15th </br> 'Consumer Week Warm Up' references can only be used between March 2nd - March 9th </br> 'Consumer Month' references can be used anytime during the month of March": "Las referencias a 'Día del Consumidor' solo pueden usarse el 15 de marzo </br> Las referencias a 'Calentamiento de la Semana del Consumidor' solo pueden usarse entre el 2 y el 9 de marzo </br> Las referencias a 'Mes del Consumidor' pueden usarse en cualquier momento durante el mes de marzo",
+    "'Mother's Day' references can only be used between April 27th - May 10th </br> 'Mother's Day Week' references can only be used between May 4th - May 10th </br> 'Mother's Day Month' references can be used anytime during the month of May </br> 'Mother's Day Warm Up' references are not allowed": "Las referencias a 'Día de la Madre' solo pueden usarse entre el 27 de abril y el 10 de mayo </br> Las referencias a 'Semana del Día de la Madre' solo pueden usarse entre el 4 y el 10 de mayo </br> Las referencias a 'Mes del Día de la Madre' pueden usarse en cualquier momento durante el mes de mayo </br> Las referencias a 'Calentamiento del Día de la Madre' no están permitidas",
+    "'Valentine Day' references can only be used between June 1st - June 12th </br> 'Valentine's Day Week' references can only be used between June 6th - June 12th </br> 'Valentine's Day Month' references can be used anytime during the month of June </br> 'Valentine's Day Warm Up' references are not allowed": "Las referencias a 'Día de San Valentín' solo pueden usarse entre el 1 y el 12 de junio </br> Las referencias a 'Semana de San Valentín' solo pueden usarse entre el 6 y el 12 de junio </br> Las referencias a 'Mes de San Valentín' pueden usarse en cualquier momento durante el mes de junio </br> Las referencias a 'Calentamiento de San Valentín' no están permitidas",
+    "'Father's Day' references can only be used between July 27th - August 9th </br> 'Father's Day Week' references can only be used between August 3rd - August 9th </br> 'Father's Day Month' references can be used anytime during the month of August </br> 'Father's Day Warm Up' references are not allowed": "Las referencias a 'Día del Padre' solo pueden usarse entre el 27 de julio y el 9 de agosto </br> Las referencias a 'Semana del Día del Padre' solo pueden usarse entre el 3 y el 9 de agosto </br> Las referencias a 'Mes del Día del Padre' pueden usarse en cualquier momento durante el mes de agosto </br> Las referencias a 'Calentamiento del Día del Padre' no están permitidas",
+    "'Children's Day' references can only be used between September 21st - October 12th </br> 'Children's Day Week' references can only be used between October 5th - October 12th </br> 'Children's Day Month' references can be used anytime during the month of October </br> 'Children's Day Warm Up' references are not allowed": "Las referencias a 'Día del Niño' solo pueden usarse entre el 21 de septiembre y el 12 de octubre </br> Las referencias a 'Semana del Día del Niño' solo pueden usarse entre el 5 y el 12 de octubre </br> Las referencias a 'Mes del Día del Niño' pueden usarse en cualquier momento durante el mes de octubre </br> Las referencias a 'Calentamiento del Día del Niño' no están permitidas"
+        }
+},
+    
+    pt: {
+        // Country names
+    countries: {
+        US: "Estados Unidos",
+        CA: "Canadá",
+        MX: "México",
+        BR: "Brasil",
+        UK: "Reino Unido",
+        ES: "Espanha",
+        FR: "França",
+        DE: "Alemanha",
+        IT: "Itália",
+        JP: "Japão",
+        AU: "Austrália",
+        NL: "Países Baixos",
+        SE: "Suécia"
+},
+        // Titles
+        calendarTitle: "🌍 Calendário Internacional de Eventos Principais",
+        calendarSubtitle1: "Eventos de vários dias começam 8 semanas antes do primeiro dia do evento e duram 1 semana após o último dia do evento",
+        calendarSubtitle2: "Eventos de um único dia começam 8 semanas antes do primeiro dia do evento e duram 24 horas",
+        calendarSubtitle3: "Se o dia seguinte for um feriado público/bancário, pode terminar 48 horas depois",
+
+        // UI Labels
+        selectCountry: "Selecionar País:",
+        language: "🌐 Idioma:",
+        searchPlaceholder: "Buscar feriados...",
+        previousYear: "◀ Ano Anterior",
+        nextYear: "Próximo Ano ▶",
+        
+        // Stats
+        totalEvents: "Total de Eventos",
+        upcoming: "Próximos",
+        daysUntil: "Dias até",
+        today: "Hoje",
+        multiDay: "Multi-Dia",
+        tbd: "A Definir",
+        noUpcoming: "Sem próximos",
+        
+        // Legend
+        legendUpcoming: "Próximo",
+        legendPassed: "Passado",
+        legendRetail: "Evento de Varejo",
+        legendSingle: "Dia Único",
+        legendMulti: "Multi-Dia",
+        legendNote: "Nota: Este calendário não inclui referências ou datas confidenciais de High Velocity Event",
+        
+        // Countdown
+        daysAway: "dias restantes",
+        tomorrow: "Amanhã!",
+        todayExclaim: "🎉 Hoje!",
+        passed: "Passado",
+        dateTBD: "Data A Definir",
+        
+        // Duration badges
+        badgeTBD: "📅 A Definir",
+        badgeSingle: "📌 Dia Único",
+        badgeMulti: "📆 {days} Dias",
+        
+        // Search
+        foundResults: "Encontrado",
+        resultFor: "resultado para",
+        resultsFor: "resultados para",
+        noResultsFor: "Sem resultados para",
+        showingAll: "— mostrando todos os feriados",
+        
+        // Day names
+        days: ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'],
+        
+        // Month names
+        months: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+        
+        // Holiday names
+        ramadanNote: "- As datas reais podem variar",
+  
+        // Holiday descriptions
+        descriptions: {
+    // Canadian province notes
+    "Excluding Quebec": "Excluindo Quebec",
+    "Excludes Nova Scotia, Prince Edward Island, Quebec": "Exclui Nova Escócia, Ilha do Príncipe Eduardo, Quebec",
+    "Quebec only": "Apenas Quebec",
+    "Excludes Quebec, Prince Edward Island, Newfoundland and Labrador": "Exclui Quebec, Ilha do Príncipe Eduardo, Terra Nova e Labrador",
+    "Newfoundland and Labrador only": "Apenas Terra Nova e Labrador",
+        
+    // General
+    "First day of the year": "Primeiro dia do ano",
+    "First day of year": "Primeiro dia do ano",
+    "Day of love": "Dia do amor",
+    "Celebrates mothers": "Celebra as mães",
+    "Celebrates fathers": "Celebra os pais",
+    "Celebrates women": "Celebra as mulheres",
+    "Celebrates children": "Celebra as crianças",
+    "Festival of costumes": "Festival de fantasias",
+    "Birth of Jesus": "Nascimento de Jesus",
+    "Last day of the year": "Último dia do ano",
+    "Last day of year": "Último dia do ano",
+    
+    // Religious
+    "Christian celebration": "Celebração cristã",
+    "Christian observance": "Observância cristã",
+    "Christian feast day": "Dia de festa cristã",
+    "Catholic feast day": "Dia de festa católica",
+    "Islamic holy month": "Mês sagrado islâmico",
+    "End of Ramadan": "Fim do Ramadã",
+    "Jewish festival of lights": "Festival judaico das luzes",
+    "Hindu festival of lights": "Festival hindu das luzes",
+    "Honors all saints": "Homenageia todos os santos",
+    "Honor the deceased": "Honrar os falecidos",
+    "Honors the deceased": "Homenageia os falecidos",
+    "Day after Easter": "Dia depois da Páscoa",
+    "Good Friday to Easter Monday": "Sexta-feira Santa à Segunda de Páscoa",
+    "Day after Pentecost": "Dia depois de Pentecostes",
+    "Epiphany": "Epifania",
+    "Easter week": "Semana Santa",
+    "Holy Week": "Semana Santa",
+    "Religious celebration": "Celebração religiosa",
+    "Pre-Lenten festival": "Festival pré-quaresmal",
+    "Protestant commemoration": "Comemoração protestante",
+    "Protestant day of prayer": "Dia protestante de oração",
+    
+    // US Specific
+    "Honors civil rights leader": "Homenageia líder dos direitos civis",
+    "Honors U.S. presidents": "Homenageia presidentes dos EUA",
+    "Irish celebration": "Celebração irlandesa",
+    "Honors fallen military": "Homenageia militares caídos",
+    "End of slavery": "Fim da escravidão",
+    "Declaration of Independence": "Declaração de Independência",
+    "Honors labor movement": "Homenageia o movimento trabalhista",
+    "Commemorates Columbus / Honors Native peoples": "Comemora Colombo / Homenageia povos nativos",
+    "Honors military veterans": "Homenageia veteranos militares",
+    "Harvest festival": "Festival da colheita",
+    "African American celebration": "Celebração afro-americana",
+    
+    // Australia Specific
+    "National day": "Dia nacional",
+    "Traditional celebration": "Celebração tradicional",
+    "Workers' rights": "Direitos dos trabalhadores",
+    "Commemorates ANZAC": "Comemora ANZAC",
+    "Aboriginal cultures": "Culturas aborígenes",
+    "Official celebration": "Celebração oficial",
+    "Indigenous observance": "Observância indígena",
+    "Famous horse race": "Famosa corrida de cavalos",
+    "Day after Christmas": "Dia depois do Natal",
+    
+    // Brazil Specific
+    "Back to school period": "Período de volta às aulas",
+    "Brazilian carnival": "Carnaval brasileiro",
+    "National hero day": "Dia do herói nacional",
+    "Workers' Day": "Dia dos trabalhadores",
+    "Book promotional event": "Evento promocional de livros",
+    "Traditional June festival": "Festival tradicional de junho",
+    "Brazilian Independence": "Independência brasileira",
+    "Gift promotional period": "Período promocional de presentes",
+    "Republic proclamation": "Proclamação da República",
+    "Retail event": "Evento de varejo",
+    "Retail Event": "Evento de Varejo",
+    
+    // Canada Specific
+    "Provincial family holiday": "Feriado familiar provincial",
+    "Queen Victoria's birthday": "Aniversário da Rainha Vitória",
+    "Patriots of Lower Canada": "Patriotas do Baixo Canadá",
+    "Quebec national holiday": "Feriado nacional de Quebec",
+    "National day of Canada": "Dia nacional do Canadá",
+    "Provincial holiday": "Feriado provincial",
+    "Newfoundland civic holiday": "Feriado cívico de Terra Nova",
+    "Honors Indigenous peoples": "Homenageia povos indígenas",
+    "Evening before Christmas": "Véspera de Natal",
+    "Post-Christmas sales": "Vendas pós-Natal",
+    
+    // France Specific
+    "Victory in Europe Day": "Dia da Vitória na Europa",
+    "Bastille Day": "Dia da Bastilha",
+    "End of World War I": "Fim da Primeira Guerra Mundial",
+    
+    // Germany Specific
+    "Father's Day and Ascension": "Dia dos Pais e Ascensão",
+    "National Day": "Dia Nacional",
+    "Traditional gift-giving": "Troca tradicional de presentes",
+    "Christmas and Boxing Day": "Natal e Boxing Day",
+    
+    // Italy Specific
+    "Liberation from Nazi occupation": "Libertação da ocupação nazista",
+    "Italian National Day": "Dia Nacional da Itália",
+    "Mid-August holiday": "Feriado de meados de agosto",
+    "Christmas and St. Stephen's Day": "Natal e Dia de Santo Estêvão",
+    
+    // Japan Specific
+    "New Year celebration": "Celebração de Ano Novo",
+    "Celebrates young adults": "Celebra jovens adultos",
+    "Celebrates Japan's founding": "Celebra a fundação do Japão",
+    "Emperor's birthday": "Aniversário do Imperador",
+    "Return gift day": "Dia de retribuir presentes",
+    "Spring equinox": "Equinócio de primavera",
+    "Honors Emperor Shōwa": "Homenageia o Imperador Shōwa",
+    "Constitution anniversary": "Aniversário da Constituição",
+    "Nature appreciation": "Apreciação da natureza",
+    "Ocean appreciation": "Apreciação do oceano",
+    "Mountain appreciation": "Apreciação da montanha",
+    "Honors elderly": "Homenageia os idosos",
+    "Autumn equinox": "Equinócio de outono",
+    "Promotes sports": "Promove o esporte",
+    "Promotes culture": "Promove a cultura",
+    "Thanks for labor": "Agradecimento pelo trabalho",
+    
+    // Mexico Specific
+    "Honors Benito Juárez": "Homenageia Benito Juárez",
+    "Mexican Independence": "Independência mexicana",
+    "Revolution anniversary": "Aniversário da Revolução",
+    
+    // Netherlands Specific
+    "King's birthday celebration": "Celebração do aniversário do Rei",
+    "Traditional gift-giving celebration": "Celebração tradicional de presentes",
+    
+    // Spain Specific
+    "Madrid community day": "Dia da comunidade de Madrid",
+    "Madrid patron saint": "Santo padroeiro de Madrid",
+    "Midsummer celebration": "Celebração de verão",
+    "Running of the bulls": "Corrida de touros",
+    "Patron saint of Spain": "Santo padroeiro da Espanha",
+    "Catalonia National Day": "Dia Nacional da Catalunha",
+    "Spanish National Day": "Dia Nacional da Espanha",
+    "Madrid patron saint day": "Dia do santo padroeiro de Madrid",
+    "Spanish Constitution Day": "Dia da Constituição Espanhola",
+    
+    // UK Specific
+    "First Monday of May": "Primeira segunda-feira de maio",
+    "Last Monday of May": "Última segunda-feira de maio",
+    "Last Monday of August": "Última segunda-feira de agosto",
+    "Mothering Sunday": "Domingo das Mães",
+    
+    // Brazil special descriptions
+    "'Consumer Day' references can only be used on March 15th </br> 'Consumer Week Warm Up' references can only be used between March 2nd - March 9th </br> 'Consumer Month' references can be used anytime during the month of March": "Referências ao 'Dia do Consumidor' só podem ser usadas em 15 de março </br> Referências ao 'Aquecimento da Semana do Consumidor' só podem ser usadas entre 2 e 9 de março </br> Referências ao 'Mês do Consumidor' podem ser usadas a qualquer momento durante o mês de março",
+    "'Mother's Day' references can only be used between April 27th - May 10th </br> 'Mother's Day Week' references can only be used between May 4th - May 10th </br> 'Mother's Day Month' references can be used anytime during the month of May </br> 'Mother's Day Warm Up' references are not allowed": "Referências ao 'Dia das Mães' só podem ser usadas entre 27 de abril e 10 de maio </br> Referências à 'Semana do Dia das Mães' só podem ser usadas entre 4 e 10 de maio </br> Referências ao 'Mês do Dia das Mães' podem ser usadas a qualquer momento durante o mês de maio </br> Referências ao 'Aquecimento do Dia das Mães' não são permitidas",
+    "'Valentine Day' references can only be used between June 1st - June 12th </br> 'Valentine's Day Week' references can only be used between June 6th - June 12th </br> 'Valentine's Day Month' references can be used anytime during the month of June </br> 'Valentine's Day Warm Up' references are not allowed": "Referências ao 'Dia dos Namorados' só podem ser usadas entre 1 e 12 de junho </br> Referências à 'Semana dos Namorados' só podem ser usadas entre 6 e 12 de junho </br> Referências ao 'Mês dos Namorados' podem ser usadas a qualquer momento durante o mês de junho </br> Referências ao 'Aquecimento do Dia dos Namorados' não são permitidas",
+    "'Father's Day' references can only be used between July 27th - August 9th </br> 'Father's Day Week' references can only be used between August 3rd - August 9th </br> 'Father's Day Month' references can be used anytime during the month of August </br> 'Father's Day Warm Up' references are not allowed": "Referências ao 'Dia dos Pais' só podem ser usadas entre 27 de julho e 9 de agosto </br> Referências à 'Semana do Dia dos Pais' só podem ser usadas entre 3 e 9 de agosto </br> Referências ao 'Mês do Dia dos Pais' podem ser usadas a qualquer momento durante o mês de agosto </br> Referências ao 'Aquecimento do Dia dos Pais' não são permitidas",
+    "'Children's Day' references can only be used between September 21st - October 12th </br> 'Children's Day Week' references can only be used between October 5th - October 12th </br> 'Children's Day Month' references can be used anytime during the month of October </br> 'Children's Day Warm Up' references are not allowed": "Referências ao 'Dia das Crianças' só podem ser usadas entre 21 de setembro e 12 de outubro </br> Referências à 'Semana do Dia das Crianças' só podem ser usadas entre 5 e 12 de outubro </br> Referências ao 'Mês do Dia das Crianças' podem ser usadas a qualquer momento durante o mês de outubro </br> Referências ao 'Aquecimento do Dia das Crianças' não são permitidas"
+        }
+},
+    
+    fr: {
+        // Country names
+    countries: {
+        US: "États-Unis",
+        CA: "Canada",
+        MX: "Mexique",
+        BR: "Brésil",
+        UK: "Royaume-Uni",
+        ES: "Espagne",
+        FR: "France",
+        DE: "Allemagne",
+        IT: "Italie",
+        JP: "Japon",
+        AU: "Australie",
+        NL: "Pays-Bas",
+        SE: "Suède"
+},
+        // Titles
+        calendarTitle: "🌍 Calendrier International des Événements Principaux",
+        calendarSubtitle1: "Les événements de plusieurs jours commencent 8 semaines avant le premier jour de l'événement et durent 1 semaine après le dernier jour de l'événement",
+        calendarSubtitle2: "Les événements d'une journée commencent 8 semaines avant le premier jour de l'événement et durent 24 heures",
+        calendarSubtitle3: "Si le jour suivant est un jour férié, l'événement peut se terminer 48 heures après",
+        
+        // UI Labels
+        selectCountry: "Sélectionner le pays:",
+        language: "🌐 Langue:",
+        searchPlaceholder: "Rechercher des jours fériés...",
+        previousYear: "◀ Année Précédente",
+        nextYear: "Année Suivante ▶",
+        
+        // Stats
+        totalEvents: "Total des Événements",
+        upcoming: "À Venir",
+        daysUntil: "Jours jusqu'à",
+        today: "Aujourd'hui",
+        multiDay: "Multi-Jours",
+        tbd: "À Définir",
+        noUpcoming: "Aucun à venir",
+        
+        // Legend
+        legendUpcoming: "À Venir",
+        legendPassed: "Passé",
+        legendRetail: "Événement Commercial",
+        legendSingle: "Jour Unique",
+        legendMulti: "Multi-Jours",
+        legendNote: "Remarque: Ce calendrier n'inclut aucune référence ou date confidentielle de High Velocity Event",
+        
+        // Countdown
+        daysAway: "jours restants",
+        tomorrow: "Demain!",
+        todayExclaim: "🎉 Aujourd'hui!",
+        passed: "Passé",
+        dateTBD: "Date À Définir",
+        
+        // Duration badges
+        badgeTBD: "📅 À Définir",
+        badgeSingle: "📌 Jour Unique",
+        badgeMulti: "📆 {days} Jours",
+        
+        // Search
+        foundResults: "Trouvé",
+        resultFor: "résultat pour",
+        resultsFor: "résultats pour",
+        noResultsFor: "Aucun résultat pour",
+        showingAll: "— affichant tous les jours fériés",
+        
+        // Day names
+        days: ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
+        
+        // Month names
+        months: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
+        
+        // Holiday names
+        ramadanNote: "- Les dates réelles peuvent varier",
+      
+        // Holiday descriptions
+        descriptions: {
+    // Canadian province notes
+    "Excluding Quebec": "Sauf le Québec",
+    "Excludes Nova Scotia, Prince Edward Island, Quebec": "Sauf la Nouvelle-Écosse, l'Île-du-Prince-Édouard, le Québec",
+    "Quebec only": "Québec seulement",
+    "Excludes Quebec, Prince Edward Island, Newfoundland and Labrador": "Sauf le Québec, l'Île-du-Prince-Édouard, Terre-Neuve-et-Labrador",
+    "Newfoundland and Labrador only": "Terre-Neuve-et-Labrador seulement",
+    
+    // General
+    "First day of the year": "Premier jour de l'année",
+    "First day of year": "Premier jour de l'année",
+    "Day of love": "Jour de l'amour",
+    "Celebrates mothers": "Célèbre les mères",
+    "Celebrates fathers": "Célèbre les pères",
+    "Celebrates women": "Célèbre les femmes",
+    "Celebrates children": "Célèbre les enfants",
+    "Festival of costumes": "Festival des costumes",
+    "Birth of Jesus": "Naissance de Jésus",
+    "Last day of the year": "Dernier jour de l'année",
+    "Last day of year": "Dernier jour de l'année",
+    
+    // Religious
+    "Christian celebration": "Célébration chrétienne",
+    "Christian observance": "Observance chrétienne",
+    "Christian feast day": "Jour de fête chrétienne",
+    "Catholic feast day": "Jour de fête catholique",
+    "Islamic holy month": "Mois sacré islamique",
+    "End of Ramadan": "Fin du Ramadan",
+    "Jewish festival of lights": "Festival juif des lumières",
+    "Hindu festival of lights": "Festival hindou des lumières",
+    "Honors all saints": "Honore tous les saints",
+    "Honor the deceased": "Honorer les défunts",
+    "Honors the deceased": "Honore les défunts",
+    "Day after Easter": "Jour après Pâques",
+    "Good Friday to Easter Monday": "Vendredi Saint au Lundi de Pâques",
+    "Day after Pentecost": "Jour après la Pentecôte",
+    "Epiphany": "Épiphanie",
+    "Easter week": "Semaine Sainte",
+    "Holy Week": "Semaine Sainte",
+    "Religious celebration": "Célébration religieuse",
+    "Pre-Lenten festival": "Festival pré-carême",
+    "Protestant commemoration": "Commémoration protestante",
+    "Protestant day of prayer": "Jour de prière protestant",
+    
+    // US Specific
+    "Honors civil rights leader": "Honore le leader des droits civiques",
+    "Honors U.S. presidents": "Honore les présidents américains",
+    "Irish celebration": "Célébration irlandaise",
+    "Honors fallen military": "Honore les militaires tombés",
+    "End of slavery": "Fin de l'esclavage",
+    "Declaration of Independence": "Déclaration d'Indépendance",
+    "Honors labor movement": "Honore le mouvement ouvrier",
+    "Commemorates Columbus / Honors Native peoples": "Commémore Colomb / Honore les peuples autochtones",
+    "Honors military veterans": "Honore les vétérans militaires",
+    "Harvest festival": "Fête de la moisson",
+    "African American celebration": "Célébration afro-américaine",
+    
+    // Australia Specific
+    "National day": "Jour national",
+    "Traditional celebration": "Célébration traditionnelle",
+    "Workers' rights": "Droits des travailleurs",
+    "Commemorates ANZAC": "Commémore l'ANZAC",
+    "Aboriginal cultures": "Cultures aborigènes",
+    "Official celebration": "Célébration officielle",
+    "Indigenous observance": "Observance autochtone",
+    "Famous horse race": "Célèbre course de chevaux",
+    "Day after Christmas": "Jour après Noël",
+    
+    // Brazil Specific
+    "Back to school period": "Période de rentrée scolaire",
+    "Brazilian carnival": "Carnaval brésilien",
+    "National hero day": "Jour du héros national",
+    "Workers' Day": "Jour des travailleurs",
+    "Book promotional event": "Événement promotionnel de livres",
+    "Traditional June festival": "Festival traditionnel de juin",
+    "Brazilian Independence": "Indépendance brésilienne",
+    "Gift promotional period": "Période promotionnelle de cadeaux",
+    "Republic proclamation": "Proclamation de la République",
+    "Retail event": "Événement commercial",
+    "Retail Event": "Événement Commercial",
+    
+    // Canada Specific
+    "Provincial family holiday": "Jour férié familial provincial",
+    "Queen Victoria's birthday": "Anniversaire de la Reine Victoria",
+    "Patriots of Lower Canada": "Patriotes du Bas-Canada",
+    "Quebec national holiday": "Fête nationale du Québec",
+    "National day of Canada": "Jour national du Canada",
+    "Provincial holiday": "Jour férié provincial",
+    "Newfoundland civic holiday": "Jour civique de Terre-Neuve",
+    "Honors Indigenous peoples": "Honore les peuples autochtones",
+    "Evening before Christmas": "Veille de Noël",
+    "Post-Christmas sales": "Ventes après Noël",
+    
+    // France Specific
+    "Victory in Europe Day": "Jour de la Victoire en Europe",
+    "Bastille Day": "Jour de la Bastille",
+    "End of World War I": "Fin de la Première Guerre mondiale",
+    
+    // Germany Specific
+    "Father's Day and Ascension": "Fête des Pères et Ascension",
+    "National Day": "Jour National",
+    "Traditional gift-giving": "Échange traditionnel de cadeaux",
+    "Christmas and Boxing Day": "Noël et Boxing Day",
+    
+    // Italy Specific
+    "Liberation from Nazi occupation": "Libération de l'occupation nazie",
+    "Italian National Day": "Jour National italien",
+    "Mid-August holiday": "Fête de mi-août",
+    "Christmas and St. Stephen's Day": "Noël et Jour de la Saint-Étienne",
+    
+    // Japan Specific
+    "New Year celebration": "Célébration du Nouvel An",
+    "Celebrates young adults": "Célèbre les jeunes adultes",
+    "Celebrates Japan's founding": "Célèbre la fondation du Japon",
+    "Emperor's birthday": "Anniversaire de l'Empereur",
+    "Return gift day": "Jour des cadeaux en retour",
+    "Spring equinox": "Équinoxe de printemps",
+    "Honors Emperor Shōwa": "Honore l'Empereur Shōwa",
+    "Constitution anniversary": "Anniversaire de la Constitution",
+    "Nature appreciation": "Appréciation de la nature",
+    "Ocean appreciation": "Appréciation de l'océan",
+    "Mountain appreciation": "Appréciation de la montagne",
+    "Honors elderly": "Honore les personnes âgées",
+    "Autumn equinox": "Équinoxe d'automne",
+    "Promotes sports": "Promeut le sport",
+    "Promotes culture": "Promeut la culture",
+    "Thanks for labor": "Remerciement pour le travail",
+    
+    // Mexico Specific
+    "Honors Benito Juárez": "Honore Benito Juárez",
+    "Mexican Independence": "Indépendance mexicaine",
+    "Revolution anniversary": "Anniversaire de la Révolution",
+    
+    // Netherlands Specific
+    "King's birthday celebration": "Célébration de l'anniversaire du Roi",
+    "Traditional gift-giving celebration": "Célébration traditionnelle de cadeaux",
+    
+    // Spain Specific
+    "Madrid community day": "Jour de la communauté de Madrid",
+    "Madrid patron saint": "Saint patron de Madrid",
+    "Midsummer celebration": "Célébration du milieu de l'été",
+    "Running of the bulls": "Course de taureaux",
+    "Patron saint of Spain": "Saint patron de l'Espagne",
+    "Catalonia National Day": "Jour National de la Catalogne",
+    "Spanish National Day": "Jour National espagnol",
+    "Madrid patron saint day": "Jour du saint patron de Madrid",
+    "Spanish Constitution Day": "Jour de la Constitution espagnole",
+    
+    // UK Specific
+    "First Monday of May": "Premier lundi de mai",
+    "Last Monday of May": "Dernier lundi de mai",
+    "Last Monday of August": "Dernier lundi d'août",
+    "Mothering Sunday": "Dimanche des Mères",
+    
+    // Brazil special descriptions
+    "'Consumer Day' references can only be used on March 15th </br> 'Consumer Week Warm Up' references can only be used between March 2nd - March 9th </br> 'Consumer Month' references can be used anytime during the month of March": "Les références à la 'Journée du Consommateur' ne peuvent être utilisées que le 15 mars </br> Les références à 'Échauffement de la Semaine du Consommateur' ne peuvent être utilisées qu'entre le 2 et le 9 mars </br> Les références au 'Mois du Consommateur' peuvent être utilisées à tout moment pendant le mois de mars",
+    "'Mother's Day' references can only be used between April 27th - May 10th </br> 'Mother's Day Week' references can only be used between May 4th - May 10th </br> 'Mother's Day Month' references can be used anytime during the month of May </br> 'Mother's Day Warm Up' references are not allowed": "Les références à la 'Fête des Mères' ne peuvent être utilisées qu'entre le 27 avril et le 10 mai </br> Les références à la 'Semaine de la Fête des Mères' ne peuvent être utilisées qu'entre le 4 et le 10 mai </br> Les références au 'Mois de la Fête des Mères' peuvent être utilisées à tout moment pendant le mois de mai </br> Les références à 'Échauffement de la Fête des Mères' ne sont pas autorisées",
+    "'Valentine Day' references can only be used between June 1st - June 12th </br> 'Valentine's Day Week' references can only be used between June 6th - June 12th </br> 'Valentine's Day Month' references can be used anytime during the month of June </br> 'Valentine's Day Warm Up' references are not allowed": "Les références à la 'Saint-Valentin' ne peuvent être utilisées qu'entre le 1er et le 12 juin </br> Les références à la 'Semaine de la Saint-Valentin' ne peuvent être utilisées qu'entre le 6 et le 12 juin </br> Les références au 'Mois de la Saint-Valentin' peuvent être utilisées à tout moment pendant le mois de juin </br> Les références à 'Échauffement de la Saint-Valentin' ne sont pas autorisées",
+    "'Father's Day' references can only be used between July 27th - August 9th </br> 'Father's Day Week' references can only be used between August 3rd - August 9th </br> 'Father's Day Month' references can be used anytime during the month of August </br> 'Father's Day Warm Up' references are not allowed": "Les références à la 'Fête des Pères' ne peuvent être utilisées qu'entre le 27 juillet et le 9 août </br> Les références à la 'Semaine de la Fête des Pères' ne peuvent être utilisées qu'entre le 3 et le 9 août </br> Les références au 'Mois de la Fête des Pères' peuvent être utilisées à tout moment pendant le mois d'août </br> Les références à 'Échauffement de la Fête des Pères' ne sont pas autorisées",
+    "'Children's Day' references can only be used between September 21st - October 12th </br> 'Children's Day Week' references can only be used between October 5th - October 12th </br> 'Children's Day Month' references can be used anytime during the month of October </br> 'Children's Day Warm Up' references are not allowed": "Les références à la 'Journée des Enfants' ne peuvent être utilisées qu'entre le 21 septembre et le 12 octobre </br> Les références à la 'Semaine de la Journée des Enfants' ne peuvent être utilisées qu'entre le 5 et le 12 octobre </br> Les références au 'Mois de la Journée des Enfants' peuvent être utilisées à tout moment pendant le mois d'octobre </br> Les références à 'Échauffement de la Journée des Enfants' ne sont pas autorisées"
+        }
+},
+    
+    de: {
+        // Country names
+        countries: {
+        US: "Vereinigte Staaten",
+        CA: "Kanada",
+        MX: "Mexiko",
+        BR: "Brasilien",
+        UK: "Vereinigtes Königreich",
+        ES: "Spanien",
+        FR: "Frankreich",
+        DE: "Deutschland",
+        IT: "Italien",
+        JP: "Japan",
+        AU: "Australien",
+        NL: "Niederlande",
+        SE: "Schweden"
+},
+        // Titles
+        calendarTitle: "🌍 Internationaler Kalender für Hauptereignisse",
+        calendarSubtitle1: "Mehrtägige Veranstaltungen beginnen 8 Wochen vor dem ersten Tag der Veranstaltung und dauern 1 Woche nach dem letzten Tag der Veranstaltung",
+        calendarSubtitle2: "Eintägige Veranstaltungen beginnen 8 Wochen vor dem ersten Tag der Veranstaltung und dauern 24 Stunden",
+        calendarSubtitle3: "Wenn der nächste Tag ein Feiertag ist, kann die Veranstaltung 48 Stunden später enden",
+        
+        // UI Labels
+        selectCountry: "Land auswählen:",
+        language: "🌐 Sprache:",
+        searchPlaceholder: "Feiertage suchen...",
+        previousYear: "◀ Vorheriges Jahr",
+        nextYear: "Nächstes Jahr ▶",
+        
+        // Stats
+        totalEvents: "Gesamte Ereignisse",
+        upcoming: "Bevorstehend",
+        daysUntil: "Tage bis",
+        today: "Heute",
+        multiDay: "Mehrtägig",
+        tbd: "Noch Offen",
+        noUpcoming: "Keine bevorstehenden",
+        
+        // Legend
+        legendUpcoming: "Bevorstehend",
+        legendPassed: "Vergangen",
+        legendRetail: "Verkaufsereignis",
+        legendSingle: "Einzeltag",
+        legendMulti: "Mehrtägig",
+        legendNote: "Hinweis: Dieser Kalender enthält keine vertraulichen High Velocity Event Referenzen oder Daten",
+        
+        // Countdown
+        daysAway: "Tage entfernt",
+        tomorrow: "Morgen!",
+        todayExclaim: "🎉 Heute!",
+        passed: "Vergangen",
+        dateTBD: "Datum Noch Offen",
+        
+        // Duration badges
+        badgeTBD: "📅 Noch Offen",
+        badgeSingle: "📌 Einzeltag",
+        badgeMulti: "📆 {days} Tage",
+        
+        // Search
+        foundResults: "Gefunden",
+        resultFor: "Ergebnis für",
+        resultsFor: "Ergebnisse für",
+        noResultsFor: "Keine Ergebnisse für",
+        showingAll: "— zeigt alle Feiertage",
+        
+        // Day names
+        days: ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],
+        
+        // Month names
+        months: ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],
+        
+        // Holiday names
+        ramadanNote: "- Tatsächliche Daten können variieren",
+        
+        // Holiday descriptions
+        descriptions: {
+    // Canadian province notes
+    "Excluding Quebec": "Außer Quebec",
+    "Excludes Nova Scotia, Prince Edward Island, Quebec": "Außer Nova Scotia, Prince Edward Island, Quebec",
+    "Quebec only": "Nur Quebec",
+    "Excludes Quebec, Prince Edward Island, Newfoundland and Labrador": "Außer Quebec, Prince Edward Island, Neufundland und Labrador",
+    "Newfoundland and Labrador only": "Nur Neufundland und Labrador",
+        
+    // General
+    "First day of the year": "Erster Tag des Jahres",
+    "First day of year": "Erster Tag des Jahres",
+    "Day of love": "Tag der Liebe",
+    "Celebrates mothers": "Feiert Mütter",
+    "Celebrates fathers": "Feiert Väter",
+    "Celebrates women": "Feiert Frauen",
+    "Celebrates children": "Feiert Kinder",
+    "Festival of costumes": "Festival der Kostüme",
+    "Birth of Jesus": "Geburt Jesu",
+    "Last day of the year": "Letzter Tag des Jahres",
+    "Last day of year": "Letzter Tag des Jahres",
+    
+    // Religious
+    "Christian celebration": "Christliche Feier",
+    "Christian observance": "Christliche Andacht",
+    "Christian feast day": "Christlicher Feiertag",
+    "Catholic feast day": "Katholischer Feiertag",
+    "Islamic holy month": "Islamischer heiliger Monat",
+    "End of Ramadan": "Ende des Ramadan",
+    "Jewish festival of lights": "Jüdisches Lichterfest",
+    "Hindu festival of lights": "Hinduistisches Lichterfest",
+    "Honors all saints": "Ehrt alle Heiligen",
+    "Honor the deceased": "Ehrt die Verstorbenen",
+    "Honors the deceased": "Ehrt die Verstorbenen",
+    "Day after Easter": "Tag nach Ostern",
+    "Good Friday to Easter Monday": "Karfreitag bis Ostermontag",
+    "Day after Pentecost": "Tag nach Pfingsten",
+    "Epiphany": "Dreikönigstag",
+    "Easter week": "Karwoche",
+    "Holy Week": "Karwoche",
+    "Religious celebration": "Religiöse Feier",
+    "Pre-Lenten festival": "Vorfastenfest",
+    "Protestant commemoration": "Protestantisches Gedenken",
+    "Protestant day of prayer": "Protestantischer Gebetstag",
+    
+    // US Specific
+    "Honors civil rights leader": "Ehrt den Bürgerrechtsführer",
+    "Honors U.S. presidents": "Ehrt US-Präsidenten",
+    "Irish celebration": "Irische Feier",
+    "Honors fallen military": "Ehrt gefallene Soldaten",
+    "End of slavery": "Ende der Sklaverei",
+    "Declaration of Independence": "Unabhängigkeitserklärung",
+    "Honors labor movement": "Ehrt die Arbeiterbewegung",
+    "Commemorates Columbus / Honors Native peoples": "Gedenkt Kolumbus / Ehrt indigene Völker",
+    "Honors military veterans": "Ehrt Militärveteranen",
+    "Harvest festival": "Erntedankfest",
+    "African American celebration": "Afroamerikanische Feier",
+    
+    // Australia Specific
+    "National day": "Nationalfeiertag",
+    "Traditional celebration": "Traditionelle Feier",
+    "Workers' rights": "Arbeitnehmerrechte",
+    "Commemorates ANZAC": "Gedenkt ANZAC",
+    "Aboriginal cultures": "Aborigine-Kulturen",
+    "Official celebration": "Offizielle Feier",
+    "Indigenous observance": "Indigene Andacht",
+    "Famous horse race": "Berühmtes Pferderennen",
+    "Day after Christmas": "Tag nach Weihnachten",
+    
+    // Brazil Specific
+    "Back to school period": "Schulanfangszeit",
+    "Brazilian carnival": "Brasilianischer Karneval",
+    "National hero day": "Tag des Nationalhelden",
+    "Workers' Day": "Tag der Arbeit",
+    "Book promotional event": "Buch-Werbeveranstaltung",
+    "Traditional June festival": "Traditionelles Junifest",
+    "Brazilian Independence": "Brasilianische Unabhängigkeit",
+    "Gift promotional period": "Geschenk-Werbezeit",
+    "Republic proclamation": "Ausrufung der Republik",
+    "Retail event": "Verkaufsereignis",
+    "Retail Event": "Verkaufsereignis",
+    
+    // Canada Specific
+    "Provincial family holiday": "Provinzieller Familientag",
+    "Queen Victoria's birthday": "Geburtstag von Königin Victoria",
+    "Patriots of Lower Canada": "Patrioten von Niederkanada",
+    "Quebec national holiday": "Nationalfeiertag von Quebec",
+    "National day of Canada": "Nationalfeiertag Kanadas",
+    "Provincial holiday": "Provinzfeiertag",
+    "Newfoundland civic holiday": "Bürgerfeiertag von Neufundland",
+    "Honors Indigenous peoples": "Ehrt indigene Völker",
+    "Evening before Christmas": "Heiligabend",
+    "Post-Christmas sales": "Verkauf nach Weihnachten",
+    
+    // France Specific
+    "Victory in Europe Day": "Tag des Sieges in Europa",
+    "Bastille Day": "Tag der Bastille",
+    "End of World War I": "Ende des Ersten Weltkriegs",
+    
+    // Germany Specific
+    "Father's Day and Ascension": "Vatertag und Christi Himmelfahrt",
+    "National Day": "Nationalfeiertag",
+    "Traditional gift-giving": "Traditionelles Schenken",
+    "Christmas and Boxing Day": "Weihnachten und zweiter Weihnachtstag",
+    
+    // Italy Specific
+    "Liberation from Nazi occupation": "Befreiung von der Nazi-Besatzung",
+    "Italian National Day": "Italienischer Nationalfeiertag",
+    "Mid-August holiday": "Feiertag Mitte August",
+    "Christmas and St. Stephen's Day": "Weihnachten und Stephanstag",
+    
+    // Japan Specific
+    "New Year celebration": "Neujahrsfeier",
+    "Celebrates young adults": "Feiert junge Erwachsene",
+    "Celebrates Japan's founding": "Feiert Japans Gründung",
+    "Emperor's birthday": "Geburtstag des Kaisers",
+    "Return gift day": "Tag der Gegengeschenke",
+    "Spring equinox": "Frühlingstagundnachtgleiche",
+    "Honors Emperor Shōwa": "Ehrt Kaiser Shōwa",
+    "Constitution anniversary": "Verfassungsjubiläum",
+    "Nature appreciation": "Wertschätzung der Natur",
+    "Ocean appreciation": "Wertschätzung des Ozeans",
+    "Mountain appreciation": "Wertschätzung der Berge",
+    "Honors elderly": "Ehrt ältere Menschen",
+    "Autumn equinox": "Herbsttagundnachtgleiche",
+    "Promotes sports": "Fördert Sport",
+    "Promotes culture": "Fördert Kultur",
+    "Thanks for labor": "Dank für die Arbeit",
+    
+    // Mexico Specific
+    "Honors Benito Juárez": "Ehrt Benito Juárez",
+    "Mexican Independence": "Mexikanische Unabhängigkeit",
+    "Revolution anniversary": "Jahrestag der Revolution",
+    
+    // Netherlands Specific
+    "King's birthday celebration": "Feier des Königsgeburtstags",
+    "Traditional gift-giving celebration": "Traditionelle Geschenkfeier",
+    
+    // Spain Specific
+    "Madrid community day": "Tag der Gemeinschaft Madrid",
+    "Madrid patron saint": "Schutzpatron von Madrid",
+    "Midsummer celebration": "Mittsommerfeier",
+    "Running of the bulls": "Stierlauf",
+    "Patron saint of Spain": "Schutzpatron Spaniens",
+    "Catalonia National Day": "Nationalfeiertag Kataloniens",
+    "Spanish National Day": "Spanischer Nationalfeiertag",
+    "Madrid patron saint day": "Tag des Schutzpatrons von Madrid",
+    "Spanish Constitution Day": "Tag der spanischen Verfassung",
+    
+    // UK Specific
+    "First Monday of May": "Erster Montag im Mai",
+    "Last Monday of May": "Letzter Montag im Mai",
+    "Last Monday of August": "Letzter Montag im August",
+    "Mothering Sunday": "Muttertag",
+    
+    // Brazil special descriptions
+    "'Consumer Day' references can only be used on March 15th </br> 'Consumer Week Warm Up' references can only be used between March 2nd - March 9th </br> 'Consumer Month' references can be used anytime during the month of March": "Verweise auf 'Verbrauchertag' können nur am 15. März verwendet werden </br> Verweise auf 'Aufwärmen der Verbraucherwoche' können nur zwischen dem 2. und 9. März verwendet werden </br> Verweise auf 'Verbrauchermonat' können jederzeit im März verwendet werden",
+    "'Mother's Day' references can only be used between April 27th - May 10th </br> 'Mother's Day Week' references can only be used between May 4th - May 10th </br> 'Mother's Day Month' references can be used anytime during the month of May </br> 'Mother's Day Warm Up' references are not allowed": "Verweise auf 'Muttertag' können nur zwischen dem 27. April und dem 10. Mai verwendet werden </br> Verweise auf 'Muttertagswoche' können nur zwischen dem 4. und 10. Mai verwendet werden </br> Verweise auf 'Muttertagsmonat' können jederzeit im Mai verwendet werden </br> Verweise auf 'Muttertag-Aufwärmen' sind nicht erlaubt",
+    "'Valentine Day' references can only be used between June 1st - June 12th </br> 'Valentine's Day Week' references can only be used between June 6th - June 12th </br> 'Valentine's Day Month' references can be used anytime during the month of June </br> 'Valentine's Day Warm Up' references are not allowed": "Verweise auf 'Valentinstag' können nur zwischen dem 1. und 12. Juni verwendet werden </br> Verweise auf 'Valentinstagswoche' können nur zwischen dem 6. und 12. Juni verwendet werden </br> Verweise auf 'Valentinstagsmonat' können jederzeit im Juni verwendet werden </br> Verweise auf 'Valentinstag-Aufwärmen' sind nicht erlaubt",
+    "'Father's Day' references can only be used between July 27th - August 9th </br> 'Father's Day Week' references can only be used between August 3rd - August 9th </br> 'Father's Day Month' references can be used anytime during the month of August </br> 'Father's Day Warm Up' references are not allowed": "Verweise auf 'Vatertag' können nur zwischen dem 27. Juli und dem 9. August verwendet werden </br> Verweise auf 'Vatertagswoche' können nur zwischen dem 3. und 9. August verwendet werden </br> Verweise auf 'Vatertagsmonat' können jederzeit im August verwendet werden </br> Verweise auf 'Vatertag-Aufwärmen' sind nicht erlaubt",
+    "'Children's Day' references can only be used between September 21st - October 12th </br> 'Children's Day Week' references can only be used between October 5th - October 12th </br> 'Children's Day Month' references can be used anytime during the month of October </br> 'Children's Day Warm Up' references are not allowed": "Verweise auf 'Kindertag' können nur zwischen dem 21. September und dem 12. Oktober verwendet werden </br> Verweise auf 'Kindertagswoche' können nur zwischen dem 5. und 12. Oktober verwendet werden </br> Verweise auf 'Kindertagsmonat' können jederzeit im Oktober verwendet werden </br> Verweise auf 'Kindertag-Aufwärmen' sind nicht erlaubt"
+        }
+},
+    
+    it: {
+        // Country names
+        countries: {
+        US: "Stati Uniti",
+        CA: "Canada",
+        MX: "Messico",
+        BR: "Brasile",
+        UK: "Regno Unito",
+        ES: "Spagna",
+        FR: "Francia",
+        DE: "Germania",
+        IT: "Italia",
+        JP: "Giappone",
+        AU: "Australia",
+        NL: "Paesi Bassi",
+        SE: "Svezia"
+},
+
+        // Title
+        calendarTitle: "🌍 Calendario Internazionale degli Eventi Principali",
+        calendarSubtitle1: "Gli eventi di più giorni iniziano 8 settimane prima del primo giorno dell'evento e durano 1 settimana dopo l'ultimo giorno dell'evento",
+        calendarSubtitle2: "Gli eventi di un solo giorno iniziano 8 settimane prima del primo giorno dell'evento e durano 24 ore",
+        calendarSubtitle3: "Se il giorno successivo è un giorno festivo, l'evento può terminare 48 ore dopo",
+        
+        // UI Labels
+        selectCountry: "Seleziona Paese:",
+        language: "🌐 Lingua:",
+        searchPlaceholder: "Cerca festività...",
+        previousYear: "◀ Anno Precedente",
+        nextYear: "Anno Successivo ▶",
+        
+        // Stats
+        totalEvents: "Eventi Totali",
+        upcoming: "In Arrivo",
+        daysUntil: "Giorni fino a",
+        today: "Oggi",
+        multiDay: "Multi-Giorno",
+        tbd: "Da Definire",
+        noUpcoming: "Nessuno in arrivo",
+        
+        // Legend
+        legendUpcoming: "In Arrivo",
+        legendPassed: "Passato",
+        legendRetail: "Evento Commerciale",
+        legendSingle: "Giorno Singolo",
+        legendMulti: "Multi-Giorno",
+        legendNote: "Nota: Questo calendario non include riferimenti o date riservate di High Velocity Event",
+        
+        // Countdown
+        daysAway: "giorni mancanti",
+        tomorrow: "Domani!",
+        todayExclaim: "🎉 Oggi!",
+        passed: "Passato",
+        dateTBD: "Data Da Definire",
+        
+        // Duration badges
+        badgeTBD: "📅 Da Definire",
+        badgeSingle: "📌 Giorno Singolo",
+        badgeMulti: "📆 {days} Giorni",
+        
+        // Search
+        foundResults: "Trovato",
+        resultFor: "risultato per",
+        resultsFor: "risultati per",
+        noResultsFor: "Nessun risultato per",
+        showingAll: "— mostrando tutte le festività",
+        
+        // Day names
+        days: ['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'],
+        
+        // Month names
+        months: ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'],
+        
+        // Holiday names
+        ramadanNote: "- Le date effettive possono variare",
+
+        // Holiday descriptions
+        descriptions: {
+    // Canadian province notes
+    "Excluding Quebec": "Escluso il Quebec",
+    "Excludes Nova Scotia, Prince Edward Island, Quebec": "Escluse Nuova Scozia, Isola del Principe Edoardo, Quebec",
+    "Quebec only": "Solo Quebec",
+    "Excludes Quebec, Prince Edward Island, Newfoundland and Labrador": "Esclusi Quebec, Isola del Principe Edoardo, Terranova e Labrador",
+    "Newfoundland and Labrador only": "Solo Terranova e Labrador",
+        
+    // General
+    "First day of the year": "Primo giorno dell'anno",
+    "First day of year": "Primo giorno dell'anno",
+    "Day of love": "Giorno dell'amore",
+    "Celebrates mothers": "Celebra le madri",
+    "Celebrates fathers": "Celebra i padri",
+    "Celebrates women": "Celebra le donne",
+    "Celebrates children": "Celebra i bambini",
+    "Festival of costumes": "Festival dei costumi",
+    "Birth of Jesus": "Nascita di Gesù",
+    "Last day of the year": "Ultimo giorno dell'anno",
+    "Last day of year": "Ultimo giorno dell'anno",
+    
+    // Religious
+    "Christian celebration": "Celebrazione cristiana",
+    "Christian observance": "Osservanza cristiana",
+    "Christian feast day": "Giorno di festa cristiana",
+    "Catholic feast day": "Giorno di festa cattolica",
+    "Islamic holy month": "Mese sacro islamico",
+    "End of Ramadan": "Fine del Ramadan",
+    "Jewish festival of lights": "Festival ebraico delle luci",
+    "Hindu festival of lights": "Festival indù delle luci",
+    "Honors all saints": "Onora tutti i santi",
+    "Honor the deceased": "Onorare i defunti",
+    "Honors the deceased": "Onora i defunti",
+    "Day after Easter": "Giorno dopo Pasqua",
+    "Good Friday to Easter Monday": "Venerdì Santo al Lunedì di Pasqua",
+    "Day after Pentecost": "Giorno dopo Pentecoste",
+    "Epiphany": "Epifania",
+    "Easter week": "Settimana Santa",
+    "Holy Week": "Settimana Santa",
+    "Religious celebration": "Celebrazione religiosa",
+    "Pre-Lenten festival": "Festival pre-quaresimale",
+    "Protestant commemoration": "Commemorazione protestante",
+    "Protestant day of prayer": "Giorno di preghiera protestante",
+    
+    // US Specific
+    "Honors civil rights leader": "Onora il leader dei diritti civili",
+    "Honors U.S. presidents": "Onora i presidenti degli Stati Uniti",
+    "Irish celebration": "Celebrazione irlandese",
+    "Honors fallen military": "Onora i militari caduti",
+    "End of slavery": "Fine della schiavitù",
+    "Declaration of Independence": "Dichiarazione di Indipendenza",
+    "Honors labor movement": "Onora il movimento operaio",
+    "Commemorates Columbus / Honors Native peoples": "Commemora Colombo / Onora i popoli nativi",
+    "Honors military veterans": "Onora i veterani militari",
+    "Harvest festival": "Festa del raccolto",
+    "African American celebration": "Celebrazione afroamericana",
+    
+    // Australia Specific
+    "National day": "Giorno nazionale",
+    "Traditional celebration": "Celebrazione tradizionale",
+    "Workers' rights": "Diritti dei lavoratori",
+    "Commemorates ANZAC": "Commemora l'ANZAC",
+    "Aboriginal cultures": "Culture aborigene",
+    "Official celebration": "Celebrazione ufficiale",
+    "Indigenous observance": "Osservanza indigena",
+    "Famous horse race": "Famosa corsa di cavalli",
+    "Day after Christmas": "Giorno dopo Natale",
+    
+    // Brazil Specific
+    "Back to school period": "Periodo di ritorno a scuola",
+    "Brazilian carnival": "Carnevale brasiliano",
+    "National hero day": "Giorno dell'eroe nazionale",
+    "Workers' Day": "Giorno dei lavoratori",
+    "Book promotional event": "Evento promozionale di libri",
+    "Traditional June festival": "Festival tradizionale di giugno",
+    "Brazilian Independence": "Indipendenza brasiliana",
+    "Gift promotional period": "Periodo promozionale di regali",
+    "Republic proclamation": "Proclamazione della Repubblica",
+    "Retail event": "Evento commerciale",
+    "Retail Event": "Evento Commerciale",
+    
+    // Canada Specific
+    "Provincial family holiday": "Festa familiare provinciale",
+    "Queen Victoria's birthday": "Compleanno della Regina Vittoria",
+    "Patriots of Lower Canada": "Patrioti del Basso Canada",
+    "Quebec national holiday": "Festa nazionale del Quebec",
+    "National day of Canada": "Giorno nazionale del Canada",
+    "Provincial holiday": "Festa provinciale",
+    "Newfoundland civic holiday": "Festa civica di Terranova",
+    "Honors Indigenous peoples": "Onora i popoli indigeni",
+    "Evening before Christmas": "Vigilia di Natale",
+    "Post-Christmas sales": "Vendite post-natalizie",
+    
+    // France Specific
+    "Victory in Europe Day": "Giorno della Vittoria in Europa",
+    "Bastille Day": "Giorno della Bastiglia",
+    "End of World War I": "Fine della Prima Guerra Mondiale",
+    
+    // Germany Specific
+    "Father's Day and Ascension": "Festa del Papà e Ascensione",
+    "National Day": "Giorno Nazionale",
+    "Traditional gift-giving": "Scambio tradizionale di regali",
+    "Christmas and Boxing Day": "Natale e Santo Stefano",
+    
+    // Italy Specific
+    "Liberation from Nazi occupation": "Liberazione dall'occupazione nazista",
+    "Italian National Day": "Giorno Nazionale Italiano",
+    "Mid-August holiday": "Festa di Ferragosto",
+    "Christmas and St. Stephen's Day": "Natale e Santo Stefano",
+    
+    // Japan Specific
+    "New Year celebration": "Celebrazione del Capodanno",
+    "Celebrates young adults": "Celebra i giovani adulti",
+    "Celebrates Japan's founding": "Celebra la fondazione del Giappone",
+    "Emperor's birthday": "Compleanno dell'Imperatore",
+    "Return gift day": "Giorno dei regali di ritorno",
+    "Spring equinox": "Equinozio di primavera",
+    "Honors Emperor Shōwa": "Onora l'Imperatore Shōwa",
+    "Constitution anniversary": "Anniversario della Costituzione",
+    "Nature appreciation": "Apprezzamento della natura",
+    "Ocean appreciation": "Apprezzamento dell'oceano",
+    "Mountain appreciation": "Apprezzamento della montagna",
+    "Honors elderly": "Onora gli anziani",
+    "Autumn equinox": "Equinozio d'autunno",
+    "Promotes sports": "Promuove lo sport",
+    "Promotes culture": "Promuove la cultura",
+    "Thanks for labor": "Ringraziamento per il lavoro",
+    
+    // Mexico Specific
+    "Honors Benito Juárez": "Onora Benito Juárez",
+    "Mexican Independence": "Indipendenza messicana",
+    "Revolution anniversary": "Anniversario della Rivoluzione",
+    
+    // Netherlands Specific
+    "King's birthday celebration": "Celebrazione del compleanno del Re",
+    "Traditional gift-giving celebration": "Celebrazione tradizionale dei regali",
+    
+    // Spain Specific
+    "Madrid community day": "Giorno della comunità di Madrid",
+    "Madrid patron saint": "Santo patrono di Madrid",
+    "Midsummer celebration": "Celebrazione di mezza estate",
+    "Running of the bulls": "Corsa dei tori",
+    "Patron saint of Spain": "Santo patrono della Spagna",
+    "Catalonia National Day": "Giorno Nazionale della Catalogna",
+    "Spanish National Day": "Giorno Nazionale spagnolo",
+    "Madrid patron saint day": "Giorno del santo patrono di Madrid",
+    "Spanish Constitution Day": "Giorno della Costituzione spagnola",
+    
+    // UK Specific
+    "First Monday of May": "Primo lunedì di maggio",
+    "Last Monday of May": "Ultimo lunedì di maggio",
+    "Last Monday of August": "Ultimo lunedì di agosto",
+    "Mothering Sunday": "Domenica delle Madri",
+    
+    // Brazil special descriptions
+    "'Consumer Day' references can only be used on March 15th </br> 'Consumer Week Warm Up' references can only be used between March 2nd - March 9th </br> 'Consumer Month' references can be used anytime during the month of March": "I riferimenti alla 'Giornata del Consumatore' possono essere utilizzati solo il 15 marzo </br> I riferimenti al 'Riscaldamento della Settimana del Consumatore' possono essere utilizzati solo tra il 2 e il 9 marzo </br> I riferimenti al 'Mese del Consumatore' possono essere utilizzati in qualsiasi momento durante il mese di marzo",
+    "'Mother's Day' references can only be used between April 27th - May 10th </br> 'Mother's Day Week' references can only be used between May 4th - May 10th </br> 'Mother's Day Month' references can be used anytime during the month of May </br> 'Mother's Day Warm Up' references are not allowed": "I riferimenti alla 'Festa della Mamma' possono essere utilizzati solo tra il 27 aprile e il 10 maggio </br> I riferimenti alla 'Settimana della Festa della Mamma' possono essere utilizzati solo tra il 4 e il 10 maggio </br> I riferimenti al 'Mese della Festa della Mamma' possono essere utilizzati in qualsiasi momento durante il mese di maggio </br> I riferimenti al 'Riscaldamento della Festa della Mamma' non sono consentiti",
+    "'Valentine Day' references can only be used between June 1st - June 12th </br> 'Valentine's Day Week' references can only be used between June 6th - June 12th </br> 'Valentine's Day Month' references can be used anytime during the month of June </br> 'Valentine's Day Warm Up' references are not allowed": "I riferimenti a 'San Valentino' possono essere utilizzati solo tra il 1° e il 12 giugno </br> I riferimenti alla 'Settimana di San Valentino' possono essere utilizzati solo tra il 6 e il 12 giugno </br> I riferimenti al 'Mese di San Valentino' possono essere utilizzati in qualsiasi momento durante il mese di giugno </br> I riferimenti al 'Riscaldamento di San Valentino' non sono consentiti",
+    "'Father's Day' references can only be used between July 27th - August 9th </br> 'Father's Day Week' references can only be used between August 3rd - August 9th </br> 'Father's Day Month' references can be used anytime during the month of August </br> 'Father's Day Warm Up' references are not allowed": "I riferimenti alla 'Festa del Papà' possono essere utilizzati solo tra il 27 luglio e il 9 agosto </br> I riferimenti alla 'Settimana della Festa del Papà' possono essere utilizzati solo tra il 3 e il 9 agosto </br> I riferimenti al 'Mese della Festa del Papà' possono essere utilizzati in qualsiasi momento durante il mese di agosto </br> I riferimenti al 'Riscaldamento della Festa del Papà' non sono consentiti",
+    "'Children's Day' references can only be used between September 21st - October 12th </br> 'Children's Day Week' references can only be used between October 5th - October 12th </br> 'Children's Day Month' references can be used anytime during the month of October </br> 'Children's Day Warm Up' references are not allowed": "I riferimenti alla 'Giornata dei Bambini' possono essere utilizzati solo tra il 21 settembre e il 12 ottobre </br> I riferimenti alla 'Settimana della Giornata dei Bambini' possono essere utilizzati solo tra il 5 e il 12 ottobre </br> I riferimenti al 'Mese della Giornata dei Bambini' possono essere utilizzati in qualsiasi momento durante il mese di ottobre </br> I riferimenti al 'Riscaldamento della Giornata dei Bambini' non sono consentiti"
+        }
+},
+    
+    ja: {
+        // Country names
+    countries: {
+        US: "アメリカ合衆国",
+        CA: "カナダ",
+        MX: "メキシコ",
+        BR: "ブラジル",
+        UK: "イギリス",
+        ES: "スペイン",
+        FR: "フランス",
+        DE: "ドイツ",
+        IT: "イタリア",
+        JP: "日本",
+        AU: "オーストラリア",
+        NL: "オランダ",
+        SE: "スウェーデン"
+},
+
+        // Titles
+        calendarTitle: "🌍 国際ピークイベントカレンダー",
+        calendarSubtitle1: "複数日イベントはイベント初日の8週間前に開始し、最終日から1週間後まで続きます",
+        calendarSubtitle2: "単日イベントはイベント初日の8週間前に開始し、24時間続きます",
+        calendarSubtitle3: "翌日が祝日の場合、48時間後に終了することができます",
+        
+        // UI Labels
+        selectCountry: "国を選択:",
+        language: "🌐 言語:",
+        searchPlaceholder: "祝日を検索...",
+        previousYear: "◀ 前年",
+        nextYear: "翌年 ▶",
+        
+        // Stats
+        totalEvents: "イベント総数",
+        upcoming: "今後",
+        daysUntil: "日後",
+        today: "今日",
+        multiDay: "複数日",
+        tbd: "未定",
+        noUpcoming: "予定なし",
+        
+        // Legend
+        legendUpcoming: "今後",
+        legendPassed: "過去",
+        legendRetail: "小売イベント",
+        legendSingle: "単日",
+        legendMulti: "複数日",
+        legendNote: "注：このカレンダーには機密のHigh Velocity Eventの参照や日付は含まれていません",
+        
+        // Countdown
+        daysAway: "日後",
+        tomorrow: "明日！",
+        todayExclaim: "🎉 今日！",
+        passed: "過去",
+        dateTBD: "日付未定",
+        
+        // Duration badges
+        badgeTBD: "📅 未定",
+        badgeSingle: "📌 単日",
+        badgeMulti: "📆 {days}日間",
+        
+        // Search
+        foundResults: "見つかりました",
+        resultFor: "件の結果",
+        resultsFor: "件の結果",
+        noResultsFor: "結果なし",
+        showingAll: "— すべての祝日を表示",
+        
+        // Day names
+        days: ['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日'],
+        
+        // Month names
+        months: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+        
+        // Holiday names
+        ramadanNote: "- 実際の日付は異なる場合があります",
+
+        // Holiday descriptions
+        descriptions: {
+    // Canadian province notes
+    "Excluding Quebec": "ケベック州を除く",
+    "Excludes Nova Scotia, Prince Edward Island, Quebec": "ノバスコシア州、プリンスエドワードアイランド州、ケベック州を除く",
+    "Quebec only": "ケベック州のみ",
+    "Excludes Quebec, Prince Edward Island, Newfoundland and Labrador": "ケベック州、プリンスエドワードアイランド州、ニューファンドランド・ラブラドール州を除く",
+    "Newfoundland and Labrador only": "ニューファンドランド・ラブラドール州のみ",
+        
+    // General
+    "First day of the year": "年の最初の日",
+    "First day of year": "年の最初の日",
+    "Day of love": "愛の日",
+    "Celebrates mothers": "母親を祝う",
+    "Celebrates fathers": "父親を祝う",
+    "Celebrates women": "女性を祝う",
+    "Celebrates children": "子供を祝う",
+    "Festival of costumes": "仮装祭り",
+    "Birth of Jesus": "イエスの誕生",
+    "Last day of the year": "年の最後の日",
+    "Last day of year": "年の最後の日",
+    
+    // Religious
+    "Christian celebration": "キリスト教の祝祭",
+    "Christian observance": "キリスト教の行事",
+    "Christian feast day": "キリスト教の祝日",
+    "Catholic feast day": "カトリックの祝日",
+    "Islamic holy month": "イスラム教の聖なる月",
+    "End of Ramadan": "ラマダンの終わり",
+    "Jewish festival of lights": "ユダヤ教の光の祭り",
+    "Hindu festival of lights": "ヒンドゥー教の光の祭り",
+    "Honors all saints": "すべての聖人を称える",
+    "Honor the deceased": "故人を称える",
+    "Honors the deceased": "故人を称える",
+    "Day after Easter": "イースター翌日",
+    "Good Friday to Easter Monday": "聖金曜日からイースター月曜日まで",
+    "Day after Pentecost": "ペンテコステ翌日",
+    "Epiphany": "公現祭",
+    "Easter week": "聖週間",
+    "Holy Week": "聖週間",
+    "Religious celebration": "宗教的祝祭",
+    "Pre-Lenten festival": "四旬節前の祭り",
+    "Protestant commemoration": "プロテスタントの記念日",
+    "Protestant day of prayer": "プロテスタントの祈りの日",
+    
+    // US Specific
+    "Honors civil rights leader": "公民権運動指導者を称える",
+    "Honors U.S. presidents": "アメリカ大統領を称える",
+    "Irish celebration": "アイルランドの祝祭",
+    "Honors fallen military": "戦没者を称える",
+    "End of slavery": "奴隷制度の終焉",
+    "Declaration of Independence": "独立宣言",
+    "Honors labor movement": "労働運動を称える",
+    "Commemorates Columbus / Honors Native peoples": "コロンブスを記念 / 先住民を称える",
+    "Honors military veterans": "退役軍人を称える",
+    "Harvest festival": "収穫祭",
+    "African American celebration": "アフリカ系アメリカ人の祝祭",
+    
+    // Australia Specific
+    "National day": "建国記念日",
+    "Traditional celebration": "伝統的な祝祭",
+    "Workers' rights": "労働者の権利",
+    "Commemorates ANZAC": "ANZACを記念",
+    "Aboriginal cultures": "アボリジニ文化",
+    "Official celebration": "公式祝典",
+    "Indigenous observance": "先住民の行事",
+    "Famous horse race": "有名な競馬",
+    "Day after Christmas": "クリスマス翌日",
+    
+    // Brazil Specific
+    "Back to school period": "新学期の期間",
+    "Brazilian carnival": "ブラジルのカーニバル",
+    "National hero day": "国民的英雄の日",
+    "Workers' Day": "労働者の日",
+    "Book promotional event": "本のプロモーションイベント",
+    "Traditional June festival": "伝統的な6月の祭り",
+    "Brazilian Independence": "ブラジル独立記念日",
+    "Gift promotional period": "ギフトプロモーション期間",
+    "Republic proclamation": "共和国宣言",
+    "Retail event": "小売イベント",
+    "Retail Event": "小売イベント",
+    
+    // Canada Specific
+    "Provincial family holiday": "州の家族の祝日",
+    "Queen Victoria's birthday": "ヴィクトリア女王の誕生日",
+    "Patriots of Lower Canada": "ローワー・カナダの愛国者",
+    "Quebec national holiday": "ケベック州の祝日",
+    "National day of Canada": "カナダの建国記念日",
+    "Provincial holiday": "州の祝日",
+    "Newfoundland civic holiday": "ニューファンドランドの市民の祝日",
+    "Honors Indigenous peoples": "先住民を称える",
+    "Evening before Christmas": "クリスマスイブ",
+    "Post-Christmas sales": "クリスマス後のセール",
+    
+    // France Specific
+    "Victory in Europe Day": "ヨーロッパ戦勝記念日",
+    "Bastille Day": "バスティーユの日",
+    "End of World War I": "第一次世界大戦終結",
+    
+    // Germany Specific
+    "Father's Day and Ascension": "父の日と昇天日",
+    "National Day": "建国記念日",
+    "Traditional gift-giving": "伝統的な贈り物",
+    "Christmas and Boxing Day": "クリスマスとボクシングデー",
+    
+    // Italy Specific
+    "Liberation from Nazi occupation": "ナチス占領からの解放",
+    "Italian National Day": "イタリア共和国記念日",
+    "Mid-August holiday": "8月中旬の祝日",
+    "Christmas and St. Stephen's Day": "クリスマスと聖ステファノの日",
+    
+    // Japan Specific
+    "New Year celebration": "新年のお祝い",
+    "Celebrates young adults": "成人を祝う",
+    "Celebrates Japan's founding": "日本の建国を祝う",
+    "Emperor's birthday": "天皇誕生日",
+    "Return gift day": "お返しの日",
+    "Spring equinox": "春分の日",
+    "Honors Emperor Shōwa": "昭和天皇を称える",
+    "Constitution anniversary": "憲法記念日",
+    "Nature appreciation": "自然への感謝",
+    "Ocean appreciation": "海への感謝",
+    "Mountain appreciation": "山への感謝",
+    "Honors elderly": "敬老",
+    "Autumn equinox": "秋分の日",
+    "Promotes sports": "スポーツ振興",
+    "Promotes culture": "文化振興",
+    "Thanks for labor": "勤労感謝",
+    
+    // Mexico Specific
+    "Honors Benito Juárez": "ベニート・フアレスを称える",
+    "Mexican Independence": "メキシコ独立記念日",
+    "Revolution anniversary": "革命記念日",
+    
+    // Netherlands Specific
+    "King's birthday celebration": "国王の誕生日祝典",
+    "Traditional gift-giving celebration": "伝統的な贈り物の祝典",
+    
+    // Spain Specific
+    "Madrid community day": "マドリード共同体の日",
+    "Madrid patron saint": "マドリードの守護聖人",
+    "Midsummer celebration": "夏至の祝典",
+    "Running of the bulls": "牛追い祭り",
+    "Patron saint of Spain": "スペインの守護聖人",
+    "Catalonia National Day": "カタルーニャの日",
+    "Spanish National Day": "スペイン国民の日",
+    "Madrid patron saint day": "マドリード守護聖人の日",
+    "Spanish Constitution Day": "スペイン憲法記念日",
+    
+    // UK Specific
+    "First Monday of May": "5月の第1月曜日",
+    "Last Monday of May": "5月の最終月曜日",
+    "Last Monday of August": "8月の最終月曜日",
+    "Mothering Sunday": "母の日曜日",
+    
+    // Brazil special descriptions
+    "'Consumer Day' references can only be used on March 15th </br> 'Consumer Week Warm Up' references can only be used between March 2nd - March 9th </br> 'Consumer Month' references can be used anytime during the month of March": "「消費者の日」への言及は3月15日のみ使用可能 </br> 「消費者週間ウォームアップ」への言及は3月2日〜9日の間のみ使用可能 </br> 「消費者月間」への言及は3月中いつでも使用可能",
+    "'Mother's Day' references can only be used between April 27th - May 10th </br> 'Mother's Day Week' references can only be used between May 4th - May 10th </br> 'Mother's Day Month' references can be used anytime during the month of May </br> 'Mother's Day Warm Up' references are not allowed": "「母の日」への言及は4月27日〜5月10日の間のみ使用可能 </br> 「母の日週間」への言及は5月4日〜10日の間のみ使用可能 </br> 「母の日月間」への言及は5月中いつでも使用可能 </br> 「母の日ウォームアップ」への言及は許可されていません",
+    "'Valentine Day' references can only be used between June 1st - June 12th </br> 'Valentine's Day Week' references can only be used between June 6th - June 12th </br> 'Valentine's Day Month' references can be used anytime during the month of June </br> 'Valentine's Day Warm Up' references are not allowed": "「バレンタインデー」への言及は6月1日〜12日の間のみ使用可能 </br> 「バレンタインデー週間」への言及は6月6日〜12日の間のみ使用可能 </br> 「バレンタインデー月間」への言及は6月中いつでも使用可能 </br> 「バレンタインデーウォームアップ」への言及は許可されていません",
+    "'Father's Day' references can only be used between July 27th - August 9th </br> 'Father's Day Week' references can only be used between August 3rd - August 9th </br> 'Father's Day Month' references can be used anytime during the month of August </br> 'Father's Day Warm Up' references are not allowed": "「父の日」への言及は7月27日〜8月9日の間のみ使用可能 </br> 「父の日週間」への言及は8月3日〜9日の間のみ使用可能 </br> 「父の日月間」への言及は8月中いつでも使用可能 </br> 「父の日ウォームアップ」への言及は許可されていません",
+    "'Children's Day' references can only be used between September 21st - October 12th </br> 'Children's Day Week' references can only be used between October 5th - October 12th </br> 'Children's Day Month' references can be used anytime during the month of October </br> 'Children's Day Warm Up' references are not allowed": "「子供の日」への言及は9月21日〜10月12日の間のみ使用可能 </br> 「子供の日週間」への言及は10月5日〜12日の間のみ使用可能 </br> 「子供の日月間」への言及は10月中いつでも使用可能 </br> 「子供の日ウォームアップ」への言及は許可されていません"
+        }
+},
+    
+    nl: {
+        // Country names
+    countries: {
+        US: "Verenigde Staten",
+        CA: "Canada",
+        MX: "Mexico",
+        BR: "Brazilië",
+        UK: "Verenigd Koninkrijk",
+        ES: "Spanje",
+        FR: "Frankrijk",
+        DE: "Duitsland",
+        IT: "Italië",
+        JP: "Japan",
+        AU: "Australië",
+        NL: "Nederland",
+        SE: "Zweden"
+},
+
+        // Titles
+        calendarTitle: "🌍 Internationale Kalender voor Belangrijke Evenementen",
+        calendarSubtitle1: "Meerdaagse evenementen beginnen 8 weken voor de eerste dag van het evenement en duren 1 week na de laatste dag van het evenement",
+        calendarSubtitle2: "Eendaagse evenementen beginnen 8 weken voor de eerste dag van het evenement en duren 24 uur",
+        calendarSubtitle3: "Als de volgende dag een feestdag is, kan het evenement 48 uur later eindigen",
+        
+        // UI Labels
+        selectCountry: "Selecteer Land:",
+        language: "🌐 Taal:",
+        searchPlaceholder: "Zoek feestdagen...",
+        previousYear: "◀ Vorig Jaar",
+        nextYear: "Volgend Jaar ▶",
+        
+        // Stats
+        totalEvents: "Totaal Evenementen",
+        upcoming: "Aankomend",
+        daysUntil: "Dagen tot",
+        today: "Vandaag",
+        multiDay: "Meerdaags",
+        tbd: "Nog Te Bepalen",
+        noUpcoming: "Geen aankomende",
+        
+        // Legend
+        legendUpcoming: "Aankomend",
+        legendPassed: "Voorbij",
+        legendRetail: "Winkel Evenement",
+        legendSingle: "Enkele Dag",
+        legendMulti: "Meerdaags",
+        legendNote: "Opmerking: Deze kalender bevat geen vertrouwelijke High Velocity Event referenties of datums",
+        
+        // Countdown
+        daysAway: "dagen te gaan",
+        tomorrow: "Morgen!",
+        todayExclaim: "🎉 Vandaag!",
+        passed: "Voorbij",
+        dateTBD: "Datum Nog Te Bepalen",
+        
+        // Duration badges
+        badgeTBD: "📅 Nog Te Bepalen",
+        badgeSingle: "📌 Enkele Dag",
+        badgeMulti: "📆 {days} Dagen",
+        
+        // Search
+        foundResults: "Gevonden",
+        resultFor: "resultaat voor",
+        resultsFor: "resultaten voor",
+        noResultsFor: "Geen resultaten voor",
+        showingAll: "— alle feestdagen weergeven",
+        
+        // Day names
+        days: ['Zondag','Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag','Zaterdag'],
+        
+        // Month names
+        months: ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'],
+        
+        // Holiday names
+        ramadanNote: "- Werkelijke datums kunnen variëren",
+
+        // Holiday descriptions
+        descriptions: {
+    // Canadian province notes
+    "Excluding Quebec": "Exclusief Quebec",
+    "Excludes Nova Scotia, Prince Edward Island, Quebec": "Exclusief Nova Scotia, Prince Edward Island, Quebec",
+    "Quebec only": "Alleen Quebec",
+    "Excludes Quebec, Prince Edward Island, Newfoundland and Labrador": "Exclusief Quebec, Prince Edward Island, Newfoundland en Labrador",
+    "Newfoundland and Labrador only": "Alleen Newfoundland en Labrador",
+        
+    // General
+    "First day of the year": "Eerste dag van het jaar",
+    "First day of year": "Eerste dag van het jaar",
+    "Day of love": "Dag van de liefde",
+    "Celebrates mothers": "Viert moeders",
+    "Celebrates fathers": "Viert vaders",
+    "Celebrates women": "Viert vrouwen",
+    "Celebrates children": "Viert kinderen",
+    "Festival of costumes": "Festival van kostuums",
+    "Birth of Jesus": "Geboorte van Jezus",
+    "Last day of the year": "Laatste dag van het jaar",
+    "Last day of year": "Laatste dag van het jaar",
+    
+    // Religious
+    "Christian celebration": "Christelijke viering",
+    "Christian observance": "Christelijke observantie",
+    "Christian feast day": "Christelijke feestdag",
+    "Catholic feast day": "Katholieke feestdag",
+    "Islamic holy month": "Islamitische heilige maand",
+    "End of Ramadan": "Einde van de Ramadan",
+    "Jewish festival of lights": "Joods lichtfeest",
+    "Hindu festival of lights": "Hindoe lichtfeest",
+    "Honors all saints": "Eert alle heiligen",
+    "Honor the deceased": "Eer de overledenen",
+    "Honors the deceased": "Eert de overledenen",
+    "Day after Easter": "Dag na Pasen",
+    "Good Friday to Easter Monday": "Goede Vrijdag tot Paasmaandag",
+    "Day after Pentecost": "Dag na Pinksteren",
+    "Epiphany": "Driekoningen",
+    "Easter week": "Goede Week",
+    "Holy Week": "Goede Week",
+    "Religious celebration": "Religieuze viering",
+    "Pre-Lenten festival": "Voorvasten festival",
+    "Protestant commemoration": "Protestantse herdenking",
+    "Protestant day of prayer": "Protestantse gebedsdag",
+    
+    // US Specific
+    "Honors civil rights leader": "Eert de burgerrechtenleider",
+    "Honors U.S. presidents": "Eert Amerikaanse presidenten",
+    "Irish celebration": "Ierse viering",
+    "Honors fallen military": "Eert gevallen militairen",
+    "End of slavery": "Einde van de slavernij",
+    "Declaration of Independence": "Onafhankelijkheidsverklaring",
+    "Honors labor movement": "Eert de arbeidersbeweging",
+    "Commemorates Columbus / Honors Native peoples": "Herdenkt Columbus / Eert inheemse volkeren",
+    "Honors military veterans": "Eert militaire veteranen",
+    "Harvest festival": "Oogstfeest",
+    "African American celebration": "Afro-Amerikaanse viering",
+    
+    // Australia Specific
+    "National day": "Nationale dag",
+    "Traditional celebration": "Traditionele viering",
+    "Workers' rights": "Werknemersrechten",
+    "Commemorates ANZAC": "Herdenkt ANZAC",
+    "Aboriginal cultures": "Aboriginalculturen",
+    "Official celebration": "Officiële viering",
+    "Indigenous observance": "Inheemse observantie",
+    "Famous horse race": "Beroemde paardenrace",
+    "Day after Christmas": "Dag na Kerstmis",
+    
+    // Brazil Specific
+    "Back to school period": "Terug naar school periode",
+    "Brazilian carnival": "Braziliaans carnaval",
+    "National hero day": "Nationale heldendag",
+    "Workers' Day": "Dag van de Arbeid",
+    "Book promotional event": "Boek promotie-evenement",
+    "Traditional June festival": "Traditioneel junifestival",
+    "Brazilian Independence": "Braziliaanse Onafhankelijkheid",
+    "Gift promotional period": "Cadeau promotieperiode",
+    "Republic proclamation": "Uitroeping van de Republiek",
+    "Retail event": "Winkel evenement",
+    "Retail Event": "Winkel Evenement",
+    
+    // Canada Specific
+    "Provincial family holiday": "Provinciale familiedag",
+    "Queen Victoria's birthday": "Verjaardag van Koningin Victoria",
+    "Patriots of Lower Canada": "Patriotten van Neder-Canada",
+    "Quebec national holiday": "Nationale feestdag van Quebec",
+    "National day of Canada": "Nationale dag van Canada",
+    "Provincial holiday": "Provinciale feestdag",
+    "Newfoundland civic holiday": "Burgerlijke feestdag van Newfoundland",
+    "Honors Indigenous peoples": "Eert inheemse volkeren",
+    "Evening before Christmas": "Kerstavond",
+    "Post-Christmas sales": "Verkoop na Kerstmis",
+    
+    // France Specific
+    "Victory in Europe Day": "Dag van de Overwinning in Europa",
+    "Bastille Day": "Bastilledag",
+    "End of World War I": "Einde van de Eerste Wereldoorlog",
+    
+    // Germany Specific
+    "Father's Day and Ascension": "Vaderdag en Hemelvaartsdag",
+    "National Day": "Nationale Dag",
+    "Traditional gift-giving": "Traditioneel cadeaus geven",
+    "Christmas and Boxing Day": "Kerstmis en Tweede Kerstdag",
+    
+    // Italy Specific
+    "Liberation from Nazi occupation": "Bevrijding van de nazi-bezetting",
+    "Italian National Day": "Italiaanse Nationale Dag",
+    "Mid-August holiday": "Feestdag midden augustus",
+    "Christmas and St. Stephen's Day": "Kerstmis en Tweede Kerstdag",
+    
+    // Japan Specific
+    "New Year celebration": "Nieuwjaarsviering",
+    "Celebrates young adults": "Viert jonge volwassenen",
+    "Celebrates Japan's founding": "Viert de stichting van Japan",
+    "Emperor's birthday": "Verjaardag van de Keizer",
+    "Return gift day": "Dag van tegengeschenken",
+    "Spring equinox": "Lente-equinox",
+    "Honors Emperor Shōwa": "Eert Keizer Shōwa",
+    "Constitution anniversary": "Verjaardag van de Grondwet",
+    "Nature appreciation": "Waardering voor de natuur",
+    "Ocean appreciation": "Waardering voor de oceaan",
+    "Mountain appreciation": "Waardering voor de bergen",
+    "Honors elderly": "Eert ouderen",
+    "Autumn equinox": "Herfst-equinox",
+    "Promotes sports": "Bevordert sport",
+    "Promotes culture": "Bevordert cultuur",
+    "Thanks for labor": "Dank voor arbeid",
+    
+    // Mexico Specific
+    "Honors Benito Juárez": "Eert Benito Juárez",
+    "Mexican Independence": "Mexicaanse Onafhankelijkheid",
+    "Revolution anniversary": "Verjaardag van de Revolutie",
+    
+    // Netherlands Specific
+    "King's birthday celebration": "Viering van de verjaardag van de Koning",
+    "Traditional gift-giving celebration": "Traditionele cadeauviering",
+    
+    // Spain Specific
+    "Madrid community day": "Dag van de gemeenschap Madrid",
+    "Madrid patron saint": "Beschermheilige van Madrid",
+    "Midsummer celebration": "Midzomerviering",
+    "Running of the bulls": "Stierenrennen",
+    "Patron saint of Spain": "Beschermheilige van Spanje",
+    "Catalonia National Day": "Nationale Dag van Catalonië",
+    "Spanish National Day": "Spaanse Nationale Dag",
+    "Madrid patron saint day": "Dag van de beschermheilige van Madrid",
+    "Spanish Constitution Day": "Dag van de Spaanse Grondwet",
+    
+    // UK Specific
+    "First Monday of May": "Eerste maandag van mei",
+    "Last Monday of May": "Laatste maandag van mei",
+    "Last Monday of August": "Laatste maandag van augustus",
+    "Mothering Sunday": "Moederdag zondag",
+    
+    // Brazil special descriptions
+    "'Consumer Day' references can only be used on March 15th </br> 'Consumer Week Warm Up' references can only be used between March 2nd - March 9th </br> 'Consumer Month' references can be used anytime during the month of March": "Verwijzingen naar 'Consumentendag' kunnen alleen op 15 maart worden gebruikt </br> Verwijzingen naar 'Consumentenweek Opwarming' kunnen alleen tussen 2 en 9 maart worden gebruikt </br> Verwijzingen naar 'Consumentenmaand' kunnen op elk moment in maart worden gebruikt",
+    "'Mother's Day' references can only be used between April 27th - May 10th </br> 'Mother's Day Week' references can only be used between May 4th - May 10th </br> 'Mother's Day Month' references can be used anytime during the month of May </br> 'Mother's Day Warm Up' references are not allowed": "Verwijzingen naar 'Moederdag' kunnen alleen tussen 27 april en 10 mei worden gebruikt </br> Verwijzingen naar 'Moederdagweek' kunnen alleen tussen 4 en 10 mei worden gebruikt </br> Verwijzingen naar 'Moederdagmaand' kunnen op elk moment in mei worden gebruikt </br> Verwijzingen naar 'Moederdag Opwarming' zijn niet toegestaan",
+    "'Valentine Day' references can only be used between June 1st - June 12th </br> 'Valentine's Day Week' references can only be used between June 6th - June 12th </br> 'Valentine's Day Month' references can be used anytime during the month of June </br> 'Valentine's Day Warm Up' references are not allowed": "Verwijzingen naar 'Valentijnsdag' kunnen alleen tussen 1 en 12 juni worden gebruikt </br> Verwijzingen naar 'Valentijnsdagweek' kunnen alleen tussen 6 en 12 juni worden gebruikt </br> Verwijzingen naar 'Valentijnsdagmaand' kunnen op elk moment in juni worden gebruikt </br> Verwijzingen naar 'Valentijnsdag Opwarming' zijn niet toegestaan",
+    "'Father's Day' references can only be used between July 27th - August 9th </br> 'Father's Day Week' references can only be used between August 3rd - August 9th </br> 'Father's Day Month' references can be used anytime during the month of August </br> 'Father's Day Warm Up' references are not allowed": "Verwijzingen naar 'Vaderdag' kunnen alleen tussen 27 juli en 9 augustus worden gebruikt </br> Verwijzingen naar 'Vaderdagweek' kunnen alleen tussen 3 en 9 augustus worden gebruikt </br> Verwijzingen naar 'Vaderdagmaand' kunnen op elk moment in augustus worden gebruikt </br> Verwijzingen naar 'Vaderdag Opwarming' zijn niet toegestaan",
+    "'Children's Day' references can only be used between September 21st - October 12th </br> 'Children's Day Week' references can only be used between October 5th - October 12th </br> 'Children's Day Month' references can be used anytime during the month of October </br> 'Children's Day Warm Up' references are not allowed": "Verwijzingen naar 'Kinderdag' kunnen alleen tussen 21 september en 12 oktober worden gebruikt </br> Verwijzingen naar 'Kinderdagweek' kunnen alleen tussen 5 en 12 oktober worden gebruikt </br> Verwijzingen naar 'Kinderdagmaand' kunnen op elk moment in oktober worden gebruikt </br> Verwijzingen naar 'Kinderdag Opwarming' zijn niet toegestaan"
+        }
+},
+    
+    sv: {
+        // Country names
+    countries: {
+        US: "USA",
+        CA: "Kanada",
+        MX: "Mexiko",
+        BR: "Brasilien",
+        UK: "Storbritannien",
+        ES: "Spanien",
+        FR: "Frankrike",
+        DE: "Tyskland",
+        IT: "Italien",
+        JP: "Japan",
+        AU: "Australien",
+        NL: "Nederländerna",
+        SE: "Sverige"
+},
+
+        // Title
+        calendarTitle: "🌍 Internationell Kalender för Huvudevenemang",
+        calendarSubtitle1: "Flerdagars evenemang börjar 8 veckor före evenemangets första dag och varar 1 vecka efter evenemangets sista dag",
+        calendarSubtitle2: "Endags evenemang börjar 8 veckor före evenemangets första dag och varar 24 timmar",
+        calendarSubtitle3: "Om nästa dag är en helgdag kan evenemanget sluta 48 timmar senare",
+        
+        // UI Labels
+        selectCountry: "Välj Land:",
+        language: "🌐 Språk:",
+        searchPlaceholder: "Sök helgdagar...",
+        previousYear: "◀ Föregående År",
+        nextYear: "Nästa År ▶",
+        
+        // Stats
+        totalEvents: "Totalt Antal Händelser",
+        upcoming: "Kommande",
+        daysUntil: "Dagar till",
+        today: "Idag",
+        multiDay: "Flerdagars",
+        tbd: "Ej Bestämt",
+        noUpcoming: "Inga kommande",
+        
+        // Legend
+        legendUpcoming: "Kommande",
+        legendPassed: "Passerat",
+        legendRetail: "Detaljhandelsevent",
+        legendSingle: "Enskild Dag",
+        legendMulti: "Flerdagars",
+        legendNote: "Obs: Denna kalender innehåller inga konfidentiella High Velocity Event referenser eller datum",
+        
+        // Countdown
+        daysAway: "dagar kvar",
+        tomorrow: "Imorgon!",
+        todayExclaim: "🎉 Idag!",
+        passed: "Passerat",
+        dateTBD: "Datum Ej Bestämt",
+        
+        // Duration badges
+        badgeTBD: "📅 Ej Bestämt",
+        badgeSingle: "📌 Enskild Dag",
+        badgeMulti: "📆 {days} Dagar",
+        
+        // Search
+        foundResults: "Hittade",
+        resultFor: "resultat för",
+        resultsFor: "resultat för",
+        noResultsFor: "Inga resultat för",
+        showingAll: "— visar alla helgdagar",
+        
+        // Day names
+        days: ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'],
+        
+        // Month names
+        months: ['Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','September','Oktober','November','December'],
+        
+        // Holiday names
+        ramadanNote: "- Faktiska datum kan variera",
+        
+        // Holiday descriptions
+        descriptions: {
+    // Canadian province notes
+    "Excluding Quebec": "Exklusive Quebec",
+    "Excludes Nova Scotia, Prince Edward Island, Quebec": "Exklusive Nova Scotia, Prince Edward Island, Quebec",
+    "Quebec only": "Endast Quebec",
+    "Excludes Quebec, Prince Edward Island, Newfoundland and Labrador": "Exklusive Quebec, Prince Edward Island, Newfoundland och Labrador",
+    "Newfoundland and Labrador only": "Endast Newfoundland och Labrador",
+        
+    // General
+    "First day of the year": "Första dagen på året",
+    "First day of year": "Första dagen på året",
+    "Day of love": "Kärlekens dag",
+    "Celebrates mothers": "Firar mödrar",
+    "Celebrates fathers": "Firar fäder",
+    "Celebrates women": "Firar kvinnor",
+    "Celebrates children": "Firar barn",
+    "Festival of costumes": "Kostymfestival",
+    "Birth of Jesus": "Jesu födelse",
+    "Last day of the year": "Sista dagen på året",
+    "Last day of year": "Sista dagen på året",
+    
+    // Religious
+    "Christian celebration": "Kristen högtid",
+    "Christian observance": "Kristen högtid",
+    "Christian feast day": "Kristen helgdag",
+    "Catholic feast day": "Katolsk helgdag",
+    "Islamic holy month": "Islamisk helig månad",
+    "End of Ramadan": "Ramadans slut",
+    "Jewish festival of lights": "Judisk ljusfest",
+    "Hindu festival of lights": "Hinduisk ljusfest",
+    "Honors all saints": "Hedrar alla helgon",
+    "Honor the deceased": "Hedra de avlidna",
+    "Honors the deceased": "Hedrar de avlidna",
+    "Day after Easter": "Dagen efter påsk",
+    "Good Friday to Easter Monday": "Långfredagen till annandag påsk",
+    "Day after Pentecost": "Dagen efter pingst",
+    "Epiphany": "Trettondedag jul",
+    "Easter week": "Stilla veckan",
+    "Holy Week": "Stilla veckan",
+    "Religious celebration": "Religiös högtid",
+    "Pre-Lenten festival": "Förfastan festival",
+    "Protestant commemoration": "Protestantisk minnesdag",
+    "Protestant day of prayer": "Protestantisk bönedag",
+    
+    // US Specific
+    "Honors civil rights leader": "Hedrar medborgarrättsledaren",
+    "Honors U.S. presidents": "Hedrar amerikanska presidenter",
+    "Irish celebration": "Irländsk högtid",
+    "Honors fallen military": "Hedrar stupade soldater",
+    "End of slavery": "Slaveriets slut",
+    "Declaration of Independence": "Självständighetsförklaringen",
+    "Honors labor movement": "Hedrar arbetarrörelsen",
+    "Commemorates Columbus / Honors Native peoples": "Minns Columbus / Hedrar ursprungsfolk",
+    "Honors military veterans": "Hedrar militära veteraner",
+    "Harvest festival": "Skördefest",
+    "African American celebration": "Afroamerikansk högtid",
+    
+    // Australia Specific
+    "National day": "Nationaldag",
+    "Traditional celebration": "Traditionell högtid",
+    "Workers' rights": "Arbetares rättigheter",
+    "Commemorates ANZAC": "Minns ANZAC",
+    "Aboriginal cultures": "Aboriginkulturer",
+    "Official celebration": "Officiell högtid",
+    "Indigenous observance": "Urfolkshögtid",
+    "Famous horse race": "Berömd hästkapplöpning",
+    "Day after Christmas": "Dagen efter jul",
+    
+    // Brazil Specific
+    "Back to school period": "Tillbaka till skolan-period",
+    "Brazilian carnival": "Brasiliansk karneval",
+    "National hero day": "Nationell hjältedag",
+    "Workers' Day": "Arbetarnas dag",
+    "Book promotional event": "Bokpromotionsevenemang",
+    "Traditional June festival": "Traditionell junifestival",
+    "Brazilian Independence": "Brasiliansk självständighet",
+    "Gift promotional period": "Presentpromotionsperiod",
+    "Republic proclamation": "Republikens utropande",
+    "Retail event": "Detaljhandelsevenemang",
+    "Retail Event": "Detaljhandelsevenemang",
+    
+    // Canada Specific
+    "Provincial family holiday": "Provinsiell familjedag",
+    "Queen Victoria's birthday": "Drottning Victorias födelsedag",
+    "Patriots of Lower Canada": "Patrioter från Nedre Kanada",
+    "Quebec national holiday": "Quebecs nationaldag",
+    "National day of Canada": "Kanadas nationaldag",
+    "Provincial holiday": "Provinsiell helgdag",
+    "Newfoundland civic holiday": "Newfoundlands medborgardag",
+    "Honors Indigenous peoples": "Hedrar ursprungsfolk",
+    "Evening before Christmas": "Julafton",
+    "Post-Christmas sales": "Mellandagsrea",
+    
+    // France Specific
+    "Victory in Europe Day": "Segerdagen i Europa",
+    "Bastille Day": "Bastiljdagen",
+    "End of World War I": "Första världskrigets slut",
+    
+    // Germany Specific
+    "Father's Day and Ascension": "Fars dag och Kristi himmelsfärdsdag",
+    "National Day": "Nationaldag",
+    "Traditional gift-giving": "Traditionellt presentgivande",
+    "Christmas and Boxing Day": "Jul och annandag jul",
+    
+    // Italy Specific
+    "Liberation from Nazi occupation": "Befrielse från nazistisk ockupation",
+    "Italian National Day": "Italiens nationaldag",
+    "Mid-August holiday": "Helgdag i mitten av augusti",
+    "Christmas and St. Stephen's Day": "Jul och annandag jul",
+    
+    // Japan Specific
+    "New Year celebration": "Nyårsfirande",
+    "Celebrates young adults": "Firar unga vuxna",
+    "Celebrates Japan's founding": "Firar Japans grundande",
+    "Emperor's birthday": "Kejsarens födelsedag",
+    "Return gift day": "Återgåvodag",
+    "Spring equinox": "Vårdagjämning",
+    "Honors Emperor Shōwa": "Hedrar kejsar Shōwa",
+    "Constitution anniversary": "Grundlagsdagen",
+    "Nature appreciation": "Uppskattning av naturen",
+    "Ocean appreciation": "Uppskattning av havet",
+    "Mountain appreciation": "Uppskattning av bergen",
+    "Honors elderly": "Hedrar äldre",
+    "Autumn equinox": "Höstdagjämning",
+    "Promotes sports": "Främjar sport",
+    "Promotes culture": "Främjar kultur",
+    "Thanks for labor": "Tack för arbete",
+    
+    // Mexico Specific
+    "Honors Benito Juárez": "Hedrar Benito Juárez",
+    "Mexican Independence": "Mexikansk självständighet",
+    "Revolution anniversary": "Revolutionens årsdag",
+    
+    // Netherlands Specific
+    "King's birthday celebration": "Firande av kungens födelsedag",
+    "Traditional gift-giving celebration": "Traditionellt presentfirande",
+    
+    // Spain Specific
+    "Madrid community day": "Madrids gemenskapsdag",
+    "Madrid patron saint": "Madrids skyddshelgon",
+    "Midsummer celebration": "Midsommarfirande",
+    "Running of the bulls": "Tjurrusning",
+    "Patron saint of Spain": "Spaniens skyddshelgon",
+    "Catalonia National Day": "Kataloniens nationaldag",
+    "Spanish National Day": "Spaniens nationaldag",
+    "Madrid patron saint day": "Madrids skyddshelgonsdag",
+    "Spanish Constitution Day": "Spanska grundlagsdagen",
+    
+    // UK Specific
+    "First Monday of May": "Första måndagen i maj",
+    "Last Monday of May": "Sista måndagen i maj",
+    "Last Monday of August": "Sista måndagen i augusti",
+    "Mothering Sunday": "Mors dag söndag",
+    
+    // Brazil special descriptions
+    "'Consumer Day' references can only be used on March 15th </br> 'Consumer Week Warm Up' references can only be used between March 2nd - March 9th </br> 'Consumer Month' references can be used anytime during the month of March": "Hänvisningar till 'Konsumentdagen' kan endast användas den 15 mars </br> Hänvisningar till 'Uppvärmning av Konsumentveckan' kan endast användas mellan 2 och 9 mars </br> Hänvisningar till 'Konsumentmånaden' kan användas när som helst under mars månad",
+    "'Mother's Day' references can only be used between April 27th - May 10th </br> 'Mother's Day Week' references can only be used between May 4th - May 10th </br> 'Mother's Day Month' references can be used anytime during the month of May </br> 'Mother's Day Warm Up' references are not allowed": "Hänvisningar till 'Mors dag' kan endast användas mellan 27 april och 10 maj </br> Hänvisningar till 'Mors dags vecka' kan endast användas mellan 4 och 10 maj </br> Hänvisningar till 'Mors dags månad' kan användas när som helst under maj månad </br> Hänvisningar till 'Mors dag Uppvärmning' är inte tillåtna",
+    "'Valentine Day' references can only be used between June 1st - June 12th </br> 'Valentine's Day Week' references can only be used between June 6th - June 12th </br> 'Valentine's Day Month' references can be used anytime during the month of June </br> 'Valentine's Day Warm Up' references are not allowed": "Hänvisningar till 'Alla hjärtans dag' kan endast användas mellan 1 och 12 juni </br> Hänvisningar till 'Alla hjärtans dags vecka' kan endast användas mellan 6 och 12 juni </br> Hänvisningar till 'Alla hjärtans dags månad' kan användas när som helst under juni månad </br> Hänvisningar till 'Alla hjärtans dag Uppvärmning' är inte tillåtna",
+    "'Father's Day' references can only be used between July 27th - August 9th </br> 'Father's Day Week' references can only be used between August 3rd - August 9th </br> 'Father's Day Month' references can be used anytime during the month of August </br> 'Father's Day Warm Up' references are not allowed": "Hänvisningar till 'Fars dag' kan endast användas mellan 27 juli och 9 augusti </br> Hänvisningar till 'Fars dags vecka' kan endast användas mellan 3 och 9 augusti </br> Hänvisningar till 'Fars dags månad' kan användas när som helst under augusti månad </br> Hänvisningar till 'Fars dag Uppvärmning' är inte tillåtna",
+    "'Children's Day' references can only be used between September 21st - October 12th </br> 'Children's Day Week' references can only be used between October 5th - October 12th </br> 'Children's Day Month' references can be used anytime during the month of October </br> 'Children's Day Warm Up' references are not allowed": "Hänvisningar till 'Barndagen' kan endast användas mellan 21 september och 12 oktober </br> Hänvisningar till 'Barndagens vecka' kan endast användas mellan 5 och 12 oktober </br> Hänvisningar till 'Barndagens månad' kan användas när som helst under oktober månad </br> Hänvisningar till 'Barndagen Uppvärmning' är inte tillåtna"
+        }
+},
+};
+
+// Get translated text
+function t(key) {
+    const lang = translations[currentLanguage] || translations.en;
+    return lang[key] || translations.en[key] || key;
+}
+
+// Get translated description
+function tDesc(description) {
+    const lang = translations[currentLanguage] || translations.en;
+    if (lang.descriptions && lang.descriptions[description]) {
+        return lang.descriptions[description];
+    }
+    // Fallback to English or original
+    if (translations.en.descriptions && translations.en.descriptions[description]) {
+        return translations.en.descriptions[description];
+    }
+    return description;
+}
+
+// Get translated month name
+function tMonth(monthIndex) {
+    const lang = translations[currentLanguage] || translations.en;
+    return lang.months[monthIndex] || translations.en.months[monthIndex];
+}
+
+// Get translated day name
+function tDay(dayIndex) {
+    const lang = translations[currentLanguage] || translations.en;
+    return lang.days[dayIndex] || translations.en.days[dayIndex];
+}
+
+// Get translated country name
+function tCountry(countryCode) {
+    const lang = translations[currentLanguage] || translations.en;
+    if (lang.countries && lang.countries[countryCode]) {
+        return lang.countries[countryCode];
+    }
+    return translations.en.countries[countryCode] || countryCode;
+}
+
+// Update country dropdown with translated names
+function updateCountryDropdown() {
+    const select = document.getElementById('countrySelect');
+    if (!select) return;
+    
+    const currentValue = select.value;
+    
+    // Country order (same as your HTML)
+    const countryOrder = ['US', 'CA', 'MX', 'BR', 'UK', 'ES', 'FR', 'DE', 'IT', 'JP', 'AU', 'NL', 'SE'];
+    
+    // Clear existing options
+    select.innerHTML = '';
+    
+    // Add translated options
+    countryOrder.forEach(code => {
+        const option = document.createElement('option');
+        option.value = code;
+        option.textContent = `${countryFlags[code]} ${tCountry(code)}`;
+        if (code === currentValue) {
+            option.selected = true;
+        }
+        select.appendChild(option);
+    });
+}
+
+// ============================================
+// LANGUAGE CHANGE FUNCTIONALITY
+// ============================================
+function changeLanguage() {
+    currentLanguage = document.getElementById('languageSelect').value;
+    try { localStorage.setItem('language', currentLanguage); } catch(e) {}
+    updateUILanguage();
+    renderAll();
+}
+
+function loadSavedLanguage() {
+    let savedLanguage = 'en';
+    try { 
+        savedLanguage = localStorage.getItem('language') || 'en'; 
+    } catch(e) {}
+    
+    if (translations[savedLanguage]) {
+        currentLanguage = savedLanguage;
+        const langSelect = document.getElementById('languageSelect');
+        if (langSelect) {
+            langSelect.value = currentLanguage;
+        }
+    }
+}
+
+function updateUILanguage() {
+    // Update labels
+    const labelCountry = document.getElementById('labelCountry');
+    if (labelCountry) labelCountry.textContent = t('selectCountry');
+    
+    const labelLanguage = document.getElementById('labelLanguage');
+    if (labelLanguage) labelLanguage.textContent = t('language');
+    
+    // Update search placeholder
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.placeholder = t('searchPlaceholder');
+    
+    // Update year navigation buttons
+    const buttons = document.querySelectorAll('.year-navigation button');
+    if (buttons.length >= 2) {
+        buttons[0].textContent = t('previousYear');
+        buttons[1].textContent = t('nextYear');
+    }
+    
+    // Update legend
+    const legendUpcoming = document.getElementById('legendUpcoming');
+    if (legendUpcoming) legendUpcoming.textContent = t('legendUpcoming');
+    
+    const legendPassed = document.getElementById('legendPassed');
+    if (legendPassed) legendPassed.textContent = t('legendPassed');
+    
+    const legendRetail = document.getElementById('legendRetail');
+    if (legendRetail) legendRetail.textContent = t('legendRetail');
+    
+    const legendSingle = document.getElementById('legendSingle');
+    if (legendSingle) legendSingle.textContent = t('legendSingle');
+    
+    const legendMulti = document.getElementById('legendMulti');
+    if (legendMulti) legendMulti.textContent = t('legendMulti');
+    
+    const legendNote = document.getElementById('legendNote');
+    if (legendNote) legendNote.textContent = t('legendNote');
+    
+    // Update calendar title and subtitles
+    const calendarTitle = document.getElementById('calendarTitle');
+    if (calendarTitle) calendarTitle.textContent = t('calendarTitle');
+
+    const calendarSubtitle1 = document.getElementById('calendarSubtitle1');
+    if (calendarSubtitle1) calendarSubtitle1.textContent = t('calendarSubtitle1');
+
+    const calendarSubtitle2 = document.getElementById('calendarSubtitle2');
+    if (calendarSubtitle2) calendarSubtitle2.textContent = t('calendarSubtitle2');
+
+    const calendarSubtitle3 = document.getElementById('calendarSubtitle3');
+    if (calendarSubtitle3) calendarSubtitle3.textContent = t('calendarSubtitle3');
+
+    // Update country dropdown
+    updateCountryDropdown();
+}
+
+// ============================================
+// THEME TOGGLE FUNCTIONALITY
+// ============================================
+function toggleTheme() {
+    const body = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    
+    if (body.getAttribute('data-theme') === 'light') {
+        body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙';
+        themeToggle.title = 'Switch to Light Mode';
+        try { localStorage.setItem('theme', 'dark'); } catch(e) {}
+    } else {
+        body.setAttribute('data-theme', 'light');
+        themeToggle.textContent = '☀️';
+        themeToggle.title = 'Switch to Dark Mode';
+        try { localStorage.setItem('theme', 'light'); } catch(e) {}
+    }
+}
+
+function loadSavedTheme() {
+    const themeToggle = document.getElementById('themeToggle');
+    if (!themeToggle) return;
+    
+    let savedTheme = 'dark'; // default
+    try { 
+        savedTheme = localStorage.getItem('theme') || 'dark'; 
+    } catch(e) {}
+    
+    if (savedTheme === 'light') {
+        document.body.setAttribute('data-theme', 'light');
+        themeToggle.textContent = '☀️';
+        themeToggle.title = 'Switch to Dark Mode';
+    } else {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙';
+        themeToggle.title = 'Switch to Light Mode';
+    }
+}
+
+// ============================================
+// SEARCH FUNCTIONALITY
+// ============================================
+function handleSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearSearch');
+    
+    currentSearch = searchInput.value.trim().toLowerCase();
+    
+    // Show/hide clear button
+    if (currentSearch.length > 0) {
+        clearBtn.classList.add('visible');
+    } else {
+        clearBtn.classList.remove('visible');
+    }
+    
+    renderList();
+}
+
+function clearSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearSearch');
+    
+    searchInput.value = '';
+    currentSearch = '';
+    clearBtn.classList.remove('visible');
+    renderList();
+}
+
+function highlightMatch(text, search) {
+    if (!search || search.length === 0) return text;
+    
+    const regex = new RegExp(`(${escapeRegex(search)})`, 'gi');
+    return text.replace(regex, '<span class="search-match">$1</span>');
+}
+
+function escapeRegex(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function matchesSearch(holiday, search) {
+    if (!search || search.length === 0) return true;
+    
+    const searchLower = search.toLowerCase();
+    
+    // Search in name
+    if (holiday.name.toLowerCase().includes(searchLower)) return true;
+    
+    // Search in local name
+    if (holiday.localName && holiday.localName.toLowerCase().includes(searchLower)) return true;
+    
+    // Search in description
+    if (holiday.description && holiday.description.toLowerCase().includes(searchLower)) return true;
+    
+    // Search in note
+    if (holiday.note && holiday.note.toLowerCase().includes(searchLower)) return true;
+    
+    return false;
+}
+
+// ============================================
+// TBD DATE CONFIGURATION
+// ============================================
+// Edit dates here for placeholder events
+// Format: { year: { "Event Name": { start: [month, day], end: [month, day] } } }
+// Note: Months are 0-indexed (January = 0, December = 11)
+// Set to null to keep as TBD
+//
+// MONTH REFERENCE:
+// January = 0    | July = 6
+// February = 1   | August = 7
+// March = 2      | September = 8
+// April = 3      | October = 9
+// May = 4        | November = 10
+// June = 5       | December = 11
+// ============================================
+
+const tbdDates = {
+    FR: {
+        2024: {
+            "Spring Deal Days": { start: [2, 10], end: [2, 16] },      // March 10-16
+        },
+        2025: {
+            "Spring Deal Days": { start: [2, 10], end: [2, 16] },      // March 10-16
+        },
+        2026: {
+            "Spring Deal Days": { start: [2, 10], end: [2, 16] },      // March 10-16
+        }
+    },
+    DE: {
+        2024: {
+            "Spring Deal Days": { start: [2, 10], end: [2, 16] },      // March 10-16
+        },
+        2025: {
+            "Spring Deal Days": { start: [2, 10], end: [2, 16] },      // March 10-16
+        },
+        2026: {
+            "Spring Deal Days": { start: [2, 10], end: [2, 16] },      // March 10-16
+        }
+    },
+    IT: {
+        2024: {
+            "Spring Deal Days": { start: [2, 10], end: [2, 16] },      // March 10-16
+        },
+        2025: {
+            "Spring Deal Days": { start: [2, 10], end: [2, 16] },      // March 10-16
+        },
+        2026: {
+            "Spring Deal Days": { start: [2, 10], end: [2, 16] },      // March 10-16
+        }
+    },
+    ES: {
+        2024: {
+            "Spring Deal Days": { start: [2, 10], end: [2, 16] },      // March 10-16
+        },
+        2025: {
+            "Spring Deal Days": { start: [2, 10], end: [2, 16] },      // March 10-16
+        },
+        2026: {
+            "Spring Deal Days": { start: [2, 10], end: [2, 16] },      // March 10-16
+        }
+    },
+    UK: {
+        2024: {
+            "Spring Deal Days": { start: [2, 10], end: [2, 16] },      // March 10-16
+        },
+        2025: {
+            "Spring Deal Days": { start: [2, 10], end: [2, 16] },      // March 10-16
+        },
+        2026: {
+            "Spring Deal Days": { start: [2, 10], end: [2, 16] },      // March 10-16
+        }
+    },
+    BR: {
+        2024: {
+            "Consumer Week": { start: [2, 11], end: [2, 17] },       // March 11-17
+            "App Day": { start: [4, 15], end: [4, 15] },             // May 15
+            "Book Friday": { start: [4, 24], end: [4, 26] },         // May 24-26
+            "Customer Sale": { start: [8, 15], end: [8, 21] },       // Sept 15-21
+            "Holiday Gift Guide": { start: [10, 1], end: [10, 30] }, // Nov 1-30
+            "Back to School": { start: [0, 15], end: [1, 15] }       // Jan 15 - Feb 15
+        },
+        2025: {
+            "Consumer Week": { start: [2, 10], end: [2, 16] },       // March 10-16
+            "App Day": null,                                          // TBD
+            "Book Friday": null,                                      // TBD
+            "Customer Sale": null,                                    // TBD
+            "Holiday Gift Guide": null,                               // TBD
+            "Back to School": { start: [0, 13], end: [1, 14] }       // Jan 13 - Feb 14
+        },
+        2026: {
+            "Consumer Week": { start: [2, 2], end: [2, 15] },       // March 3-16
+            "App Day - April": { start: [3, 3], end: [3, 4] },
+            "App Day - September": { start: [8, 8], end: [8, 9] },
+            "App Day - Fathers Day": { start: [7, 7], end: [7, 8] },
+            "App Day Goleada de Ofertas - May": { start: [4, 4], end: [4, 5] },
+            "App Day Goleada de Ofertas - June": { start: [5, 5], end: [5, 6] },
+            "App Day - Christmas": { start: [11, 11], end: [11, 12] },
+            "Book Friday": { start: [4, 11], end: [4, 18] },
+            "Holiday Gift Guide": { start: [10, 16], end: [11, 25] },
+            "Back to School": { start: [11, 7], end: [1, 28] },
+        }
+    },
+    MX: {
+        2024: {
+            "Hot Sale": { start: [4, 27], end: [5, 4] }              // May 27 - June 4
+        },
+        2025: {
+            "Hot Sale": { start: [4, 26], end: [5, 3] }              // May 26 - June 3
+        },
+        2026: {
+            "Hot Sale": { start: [4, 25], end: [5, 2] }              // May 25 - June 2
+        }
+    },
+    NL: {
+        2024: {
+            "Electronics Deals": { start: [0, 15], end: [0, 21] },    // Jan 15-21
+            "Spring Deal Days": { start: [3, 1], end: [3, 7] },       // April 1-7
+            "Gaming Week (Spring)": { start: [4, 6], end: [4, 12] },  // May 6-12
+            "Early Summer Deals": { start: [5, 17], end: [5, 23] },   // June 17-23
+            "Back to School": { start: [7, 12], end: [7, 25] },       // Aug 12-25
+            "Gaming Week (Fall)": { start: [9, 14], end: [9, 20] },   // Oct 14-20
+            "Last Minute Deals": { start: [11, 18], end: [11, 23] }   // Dec 18-23
+        },
+        2025: {
+            "Electronics Deals": { start: [0, 13], end: [0, 19] },    // Jan 13-19
+            "Spring Deal Days": null,
+            "Gaming Week (Spring)": null,
+            "Early Summer Deals": null,
+            "Back to School": null,
+            "Gaming Week (Fall)": null,
+            "Last Minute Deals": null
+        },
+    },
+    SE: {
+        2024: {
+            "Spring Deal Days": { start: [3, 8], end: [3, 14] },      // April 8-14
+            "Back to School": { start: [7, 5], end: [7, 18] },        // Aug 5-18
+            "Gaming Week": { start: [9, 21], end: [9, 27] }           // Oct 21-27
+        },
+        2025: {
+            "Spring Deal Days": { start: [3, 7], end: [3, 13] },      // April 7-13
+            "Back to School": null,
+            "Gaming Week": null
+        },
+    }
+};
+
+// Helper function to get TBD date from config
+function getTBDDate(country, year, eventName) {
+    if (tbdDates[country] && 
+        tbdDates[country][year] && 
+        tbdDates[country][year][eventName]) {
+        const config = tbdDates[country][year][eventName];
+        if (config && config.start && config.end) {
+            return {
+                start: new Date(year, config.start[0], config.start[1]),
+                end: new Date(year, config.end[0], config.end[1]),
+                placeholder: true  // CHANGED: Always true so retail events stay yellow
+            };
+        }
+    }
+    return { start: null, end: null, placeholder: true };
+}
+// Get nth weekday of month (e.g., 3rd Monday)
+function nthDay(y, m, dow, n) {
+    const f = new Date(y, m, 1);
+    return new Date(y, m, 1 + (dow - f.getDay() + 7) % 7 + (n - 1) * 7);
+}
+
+// Get last weekday of month
+function lastDay(y, m, dow) {
+    const l = new Date(y, m + 1, 0);
+    return new Date(y, m + 1, -((l.getDay() - dow + 7) % 7));
+}
+
+// Get Monday before a specific date
+function monBefore(y, m, d) {
+    const dt = new Date(y, m, d);
+    const diff = dt.getDay() === 0 ? 6 : dt.getDay() - 1;
+    return new Date(y, m, d - diff);
+}
+
+// Calculate Easter Sunday
+function easter(y) {
+    const a = y % 19;
+    const b = Math.floor(y / 100);
+    const c = y % 100;
+    const d = Math.floor(b / 4);
+    const e = b % 4;
+    const f = Math.floor((b + 8) / 25);
+    const g = Math.floor((b - f + 1) / 3);
+    const h = (19 * a + b - d - g + 15) % 30;
+    const i = Math.floor(c / 4);
+    const k = c % 4;
+    const l = (32 + 2 * e + 2 * i - h - k) % 7;
+    const m = Math.floor((a + 11 * h + 22 * l) / 451);
+    const month = Math.floor((h + l - 7 * m + 114) / 31) - 1;
+    const day = ((h + l - 7 * m + 114) % 31) + 1;
+    return new Date(y, month, day);
+}
+
+// Easter-related dates
+function goodFri(y) { return new Date(easter(y).getTime() - 2 * D); }
+function easterMon(y) { return new Date(easter(y).getTime() + D); }
+function ascension(y) { return new Date(easter(y).getTime() + 39 * D); }
+function whitMon(y) { return new Date(easter(y).getTime() + 50 * D); }
+function corpus(y) { return new Date(easter(y).getTime() + 60 * D); }
+function pentecost(y) { return new Date(easter(y).getTime() + 49 * D); }
+
+// Carnival dates
+function carnival(y) {
+    const e = easter(y);
+    return { start: new Date(e.getTime() - 49 * D), end: new Date(e.getTime() - 47 * D) };
+}
+function brCarnival(y) {
+    const e = easter(y);
+    return { start: new Date(e.getTime() - 51 * D), end: new Date(e.getTime() - 47 * D) };
+}
+
+// Holy Week
+function holyWeek(y) {
+    const e = easter(y);
+    return { start: new Date(e.getTime() - 7 * D), end: e };
+}
+
+// Lunar New Year dates
+function lunar(y) {
+    const dates = {
+        2024: new Date(2024, 1, 10), 2025: new Date(2025, 0, 29), 2026: new Date(2026, 1, 17),
+        2027: new Date(2027, 1, 6), 2028: new Date(2028, 0, 26), 2029: new Date(2029, 1, 13),
+        2030: new Date(2030, 1, 3)
+    };
+    return dates[y] || new Date(y, 1, 1);
+}
+
+// Ramadan dates
+function ramadan(y) {
+    const dates = {
+        2024: { s: new Date(2024, 2, 10), e: new Date(2024, 3, 9) },
+        2025: { s: new Date(2025, 1, 28), e: new Date(2025, 2, 29) },
+        2026: { s: new Date(2026, 1, 17), e: new Date(2026, 2, 19) },
+        2027: { s: new Date(2027, 1, 7), e: new Date(2027, 2, 8) },
+        2028: { s: new Date(2028, 0, 27), e: new Date(2028, 1, 25) },
+        2029: { s: new Date(2029, 0, 15), e: new Date(2029, 1, 13) },
+        2030: { s: new Date(2030, 0, 5), e: new Date(2030, 1, 3) }
+    };
+    const d = dates[y];
+    return d ? { start: d.s, end: d.e } : { start: new Date(y, 2, 1), end: new Date(y, 2, 30) };
+}
+
+// Eid al-Fitr
+function eid(y) {
+    const r = ramadan(y);
+    const e = new Date(r.end.getTime() + D);
+    return { start: e, end: new Date(e.getTime() + 2 * D) };
+}
+
+// Diwali dates
+function diwali(y) {
+    const dates = {
+        2024: new Date(2024, 10, 1), 2025: new Date(2025, 9, 20), 2026: new Date(2026, 10, 8),
+        2027: new Date(2027, 9, 29), 2028: new Date(2028, 9, 17), 2029: new Date(2029, 10, 5),
+        2030: new Date(2030, 9, 26)
+    };
+    return dates[y] || new Date(y, 9, 25);
+}
+
+// Hanukkah dates
+function hanukkah(y) {
+    const dates = {
+        2024: { s: new Date(2024, 11, 25), e: new Date(2025, 0, 2) },
+        2025: { s: new Date(2025, 11, 14), e: new Date(2025, 11, 22) },
+        2026: { s: new Date(2026, 11, 4), e: new Date(2026, 11, 12) },
+        2027: { s: new Date(2027, 11, 24), e: new Date(2028, 0, 1) },
+        2028: { s: new Date(2028, 11, 12), e: new Date(2028, 11, 20) },
+        2029: { s: new Date(2029, 11, 1), e: new Date(2029, 11, 9) },
+        2030: { s: new Date(2030, 11, 20), e: new Date(2030, 11, 28) }
+    };
+    const d = dates[y];
+    return d ? { start: d.s, end: d.e } : { start: new Date(y, 11, 15), end: new Date(y, 11, 23) };
+}
+
+// France Mother's Day (last Sunday of May, unless it's Pentecost)
+function frMother(y) {
+    const l = lastDay(y, 4, 0);
+    const p = pentecost(y);
+    return l.toDateString() === p.toDateString() ? nthDay(y, 5, 0, 1) : l;
+}
+
+// Netherlands King's Day (April 27, or April 26 if Sunday)
+function kingsDay(y) {
+    const d = new Date(y, 3, 27);
+    return d.getDay() === 0 ? new Date(y, 3, 26) : d;
+}
+
+// Germany Day of Prayer and Repentance
+function bettag(y) {
+    const n = new Date(y, 10, 23);
+    const dow = n.getDay();
+    return new Date(y, 10, 23 - (dow >= 3 ? dow - 3 : dow + 4));
+}
+
+// UK Mother's Day (4th Sunday of Lent)
+function ukMother(y) {
+    return new Date(easter(y).getTime() - 21 * D);
+}
+
+// Equinox dates
+function vernal(y) {
+    const dates = { 2024: 20, 2025: 20, 2026: 20, 2027: 21, 2028: 20, 2029: 20, 2030: 20 };
+    return new Date(y, 2, dates[y] || 20);
+}
+function autumnal(y) {
+    const dates = { 2024: 22, 2025: 23, 2026: 23, 2027: 23, 2028: 22, 2029: 22, 2030: 23 };
+    return new Date(y, 8, dates[y] || 22);
+}
+
+// Calculate duration between dates
+function duration(s, e) {
+    return Math.ceil(Math.abs(new Date(e) - new Date(s)) / D) + 1;
+}
+// Get holidays for a specific country and year
+function getHolidays(c, y) {
+    const r = ramadan(y), ei = eid(y), h = hanukkah(y), hw = holyWeek(y), ca = carnival(y), bc = brCarnival(y);
+
+    const holidays = {
+        US: [
+            {name: "New Year's Day", description: "First day of the year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Martin Luther King Jr. Day", description: "Honors civil rights leader", start: nthDay(y, 0, 1, 3), end: nthDay(y, 0, 1, 3)},
+            {name: "Valentine's Day", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "Presidents' Day", description: "Honors U.S. presidents", start: nthDay(y, 1, 1, 3), end: nthDay(y, 1, 1, 3)},
+            {name: "St. Patrick's Day", description: "Irish celebration", start: new Date(y, 2, 17), end: new Date(y, 2, 17)},
+            {name: "Ramadan", nameNote: "ramadanNote", description: "Islamic holy month", start: r.start, end: r.end},
+            {name: "Easter", description: "Christian celebration", start: easter(y), end: easter(y)},
+            {name: "Mother's Day", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Memorial Day", description: "Honors fallen military", start: lastDay(y, 4, 1), end: lastDay(y, 4, 1)},
+            {name: "Father's Day", description: "Celebrates fathers", start: nthDay(y, 5, 0, 3), end: nthDay(y, 5, 0, 3)},
+            {name: "Juneteenth", description: "End of slavery", start: new Date(y, 5, 19), end: new Date(y, 5, 19)},
+            {name: "Independence Day", description: "Declaration of Independence", start: new Date(y, 6, 4), end: new Date(y, 6, 4)},
+            {name: "Labor Day Weekend", description: "Honors labor movement", start: nthDay(y, 8, 1, 1), end: nthDay(y, 8, 1, 1)},
+            {name: "Columbus Day / Indigenous Peoples' Day", description: "Commemorates Columbus / Honors Native peoples", start: nthDay(y, 9, 1, 2), end: nthDay(y, 9, 1, 2)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Veterans Day", description: "Honors military veterans", start: new Date(y, 10, 11), end: new Date(y, 10, 11)},
+            {name: "Thanksgiving Day", description: "Harvest festival", start: nthDay(y, 10, 4, 4), end: nthDay(y, 10, 4, 4)},
+            {name: "Hanukkah", description: "Jewish festival of lights", start: h.start, end: h.end},
+            {name: "Christmas Day", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)},
+            {name: "Kwanzaa", description: "African American celebration", start: new Date(y, 11, 26), end: new Date(y + 1, 0, 1)},
+            {name: "Eid al-Fitr", nameNote: "ramadanNote", description: "End of Ramadan", start: ei.start, end: ei.end},
+        ],
+
+        AU: [
+            {name: "New Year's Day", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Australia Day", description: "National day", start: new Date(y, 0, 26), end: new Date(y, 0, 26)},
+            {name: "Lunar New Year", description: "Traditional celebration", start: lunar(y), end: lunar(y)},
+            {name: "Valentine's Day", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "Labor Day (WA)", description: "Workers' rights", note: "WA - 1st Mon Mar", start: nthDay(y, 2, 1, 1), end: nthDay(y, 2, 1, 1)},
+            {name: "Labor Day (VIC)", description: "Workers' rights", note: "VIC - 2nd Mon Mar", start: nthDay(y, 2, 1, 2), end: nthDay(y, 2, 1, 2)},
+            {name: "St. Patrick's Day", description: "Irish celebration", start: new Date(y, 2, 17), end: new Date(y, 2, 17)},
+            {name: "Ramadan", nameNote: "ramadanNote", description: "Islamic holy month", start: r.start, end: r.end},
+            {name: "Good Friday", description: "Christian observance", start: goodFri(y), end: goodFri(y)},
+            {name: "Easter", description: "Christian celebration", start: easter(y), end: easterMon(y)},
+            {name: "Eid al-Fitr", nameNote: "ramadanNote", description: "End of Ramadan", start: ei.start, end: ei.end},
+            {name: "Anzac Day", description: "Commemorates ANZAC", start: new Date(y, 3, 25), end: new Date(y, 3, 25)},
+            {name: "Labor Day (QLD)", description: "Workers' rights", note: "QLD - 1st Mon May", start: nthDay(y, 4, 1, 1), end: nthDay(y, 4, 1, 1)},
+            {name: "Mother's Day", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Reconciliation Day", description: "Aboriginal cultures", start: new Date(y, 4, 27), end: new Date(y, 4, 27)},
+            {name: "Queen's Birthday (QLD, SA, ACT)", description: "Official celebration", note: "QLD, SA, ACT - 2nd Mon June", start: nthDay(y, 5, 1, 2), end: nthDay(y, 5, 1, 2)},
+            {name: "King's Birthday (NSW, VIC)", description: "Official celebration", note: "NSW, VIC - 2nd Mon June", start: nthDay(y, 5, 1, 2), end: nthDay(y, 5, 1, 2)},
+            {name: "NAIDOC Week", description: "Indigenous observance", start: nthDay(y, 6, 0, 1), end: new Date(nthDay(y, 6, 0, 1).getTime() + 6 * D)},
+            {name: "Father's Day", description: "Celebrates fathers", start: nthDay(y, 8, 0, 1), end: nthDay(y, 8, 0, 1)},
+            {name: "King's Birthday (WA)", description: "Official celebration", note: "WA - 4th Mon Sept", start: nthDay(y, 8, 1, 4), end: nthDay(y, 8, 1, 4)},
+            {name: "Labor Day (NSW, SA, ACT)", description: "Workers' rights", note: "NSW, SA, ACT - 1st Mon Oct", start: nthDay(y, 9, 1, 1), end: nthDay(y, 9, 1, 1)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Diwali", description: "Hindu festival of lights", start: diwali(y), end: diwali(y)},
+            {name: "Melbourne Cup", description: "Famous horse race", start: nthDay(y, 10, 2, 1), end: nthDay(y, 10, 2, 1)},
+            {name: "Christmas Day", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)},
+            {name: "Boxing Day", description: "Day after Christmas", start: new Date(y, 11, 26), end: new Date(y, 11, 26)}
+        ],
+
+        BR: [
+            {name: "New Year's Day", localName: "Ano Novo", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Back to School", localName: "Volta às Aulas", description: "Back to school period", ...getTBDDate('BR', y, 'Back to School')},
+            {name: "Carnival", localName: "Carnaval", description: "Brazilian carnival", start: bc.start, end: bc.end},
+            {name: "International Women's Day", localName: "Dia da Mulher", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Consumer Week", localName: "Semana do Consumidor", description: "'Consumer Day' references can only be used on March 15th </br> 'Consumer Week Warm Up' references can only be used between March 2nd - March 9th </br> 'Consumer Month' references can be used anytime during the month of March", ...getTBDDate('BR', y, 'Consumer Week')},
+            {name: "Good Friday", localName: "Sexta-feira Santa", description: "Christian observance", start: goodFri(y), end: goodFri(y)},
+            {name: "Easter", localName: "Páscoa", description: "Christian celebration", start: easter(y), end: easter(y)},
+            {name: "Tiradentes Day", localName: "Tiradentes", description: "National hero day", start: new Date(y, 3, 21), end: new Date(y, 3, 21)},
+            {name: "App Day - April", description: "Retail event", ...getTBDDate('BR', y, 'App Day - April')},
+            {name: "App Day - September", description: "Retail event", ...getTBDDate('BR', y, 'App Day - September')},
+            {name: "App Day - Father's Day", description: "Retail event", ...getTBDDate('BR', y, 'App Day - Fathers Day')},
+            {name: "App Day - Christmas", description: "Retail event", ...getTBDDate('BR', y, 'App Day - Christmas')},
+            {name: "App Day Goleada de Ofertas - May", description: "Retail event", ...getTBDDate('BR', y, 'App Day Goleada de Ofertas - May')},
+            {name: "App Day Goleada de Ofertas - June", description: "Retail event", ...getTBDDate('BR', y, 'App Day Goleada de Ofertas - June')},
+            {name: "Labour Day", localName: "Dia do Trabalho", description: "Workers' Day", start: new Date(y, 4, 1), end: new Date(y, 4, 1)},
+            {name: "Mother's Day", localName: "Dia das Mães", description: "'Mother's Day' references can only be used between April 27th - May 10th </br> 'Mother's Day Week' references can only be used between May 4th - May 10th </br> 'Mother's Day Month' references can be used anytime during the month of May </br> 'Mother's Day Warm Up' references are not allowed", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Book Friday", description: "Book promotional event", ...getTBDDate('BR', y, 'Book Friday')},
+            {name: "Valentine's Day", localName: "Dia dos Namorados", description: "'Valentine Day' references can only be used between June 1st - June 12th </br> 'Valentine's Day Week' references can only be used between June 6th - June 12th </br> 'Valentine's Day Month' references can be used anytime during the month of June </br> 'Valentine's Day Warm Up' references are not allowed", start: new Date(y, 5, 1), end: new Date(y, 5, 12)},
+            {name: "June Festival", localName: "Festa Junina", description: "Traditional June festival", start: new Date(y, 5, 1), end: new Date(y, 5, 30)},
+            {name: "Corpus Christi", description: "Christian feast day", start: corpus(y), end: corpus(y)},
+            {name: "Father's Day", localName: "Dia dos Pais", description: "'Father's Day' references can only be used between July 27th - August 9th </br> 'Father's Day Week' references can only be used between August 3rd - August 9th </br> 'Father's Day Month' references can be used anytime during the month of August </br> 'Father's Day Warm Up' references are not allowed", start: new Date(y, 6, 27), end: new Date(y, 7, 9)},
+            {name: "Independence Day", localName: "Dia da Independência", description: "Brazilian Independence", start: new Date(y, 8, 7), end: new Date(y, 8, 7)},
+            {name: "Children's Day", localName: "Dia das Crianças", description: "'Children's Day' references can only be used between September 21st - October 12th </br> 'Children's Day Week' references can only be used between October 5th - October 12th </br> 'Children's Day Month' references can be used anytime during the month of October </br> 'Children's Day Warm Up' references are not allowed", start: new Date(y, 8, 21), end: new Date(y, 9, 12)},
+            {name: "Holiday Gift Guide", localName: "Guia de Presentes", description: "Gift promotional period", ...getTBDDate('BR', y, 'Holiday Gift Guide')},
+            {name: "All Souls' Day", localName: "Finados", description: "Honor the deceased", start: new Date(y, 10, 2), end: new Date(y, 10, 2)},
+            {name: "Republic Day", localName: "Proclamação da República", description: "Republic proclamation", start: new Date(y, 10, 15), end: new Date(y, 10, 15)},
+            {name: "Black Awareness", localName: "Dia da Consciência Negra", description: "", start: new Date(y, 10, 2), end: new Date(y, 10, 30)},
+            {name: "Christmas Day", localName: "Natal", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)},
+            {name: "Halloween", localName: "Dia das Bruxas", description: "Festival of costumes", start: new Date(y, 9, 15), end: new Date(y, 9, 31)}
+        ],
+
+        CA: [
+            {name: "New Year's Day", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Valentine's Day", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "Family Day / Louis Riel Day / Nova Scotia Heritage Day / Islander Day", description: "Provincial family holiday", note: "Excluding Quebec", start: nthDay(y, 1, 1, 3), end: nthDay(y, 1, 1, 3)},
+            {name: "International Women's Day", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "St. Patrick's Day", description: "Irish celebration", start: new Date(y, 2, 17), end: new Date(y, 2, 17)},
+            {name: "Good Friday", description: "Christian observance", start: goodFri(y), end: goodFri(y)},
+            {name: "Easter", description: "Christian celebration", start: easter(y), end: easterMon(y)},
+            {name: "Mother's Day", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Victoria Day", description: "Queen Victoria's birthday", note: "Excludes Nova Scotia, Prince Edward Island, Quebec", start: monBefore(y, 4, 25), end: monBefore(y, 4, 25)},
+            {name: "National Patriots' Day", description: "Patriots of Lower Canada", note: "Quebec only", start: monBefore(y, 4, 25), end: monBefore(y, 4, 25)},
+            {name: "Father's Day", description: "Celebrates fathers", start: nthDay(y, 5, 0, 3), end: nthDay(y, 5, 0, 3)},
+            {name: "St. Jean Baptiste Day", description: "Quebec national holiday", note: "Quebec only", start: new Date(y, 5, 24), end: new Date(y, 5, 24)},
+            {name: "Canada Day", description: "National day of Canada", start: new Date(y, 6, 1), end: new Date(y, 6, 1)},
+            {name: "Civic Holiday", description: "Provincial holiday", note: "Excludes Quebec, Prince Edward Island, Newfoundland and Labrador", start: nthDay(y, 7, 1, 1), end: nthDay(y, 7, 1, 1)},
+            {name: "Regatta Day", description: "Newfoundland civic holiday", note: "Newfoundland and Labrador only", start: nthDay(y, 7, 3, 1), end: nthDay(y, 7, 3, 1)},
+            {name: "Labour Day Weekend", description: "Honors labor movement", start: nthDay(y, 8, 1, 1), end: nthDay(y, 8, 1, 1)},
+            {name: "National Day for Truth and Reconciliation", description: "Honors Indigenous peoples", start: new Date(y, 8, 30), end: new Date(y, 8, 30)},
+            {name: "Thanksgiving Day", description: "Harvest festival", start: nthDay(y, 9, 1, 2), end: nthDay(y, 9, 1, 2)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Remembrance Day", description: "Honors military veterans", start: new Date(y, 10, 11), end: new Date(y, 10, 11)},
+            {name: "Hanukkah", description: "Jewish festival of lights", start: h.start, end: h.end},
+            {name: "Christmas Eve", description: "Evening before Christmas", start: new Date(y, 11, 24), end: new Date(y, 11, 24)},
+            {name: "Christmas Day", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)},
+            {name: "Boxing Day", description: "Day after Christmas", start: new Date(y, 11, 26), end: new Date(y, 11, 26)},
+            {name: "Boxing Week", description: "Post-Christmas sales", start: new Date(y, 11, 26), end: new Date(y, 11, 31)},
+            {name: "New Year's Eve", description: "Last day of the year", start: new Date(y, 11, 31), end: new Date(y, 11, 31)}
+],
+        FR: [
+            {name: "New Year's Day", localName: "Nouvel An", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Epiphany", localName: "Épiphanie", description: "Christian feast day", start: new Date(y, 0, 6), end: new Date(y, 0, 6)},
+            {name: "Valentine's Day", localName: "Saint Valentin", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "Spring Deal Days", description: "Retail Event", ...getTBDDate('FR', y, 'Spring Deal Days')},
+            {name: "International Women's Day", localName: "La Journée Internationale de la Femme", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Easter", localName: "Pâques", description: "Christian celebration", start: easter(y), end: easter(y)},
+            {name: "Easter Monday", localName: "Lundi de Pâques", description: "Day after Easter", start: easterMon(y), end: easterMon(y)},
+            {name: "Labour Day", localName: "Fête du Travail", description: "Workers' Day", start: new Date(y, 4, 1), end: new Date(y, 4, 1)},
+            {name: "Liberation Day", localName: "Fête de la Victoire", description: "Victory in Europe Day", start: new Date(y, 4, 8), end: new Date(y, 4, 8)},
+            {name: "Ascension Day", localName: "Jeudi de l'Ascension", description: "Christian observance", start: ascension(y), end: ascension(y)},
+            {name: "Pentecost", localName: "Pentecôte", description: "Christian observance", start: pentecost(y), end: pentecost(y)},
+            {name: "Mother's Day", localName: "Fête des Mères", description: "Celebrates mothers", start: frMother(y), end: frMother(y)},
+            {name: "Father's Day", localName: "Fête des Pères", description: "Celebrates fathers", start: nthDay(y, 5, 0, 3), end: nthDay(y, 5, 0, 3)},
+            {name: "Republic Day", localName: "Fête Nationale", description: "Bastille Day", start: new Date(y, 6, 14), end: new Date(y, 6, 14)},
+            {name: "Assumption of the Virgin", localName: "Assomption", description: "Christian observance", start: new Date(y, 7, 15), end: new Date(y, 7, 15)},
+            {name: "Halloween", localName: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "All Saints' Day", localName: "La Toussaint", description: "Honors all saints", start: new Date(y, 10, 1), end: new Date(y, 10, 1)},
+            {name: "Armistice Day", localName: "Armistice", description: "End of World War I", start: new Date(y, 10, 11), end: new Date(y, 10, 11)},
+            {name: "Christmas", localName: "Noël", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)}
+        ],
+
+        DE: [
+            {name: "New Year's Day", localName: "Neujahr", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Holy Three Kings", localName: "Heilige Drei Könige", description: "Epiphany", start: new Date(y, 0, 6), end: new Date(y, 0, 6)},
+            {name: "Spring Deal Days", description: "Retail Event", ...getTBDDate('FR', y, 'Spring Deal Days')},
+            {name: "Valentine's Day", localName: "Valentinstag", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "International Women's Day", localName: "Internationaler Frauentag", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Easter", localName: "Karfreitag und Ostermontag", description: "Good Friday to Easter Monday", start: goodFri(y), end: easterMon(y)},
+            {name: "Labor Day", localName: "Tag der Arbeit", description: "Workers' Day", start: new Date(y, 4, 1), end: new Date(y, 4, 1)},
+            {name: "Mother's Day", localName: "Muttertag", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Father's Day / Ascension Day", localName: "Vatertag / Christi Himmelfahrt", description: "Father's Day and Ascension", start: ascension(y), end: ascension(y)},
+            {name: "Whit Monday", localName: "Pfingstmontag", description: "Day after Pentecost", start: whitMon(y), end: whitMon(y)},
+            {name: "Corpus Christi", localName: "Fronleichnam", description: "Catholic feast day", start: corpus(y), end: corpus(y)},
+            {name: "World Children's Day", localName: "Weltkindertag", description: "Celebrates children", start: new Date(y, 8, 20), end: new Date(y, 8, 20)},
+            {name: "German Unity Day", localName: "Tag der deutschen Einheit", description: "National Day", start: new Date(y, 9, 3), end: new Date(y, 9, 3)},
+            {name: "Reformation Day", localName: "Reformationstag", description: "Protestant commemoration", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "All Saints' Day", localName: "Allerheiligen", description: "Honors all saints", start: new Date(y, 10, 1), end: new Date(y, 10, 1)},
+            {name: "Day of Prayer and Repentance", localName: "Buß- und Bettag", description: "Protestant day of prayer", start: bettag(y), end: bettag(y)},
+            {name: "St. Nicholas Day", localName: "Nikolaus", description: "Traditional gift-giving", start: new Date(y, 11, 6), end: new Date(y, 11, 6)},
+            {name: "Christmas", localName: "Weihnachten sowie 1. und 2. Weihnachtstag", description: "Christmas and Boxing Day", start: new Date(y, 11, 25), end: new Date(y, 11, 26)}
+        ],
+
+        IT: [
+            {name: "New Year's Day", localName: "Capodanno", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Epiphany", localName: "Epifania", description: "Christian feast day", start: new Date(y, 0, 6), end: new Date(y, 0, 6)},
+            {name: "Valentine's Day", localName: "San Valentino", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "Spring Deal Days", description: "Retail Event", ...getTBDDate('FR', y, 'Spring Deal Days')},
+            {name: "Father's Day", localName: "Festa del papà", description: "Celebrates fathers", start: new Date(y, 2, 19), end: new Date(y, 2, 19)},
+            {name: "Easter", localName: "Pasqua", description: "Christian celebration", start: easter(y), end: easter(y)},
+            {name: "Easter Monday", localName: "Pasquetta", description: "Day after Easter", start: easterMon(y), end: easterMon(y)},
+            {name: "Liberation Day", localName: "Festa della liberazione", description: "Liberation from Nazi occupation", start: new Date(y, 3, 25), end: new Date(y, 3, 25)},
+            {name: "Labour Day", localName: "Festa del Lavoro", description: "Workers' Day", start: new Date(y, 4, 1), end: new Date(y, 4, 1)},
+            {name: "Mother's Day", localName: "Festa della Mamma", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Republic Day", localName: "Festa della Repubblica", description: "Italian National Day", start: new Date(y, 5, 2), end: new Date(y, 5, 2)},
+            {name: "Ferragosto", localName: "Ferragosto", description: "Mid-August holiday", start: new Date(y, 7, 15), end: new Date(y, 7, 15)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "All Saints' Day", localName: "Ognissanti", description: "Honors all saints", start: new Date(y, 10, 1), end: new Date(y, 10, 1)},
+            {name: "Christmas", localName: "Natale e Santo Stefano", description: "Christmas and St. Stephen's Day", start: new Date(y, 11, 25), end: new Date(y, 11, 26)}
+        ],
+
+        JP: [
+            {name: "New Year's Day", localName: "元日", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "New Year Holiday", localName: "お正月", description: "New Year celebration", start: new Date(y, 0, 1), end: new Date(y, 0, 3)},
+            {name: "Coming of Age Day", localName: "成人の日", description: "Celebrates young adults", start: nthDay(y, 0, 1, 2), end: nthDay(y, 0, 1, 2)},
+            {name: "National Foundation Day", localName: "建国記念の日", description: "Celebrates Japan's founding", start: new Date(y, 1, 11), end: new Date(y, 1, 11)},
+            {name: "Valentine's Day", localName: "バレンタインデー", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "The Emperor's Birthday", localName: "天皇誕生日", description: "Emperor's birthday", start: new Date(y, 1, 23), end: new Date(y, 1, 23)},
+            {name: "White Day", localName: "ホワイトデー", description: "Return gift day", start: new Date(y, 2, 14), end: new Date(y, 2, 14)},
+            {name: "Vernal Equinox Day", localName: "春分の日", description: "Spring equinox", start: vernal(y), end: vernal(y)},
+            {name: "Shōwa Day", localName: "昭和の日", description: "Honors Emperor Shōwa", start: new Date(y, 3, 29), end: new Date(y, 3, 29)},
+            {name: "Constitution Memorial Day", localName: "憲法記念日", description: "Constitution anniversary", start: new Date(y, 4, 3), end: new Date(y, 4, 3)},
+            {name: "Greenery Day", localName: "みどりの日", description: "Nature appreciation", start: new Date(y, 4, 4), end: new Date(y, 4, 4)},
+            {name: "Children's Day", localName: "子供の日", description: "Celebrates children", start: new Date(y, 4, 5), end: new Date(y, 4, 5)},
+            {name: "Mother's Day", localName: "母の日", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Father's Day", localName: "父の日", description: "Celebrates fathers", start: nthDay(y, 5, 0, 3), end: nthDay(y, 5, 0, 3)},
+            {name: "Marine Day", localName: "海の日", description: "Ocean appreciation", start: nthDay(y, 6, 1, 3), end: nthDay(y, 6, 1, 3)},
+            {name: "Mountain Day", localName: "山の日", description: "Mountain appreciation", start: new Date(y, 7, 11), end: new Date(y, 7, 11)},
+            {name: "Respect for the Aged Day", localName: "敬老の日", description: "Honors elderly", start: nthDay(y, 8, 1, 3), end: nthDay(y, 8, 1, 3)},
+            {name: "Autumnal Equinox Day", localName: "秋分の日", description: "Autumn equinox", start: autumnal(y), end: autumnal(y)},
+            {name: "Health and Sports Day", localName: "スポーツの日", description: "Promotes sports", start: nthDay(y, 9, 1, 2), end: nthDay(y, 9, 1, 2)},
+            {name: "Halloween", localName: "ハロウィーン", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Culture Day", localName: "文化の日", description: "Promotes culture", start: new Date(y, 10, 3), end: new Date(y, 10, 3)},
+            {name: "Labour Thanksgiving Day", localName: "勤労感謝の日", description: "Thanks for labor", start: new Date(y, 10, 23), end: new Date(y, 10, 23)},
+            {name: "Christmas", localName: "クリスマス", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)},
+            {name: "New Year's Eve", localName: "大晦日", description: "Last day of year", start: new Date(y, 11, 31), end: new Date(y, 11, 31)}
+        ],
+
+        MX: [
+            {name: "New Year's Day", localName: "Año Nuevo", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Constitution Day", localName: "Día de la Constitución Mexicana", description: "Constitution anniversary", start: nthDay(y, 1, 1, 1), end: nthDay(y, 1, 1, 1)},
+            {name: "Valentine's Day", localName: "San Valentín", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "International Women's Day", localName: "Día Internacional de la Mujer", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Birth of Benito Juárez", localName: "Natalicio de Benito Juárez", description: "Honors Benito Juárez", start: nthDay(y, 2, 1, 3), end: nthDay(y, 2, 1, 3)},
+            {name: "Holy Week", localName: "Semana Santa", description: "Easter week", start: hw.start, end: hw.end},
+            {name: "Children's Day", localName: "Día del Niño", description: "Celebrates children", start: new Date(y, 3, 30), end: new Date(y, 3, 30)},
+            {name: "Labour Day", localName: "Día del Trabajo", description: "Workers' Day", start: new Date(y, 4, 1), end: new Date(y, 4, 1)},
+            {name: "Mother's Day", localName: "Día de la Madre", description: "Celebrates mothers", start: new Date(y, 4, 10), end: new Date(y, 4, 10)},
+            {name: "Hot Sale", description: "Retail Event", ...getTBDDate('MX', y, 'Hot Sale')},
+            {name: "Father's Day", localName: "Día del Padre", description: "Celebrates fathers", start: nthDay(y, 5, 0, 3), end: nthDay(y, 5, 0, 3)},
+            {name: "Independence Day", localName: "Día de la Independencia", description: "Mexican Independence", start: new Date(y, 8, 16), end: new Date(y, 8, 16)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Day of the Dead", localName: "Día de Muertos", description: "Honors the deceased", start: new Date(y, 10, 1), end: new Date(y, 10, 2)},
+            {name: "Anniversary of the Mexican Revolution", localName: "Aniversario de la Revolución Mexicana", description: "Revolution anniversary", start: nthDay(y, 10, 1, 3), end: nthDay(y, 10, 1, 3)},
+            {name: "Day of the Virgin of Guadalupe", localName: "Día de la Virgen de Guadalupe", description: "Religious celebration", start: new Date(y, 11, 12), end: new Date(y, 11, 12)},
+            {name: "Christmas", localName: "Navidad", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)}
+        ],
+
+        NL: [
+            {name: "New Year's Day", localName: "Nieuwjaarsdag", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            
+            {name: "Carnival", localName: "Carnaval", description: "Pre-Lenten festival", start: ca.start, end: ca.end},
+            {name: "Valentine's Day", localName: "Valentijnsdag", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "International Women's Day", localName: "Internationale Vrouwendag", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Good Friday & Easter", localName: "Pasen", description: "Christian observance", start: goodFri(y), end: easterMon(y)},
+            {name: "King's Day", localName: "Koningsdag", description: "King's birthday celebration", start: kingsDay(y), end: kingsDay(y)},
+            {name: "Mother's Day", localName: "Moederdag", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
+            {name: "Father's Day", localName: "Vaderdag", description: "Celebrates fathers", start: nthDay(y, 5, 0, 3), end: nthDay(y, 5, 0, 3)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Sinterklaas", localName: "Sinterklaas", description: "Traditional gift-giving celebration", start: new Date(y, 11, 5), end: new Date(y, 11, 5)},
+            {name: "Christmas", localName: "Kerst", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 26)},
+            
+        ],
+
+        ES: [
+            {name: "New Year's Day", localName: "Año Nuevo", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Holy Three Kings", localName: "Reyes Magos", description: "Epiphany", start: new Date(y, 0, 6), end: new Date(y, 0, 6)},
+            {name: "Valentine's Day", localName: "San Valentín", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "International Women's Day", localName: "Día Internacional de la Mujer", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Father's Day", localName: "Día del Padre", description: "Celebrates fathers", start: new Date(y, 2, 19), end: new Date(y, 2, 19)},
+            {name: "Spring Deal Days", description: "Retail Event", ...getTBDDate('FR', y, 'Spring Deal Days')},
+            {name: "Easter", localName: "Semana Santa", description: "Holy Week", start: hw.start, end: hw.end},
+            {name: "Labor Day", localName: "Día del Trabajo", description: "Workers' Day", start: new Date(y, 4, 1), end: new Date(y, 4, 1)},
+            {name: "Community of Madrid Day", localName: "Fiestas del 2 de Mayo", description: "Madrid community day", start: new Date(y, 4, 2), end: new Date(y, 4, 2)},
+            {name: "Mother's Day", localName: "Día de la Madre", description: "Celebrates mothers", start: nthDay(y, 4, 0, 1), end: nthDay(y, 4, 0, 1)},
+            {name: "City of Madrid Day", localName: "San Isidro", description: "Madrid patron saint", start: new Date(y, 4, 15), end: new Date(y, 4, 15)},
+            {name: "Saint John", localName: "San Juan", description: "Midsummer celebration", start: new Date(y, 5, 24), end: new Date(y, 5, 24)},
+            {name: "San Fermín", localName: "San Fermín", description: "Running of the bulls", start: new Date(y, 6, 6), end: new Date(y, 6, 14)},
+            {name: "St. James's Day", localName: "Santiago Apóstol", description: "Patron saint of Spain", start: new Date(y, 6, 25), end: new Date(y, 6, 25)},
+            {name: "Assumption of the Virgin", localName: "Asunción de la Virgen", description: "Christian observance", start: new Date(y, 7, 15), end: new Date(y, 7, 15)},
+            {name: "Catalonia Day", localName: "La Diada", description: "Catalonia National Day", start: new Date(y, 8, 11), end: new Date(y, 8, 11)},
+            {name: "National Day", localName: "Día de la Hispanidad", description: "Spanish National Day", start: new Date(y, 9, 12), end: new Date(y, 9, 12)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "All Saints' Day", localName: "Día de Todos los Santos", description: "Honors all saints", start: new Date(y, 10, 1), end: new Date(y, 10, 1)},
+            {name: "Madrid Local Day", localName: "Día de la Almudena", description: "Madrid patron saint day", start: new Date(y, 10, 9), end: new Date(y, 10, 9)},
+            {name: "Constitution Day", localName: "Día de la Constitución", description: "Spanish Constitution Day", start: new Date(y, 11, 6), end: new Date(y, 11, 6)},
+            {name: "Immaculate Conception", localName: "Inmaculada Concepción", description: "Catholic feast day", start: new Date(y, 11, 8), end: new Date(y, 11, 8)},
+            {name: "Christmas", localName: "Día de Navidad", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)}
+        ],
+
+        SE: [
+            {name: "New Year's Day", localName: "Nyårsdagen", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Valentine's Day", localName: "Alla hjärtans dag", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "International Women's Day", localName: "Internationella kvinnodagen", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Good Friday & Easter", localName: "Påsk (långfredag)", description: "Christian observance", start: goodFri(y), end: easterMon(y)},
+            {name: "Mother's Day", localName: "Morsdag", description: "Celebrates mothers", start: lastDay(y, 4, 0), end: lastDay(y, 4, 0)},
+            {name: "Halloween", localName: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Father's Day", localName: "Farsdag", description: "Celebrates fathers", start: nthDay(y, 10, 0, 2), end: nthDay(y, 10, 0, 2)},
+            {name: "Christmas", localName: "Jul", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)}
+        ],
+
+        UK: [
+            {name: "New Year's Day", description: "First day of year", start: new Date(y, 0, 1), end: new Date(y, 0, 1)},
+            {name: "Valentine's Day", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
+            {name: "International Women's Day", description: "Celebrates women", start: new Date(y, 2, 8), end: new Date(y, 2, 8)},
+            {name: "Spring Deal Days", description: "Retail Event", ...getTBDDate('FR', y, 'Spring Deal Days')},
+            {name: "Mother's Day", description: "Mothering Sunday", start: ukMother(y), end: ukMother(y)},
+            {name: "St. Patrick's Day", description: "Irish celebration", start: new Date(y, 2, 17), end: new Date(y, 2, 17)},
+            {name: "Good Friday", description: "Christian observance", start: goodFri(y), end: goodFri(y)},
+            {name: "Easter Monday", description: "Day after Easter", start: easterMon(y), end: easterMon(y)},
+            {name: "Early May Bank Holiday", description: "First Monday of May", start: nthDay(y, 4, 1, 1), end: nthDay(y, 4, 1, 1)},
+            {name: "Spring Bank Holiday", description: "Last Monday of May", start: lastDay(y, 4, 1), end: lastDay(y, 4, 1)},
+            {name: "Father's Day", description: "Celebrates fathers", start: nthDay(y, 5, 0, 3), end: nthDay(y, 5, 0, 3)},
+            {name: "Summer Bank Holiday", description: "Last Monday of August", start: lastDay(y, 7, 1), end: lastDay(y, 7, 1)},
+            {name: "Halloween", description: "Festival of costumes", start: new Date(y, 9, 31), end: new Date(y, 9, 31)},
+            {name: "Christmas", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)},
+            {name: "Boxing Day", description: "Day after Christmas", start: new Date(y, 11, 26), end: new Date(y, 11, 26)}
+        ]
+    };
+
+    // Return holidays for the selected country, sorted by date
+    const list = holidays[c] || holidays.US;
+    return list.sort((a, b) => {
+        if (!a.start) return 1;
+        if (!b.start) return -1;
+        return a.start - b.start;
+    });
+}
+// Format date for display
+function formatDate(d) {
+    if (!d) return t('tbd');
+    return `${tMonth(d.getMonth())} ${d.getDate()}`;
+}
+
+// Calculate days until a date
+function daysUntil(d) {
+    if (!d) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const target = new Date(d);
+    target.setHours(0, 0, 0, 0);
+    return Math.ceil((target - today) / D);
+}
+
+// Render statistics cards
+function renderStats() {
+    const holidays = getHolidays(currentCountry, currentYear);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const dated = holidays.filter(h => !h.placeholder && h.start);
+    const upcoming = dated.filter(h => h.start >= today);
+    const next = upcoming[0];
+    const days = next ? daysUntil(next.start) : null;
+    const placeholders = holidays.filter(h => h.placeholder).length;
+    const multi = dated.filter(h => h.start.toDateString() !== h.end.toDateString()).length;
+
+    const nextEventText = next 
+        ? (days === 0 ? `${t('today')}: ${next.name}` : `${t('daysUntil')} ${next.name}`)
+        : t('noUpcoming');
+
+    document.getElementById('stats').innerHTML = `
+        <div class="stat-card">
+            <h3>${holidays.length}</h3>
+            <p>${t('totalEvents')}</p>
+        </div>
+        <div class="stat-card">
+            <h3>${upcoming.length}</h3>
+            <p>${t('upcoming')}</p>
+        </div>
+        <div class="stat-card">
+            <h3>${days !== null ? (days === 0 ? '🎉' : days) : 'N/A'}</h3>
+            <p>${nextEventText}</p>
+        </div>
+        <div class="stat-card">
+            <h3>${multi}</h3>
+            <p>${t('multiDay')}</p>
+        </div>
+        <div class="stat-card">
+            <h3>${placeholders}</h3>
+            <p>${t('tbd')}</p>
+        </div>
+    `;
+}
+
+// Render holiday list
+function renderList() {
+    const holidays = getHolidays(currentCountry, currentYear);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const searchResultsInfo = document.getElementById('searchResultsInfo');
+    let displayHolidays = holidays;
+    let shouldHighlight = false;
+
+    // Only filter if there's actually a search term
+    if (currentSearch && currentSearch.length > 0) {
+        const filteredHolidays = holidays.filter(h => matchesSearch(h, currentSearch));
+        
+        if (filteredHolidays.length > 0) {
+            displayHolidays = filteredHolidays;
+            shouldHighlight = true;
+            const resultWord = filteredHolidays.length !== 1 ? t('resultsFor') : t('resultFor');
+            searchResultsInfo.innerHTML = `
+                <div class="search-results-info">
+                    ${t('foundResults')} <span class="highlight">${filteredHolidays.length}</span> ${resultWord}
+                    "<span class="highlight">${currentSearch}</span>"
+                </div>
+            `;
+        } else {
+            displayHolidays = holidays;
+            shouldHighlight = false;
+            searchResultsInfo.innerHTML = `
+                <div class="search-results-info">
+                    ${t('noResultsFor')} "<span class="highlight">${currentSearch}</span>" ${t('showingAll')}
+                </div>
+            `;
+        }
+    } else {
+        displayHolidays = holidays;
+        shouldHighlight = false;
+        searchResultsInfo.innerHTML = '';
+    }
+
+    let html = '';
+
+    displayHolidays.forEach(h => {
+        const isPlaceholderType = h.placeholder === true;
+        const hasNoDates = !h.start;
+        const isPast = !hasNoDates && h.end < today;
+        const isToday = !hasNoDates && today >= h.start && today <= h.end;
+        const days = hasNoDates ? null : daysUntil(h.start);
+        const isMulti = !hasNoDates && h.start.toDateString() !== h.end.toDateString();
+        const dur = isMulti ? duration(h.start, h.end) : 1;
+
+        // Card class
+        let cls = 'holiday-card';
+        if (isPlaceholderType) {
+            cls += ' placeholder';
+        } else if (isPast) {
+            cls += ' past';
+        } else if (days <= 30 && days > 0) {
+            cls += ' upcoming';
+        }
+
+        // Duration badge (translated)
+        let badge;
+        if (hasNoDates) {
+            badge = `<span class="duration-badge tbd">${t('badgeTBD')}</span>`;
+        } else if (isMulti) {
+            badge = `<span class="duration-badge multi-day">${t('badgeMulti').replace('{days}', dur)}</span>`;
+        } else {
+            badge = `<span class="duration-badge single-day">${t('badgeSingle')}</span>`;
+        }
+
+        // Countdown text (translated)
+        let countdown;
+        if (hasNoDates) {
+            countdown = `<span class="countdown tbd">${t('dateTBD')}</span>`;
+        } else if (isToday) {
+            countdown = `<span class="countdown now">${t('todayExclaim')}</span>`;
+        } else if (isPast) {
+            countdown = `<span class="countdown">${t('passed')}</span>`;
+        } else if (days === 1) {
+            countdown = `<span class="countdown">${t('tomorrow')}</span>`;
+        } else {
+            countdown = `<span class="countdown">${days} ${t('daysAway')}</span>`;
+        }
+
+        // Date display (translated)
+        const dateStr = hasNoDates ? t('tbd') : formatDate(h.start);
+        const dayName = hasNoDates ? '' : tDay(h.start.getDay());
+
+        // Date range for multi-day events
+        let dateRange = '';
+        if (isMulti) {
+            dateRange = `<div class="date-range">${formatDate(h.start)} → ${formatDate(h.end)}</div>`;
+        }
+
+        // Apply search highlighting only when we have matching results
+        // Note: Holiday NAME is NOT translated, only description is
+        // Build the display name with optional translated note
+        let baseName = h.name;
+        if (h.nameNote) {
+        baseName = `${h.name} ${t(h.nameNote)}`;
+    }
+        const displayName = shouldHighlight ? highlightMatch(baseName, currentSearch) : baseName;
+        const displayLocalName = h.localName ? (shouldHighlight ? highlightMatch(h.localName, currentSearch) : h.localName) : '';
+        
+        // Translate the description
+        const translatedDescription = tDesc(h.description);
+        const displayDescription = shouldHighlight ? highlightMatch(translatedDescription, currentSearch) : translatedDescription;
+        
+        const translatedNote = h.note ? tDesc(h.note) : '';
+        const displayNote = translatedNote ? (shouldHighlight ? highlightMatch(translatedNote, currentSearch) : translatedNote) : '';
+
+        // Build card HTML
+        html += `
+            <div class="${cls}">
+                <div class="holiday-info">
+                    <h3>${displayName} ${badge}</h3>
+                    ${displayLocalName ? `<div class="local-name">${displayLocalName}</div>` : ''}
+                    <p>${displayDescription}</p>
+                    ${displayNote ? `<div class="note">📍 ${displayNote}</div>` : ''}
+                </div>
+                <div class="holiday-date">
+                    <div class="date">${dateStr}</div>
+                    <div class="day-name">${dayName}</div>
+                    ${dateRange}
+                </div>
+                ${countdown}
+            </div>
+        `;
+    });
+
+    document.getElementById('holidayList').innerHTML = html;
+}
+
+// Change year
+function changeYear(delta) {
+    currentYear += delta;
+    renderAll();
+}
+
+// Change country
+function changeCountry() {
+    currentCountry = document.getElementById('countrySelect').value;
+    document.getElementById('countryFlag').textContent = countryFlags[currentCountry];
+    renderAll();
+}
+
+// Render everything
+function renderAll() {
+    document.getElementById('currentYear').textContent = currentYear;
+    document.getElementById('countryFlag').textContent = countryFlags[currentCountry];
+    updateUILanguage();
+    renderStats();
+    renderList();
+}
+
+// Initialize on page load
+window.onload = function() {
+    loadSavedTheme();
+    loadSavedLanguage();
+    renderAll();
+};
+
+// Also run immediately in case DOM is already loaded
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    loadSavedTheme();
+    loadSavedLanguage();
+    renderAll();
+}
+
+// Auto-update at midnight
+function scheduleUpdate() {
+    const now = new Date();
+    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const msUntilMidnight = tomorrow - now;
+    
+    setTimeout(() => {
+        renderAll();
+        scheduleUpdate();
+    }, msUntilMidnight);
+}
+scheduleUpdate();
+</script>
+</body>
+</html>
