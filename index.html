@@ -134,6 +134,7 @@ body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-g
 .legend-color.placeholder{background:rgba(255,193,7,0.3);border:1px solid var(--accent-placeholder)}
 .legend-color.single-day{background:rgba(76,175,80,0.3);border:1px solid var(--accent-single)}
 .legend-color.multi-day{background:rgba(156,39,176,0.3);border:1px solid var(--accent-multi)}
+.legend p{width:100%;flex-basis:100%;text-align:center;margin-top:15px;font-size:0.85em;color:var(--text-secondary)}
 
 @media(max-width:768px){
 .calendar-header h1{font-size:1.6em}
@@ -306,6 +307,9 @@ const translations = {
         
         // Month names
         months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+        
+        // Holiday names
+        ramadanNote: "- Actual dates may vary",
         
         // Holiday descriptions
         descriptions: {
@@ -512,6 +516,9 @@ const translations = {
         // Month names
         months: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
         
+        // Holiday names
+        ramadanNote: "- Las fechas reales pueden variar",
+        
         // Holiday descriptions
         descriptions: {
             "First day of the year": "Primer día del año",
@@ -716,6 +723,9 @@ const translations = {
         
         // Month names
         months: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+        
+        // Holiday names
+        ramadanNote: "- As datas reais podem variar",
         
         // Holiday descriptions
         descriptions: {
@@ -922,6 +932,9 @@ const translations = {
         // Month names
         months: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
         
+        // Holiday names
+        ramadanNote: "- Les dates réelles peuvent varier",
+        
         // Holiday descriptions
         descriptions: {
             "First day of the year": "Premier jour de l'année",
@@ -1028,6 +1041,9 @@ const translations = {
         // Month names
         months: ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],
         
+        // Holiday names
+        ramadanNote: "- Tatsächliche Daten können variieren",
+        
         // Holiday descriptions
         descriptions: {
             "First day of the year": "Erster Tag des Jahres",
@@ -1129,6 +1145,9 @@ const translations = {
         // Month names
         months: ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'],
         
+        // Holiday names
+        ramadanNote: "- Le date effettive possono variare",
+        
         // Holiday descriptions
         descriptions: {
             "First day of the year": "Primo giorno dell'anno",
@@ -1203,7 +1222,7 @@ const translations = {
         legendRetail: "小売イベント",
         legendSingle: "単日",
         legendMulti: "複数日",
-        legendNote: "</br>注：このカレンダーには機密のHigh Velocity Eventの参照や日付は含まれていません",
+        legendNote: "注：このカレンダーには機密のHigh Velocity Eventの参照や日付は含まれていません",
         
         // Countdown
         daysAway: "日後",
@@ -1229,6 +1248,9 @@ const translations = {
         
         // Month names
         months: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+        
+        // Holiday names
+        ramadanNote: "- 実際の日付は異なる場合があります",
         
         // Holiday descriptions
         descriptions: {
@@ -1330,6 +1352,9 @@ const translations = {
         // Month names
         months: ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'],
         
+        // Holiday names
+        ramadanNote: "- Werkelijke datums kunnen variëren",
+        
         // Holiday descriptions
         descriptions: {
             "First day of the year": "Eerste dag van het jaar",
@@ -1428,6 +1453,9 @@ const translations = {
         
         // Month names
         months: ['Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','September','Oktober','November','December'],
+        
+        // Holiday names
+        ramadanNote: "- Faktiska datum kan variera",
         
         // Holiday descriptions
         descriptions: {
@@ -2034,7 +2062,7 @@ function getHolidays(c, y) {
             {name: "Valentine's Day", description: "Day of love", start: new Date(y, 1, 14), end: new Date(y, 1, 14)},
             {name: "Presidents' Day", description: "Honors U.S. presidents", start: nthDay(y, 1, 1, 3), end: nthDay(y, 1, 1, 3)},
             {name: "St. Patrick's Day", description: "Irish celebration", start: new Date(y, 2, 17), end: new Date(y, 2, 17)},
-            {name: "Ramadan - Actual dates may vary", description: "Islamic holy month", start: r.start, end: r.end},
+            {name: "Ramadan", nameNote: "ramadanNote", description: "Islamic holy month", start: r.start, end: r.end},
             {name: "Easter", description: "Christian celebration", start: easter(y), end: easter(y)},
             {name: "Mother's Day", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
             {name: "Memorial Day", description: "Honors fallen military", start: lastDay(y, 4, 1), end: lastDay(y, 4, 1)},
@@ -2049,7 +2077,7 @@ function getHolidays(c, y) {
             {name: "Hanukkah", description: "Jewish festival of lights", start: h.start, end: h.end},
             {name: "Christmas Day", description: "Birth of Jesus", start: new Date(y, 11, 25), end: new Date(y, 11, 25)},
             {name: "Kwanzaa", description: "African American celebration", start: new Date(y, 11, 26), end: new Date(y + 1, 0, 1)},
-            {name: "Eid al-Fitr - Actual dates may vary", description: "End of Ramadan", start: ei.start, end: ei.end}
+            {name: "Eid al-Fitr", nameNote: "ramadanNote", description: "End of Ramadan", start: ei.start, end: ei.end},
         ],
 
         AU: [
@@ -2060,10 +2088,10 @@ function getHolidays(c, y) {
             {name: "Labor Day (WA)", description: "Workers' rights", note: "WA - 1st Mon Mar", start: nthDay(y, 2, 1, 1), end: nthDay(y, 2, 1, 1)},
             {name: "Labor Day (VIC)", description: "Workers' rights", note: "VIC - 2nd Mon Mar", start: nthDay(y, 2, 1, 2), end: nthDay(y, 2, 1, 2)},
             {name: "St. Patrick's Day", description: "Irish celebration", start: new Date(y, 2, 17), end: new Date(y, 2, 17)},
-            {name: "Ramadan - Actual dates may vary", description: "Islamic holy month", start: r.start, end: r.end},
+            {name: "Ramadan", nameNote: "ramadanNote", description: "Islamic holy month", start: r.start, end: r.end},
             {name: "Good Friday", description: "Christian observance", start: goodFri(y), end: goodFri(y)},
             {name: "Easter", description: "Christian celebration", start: easter(y), end: easterMon(y)},
-            {name: "Eid al-Fitr - Actual dates may vary", description: "End of Ramadan", start: ei.start, end: ei.end},
+            {name: "Eid al-Fitr", nameNote: "ramadanNote", description: "End of Ramadan", start: ei.start, end: ei.end},
             {name: "Anzac Day", description: "Commemorates ANZAC", start: new Date(y, 3, 25), end: new Date(y, 3, 25)},
             {name: "Labor Day (QLD)", description: "Workers' rights", note: "QLD - 1st Mon May", start: nthDay(y, 4, 1, 1), end: nthDay(y, 4, 1, 1)},
             {name: "Mother's Day", description: "Celebrates mothers", start: nthDay(y, 4, 0, 2), end: nthDay(y, 4, 0, 2)},
@@ -2483,7 +2511,12 @@ function renderList() {
 
         // Apply search highlighting only when we have matching results
         // Note: Holiday NAME is NOT translated, only description is
-        const displayName = shouldHighlight ? highlightMatch(h.name, currentSearch) : h.name;
+        // Build the display name with optional translated note
+        let baseName = h.name;
+        if (h.nameNote) {
+        baseName = `${h.name} ${t(h.nameNote)}`;
+    }
+        const displayName = shouldHighlight ? highlightMatch(baseName, currentSearch) : baseName;
         const displayLocalName = h.localName ? (shouldHighlight ? highlightMatch(h.localName, currentSearch) : h.localName) : '';
         
         // Translate the description
