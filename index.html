@@ -181,15 +181,16 @@ body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-g
     <div class="language-selector">
         <label id="labelLanguage">🌐 Language:</label>
         <select id="languageSelect" onchange="changeLanguage()">
-            <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="pt">Português</option>
-            <option value="fr">Français</option>
-            <option value="de">Deutsch</option>
-            <option value="it">Italiano</option>
-            <option value="ja">日本語</option>
-            <option value="nl">Nederlands</option>
-            <option value="sv">Svenska</option>
+            <option value="en">EN-English</option>
+            <option value="es">ES-Español</option>
+            <option value="pt">BR-Português</option>
+            <option value="fr">FR-Français</option>
+            <option value="de">DE-Deutsch</option>
+            <option value="it">IT-Italiano</option>
+            <option value="ja">JP-日本語</option>
+            <option value="nl">NL-Nederlands</option>
+            <option value="sv">SE-Svenska</option>
+            <option value="zh">ZH-中文</option>
         </select>
     </div>
 </div>
@@ -2461,7 +2462,254 @@ const translations = {
     "'Father's Day' references can only be used between July 27th - August 9th </br> 'Father's Day Week' references can only be used between August 3rd - August 9th </br> 'Father's Day Month' references can be used anytime during the month of August </br> 'Father's Day Warm Up' references are not allowed": "Hänvisningar till 'Fars dag' kan endast användas mellan 27 juli och 9 augusti </br> Hänvisningar till 'Fars dags vecka' kan endast användas mellan 3 och 9 augusti </br> Hänvisningar till 'Fars dags månad' kan användas när som helst under augusti månad </br> Hänvisningar till 'Fars dag Uppvärmning' är inte tillåtna",
     "'Children's Day' references can only be used between September 21st - October 12th </br> 'Children's Day Week' references can only be used between October 5th - October 12th </br> 'Children's Day Month' references can be used anytime during the month of October </br> 'Children's Day Warm Up' references are not allowed": "Hänvisningar till 'Barndagen' kan endast användas mellan 21 september och 12 oktober </br> Hänvisningar till 'Barndagens vecka' kan endast användas mellan 5 och 12 oktober </br> Hänvisningar till 'Barndagens månad' kan användas när som helst under oktober månad </br> Hänvisningar till 'Barndagen Uppvärmning' är inte tillåtna"
         }
-},
+    },
+zh: {
+    // Country names
+    countries: {
+        US: "美国",
+        CA: "加拿大",
+        MX: "墨西哥",
+        BR: "巴西",
+        UK: "英国",
+        ES: "西班牙",
+        FR: "法国",
+        DE: "德国",
+        IT: "意大利",
+        JP: "日本",
+        AU: "澳大利亚",
+        NL: "荷兰",
+        SE: "瑞典"
+    },
+
+    // Titles
+    calendarTitle: "🌍 国际重大活动日历",
+    calendarSubtitle1: "多日活动在活动首日前8周开始，并在活动最后一天后持续1周",
+    calendarSubtitle2: "单日活动在活动首日前8周开始，持续24小时",
+    calendarSubtitle3: "如果第二天是公共/银行假日，则可在48小时后结束",
+
+    // UI Labels
+    selectCountry: "选择国家：",
+    language: "🌐 语言：",
+    searchPlaceholder: "搜索节日...",
+    previousYear: "◀ 上一年",
+    nextYear: "下一年 ▶",
+
+    // Stats
+    totalEvents: "活动总数",
+    upcoming: "即将到来",
+    daysUntil: "天后",
+    today: "今天",
+    multiDay: "多日活动",
+    retailEvents: "零售活动",
+    noUpcoming: "无即将到来的活动",
+
+    // Legend
+    legendUpcoming: "即将到来",
+    legendPassed: "已过去",
+    legendRetail: "零售活动",
+    legendSingle: "单日",
+    legendMulti: "多日",
+    legendNote: "注：此日历不包含任何机密的 High Velocity Event 参考或日期",
+
+    // Countdown
+    daysAway: "天后",
+    tomorrow: "明天！",
+    todayExclaim: "🎉 今天！",
+    passed: "已过去",
+    dateTBD: "日期待定",
+
+    // Duration badges
+    badgeTBD: "📅 待定",
+    badgeSingle: "📌 单日",
+    badgeMulti: "📆 {days}天",
+
+    // Search
+    foundResults: "找到",
+    resultFor: "个结果",
+    resultsFor: "个结果",
+    noResultsFor: "没有找到结果",
+    showingAll: "— 显示所有节日",
+
+    // Day names
+    days: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],
+
+    // Month names
+    months: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+
+    // Holiday names
+    ramadanNote: "- 实际日期可能有所不同",
+
+    // Holiday descriptions
+    descriptions: {
+        // General
+        "First day of the year": "新年第一天",
+        "First day of year": "新年第一天",
+        "Day of love": "爱的节日",
+        "Celebrates mothers": "庆祝母亲",
+        "Celebrates fathers": "庆祝父亲",
+        "Celebrates women": "庆祝女性",
+        "Celebrates children": "庆祝儿童",
+        "Festival of costumes": "化装节",
+        "Birth of Jesus": "耶稣诞生",
+        "Last day of the year": "一年的最后一天",
+        "Last day of year": "一年的最后一天",
+
+        // Religious
+        "Christian celebration": "基督教庆典",
+        "Christian observance": "基督教纪念日",
+        "Christian feast day": "基督教节日",
+        "Catholic feast day": "天主教节日",
+        "Islamic holy month": "伊斯兰教圣月",
+        "End of Ramadan": "斋月结束",
+        "Jewish festival of lights": "犹太光明节",
+        "Hindu festival of lights": "印度排灯节",
+        "Honors all saints": "纪念所有圣人",
+        "Honor the deceased": "纪念逝者",
+        "Honors the deceased": "纪念逝者",
+        "Day after Easter": "复活节后一天",
+        "Good Friday to Easter Monday": "耶稣受难日至复活节星期一",
+        "Day after Pentecost": "五旬节后一天",
+        "Epiphany": "主显节",
+        "Easter week": "复活节周",
+        "Holy Week": "圣周",
+        "Religious celebration": "宗教庆典",
+        "Pre-Lenten festival": "四旬期前节日",
+        "Protestant commemoration": "新教纪念日",
+        "Protestant day of prayer": "新教祈祷日",
+
+        // US Specific
+        "Honors civil rights leader": "纪念民权领袖",
+        "Honors U.S. presidents": "纪念美国总统",
+        "Irish celebration": "爱尔兰庆典",
+        "Honors fallen military": "纪念阵亡将士",
+        "End of slavery": "奴隶制终结",
+        "Declaration of Independence": "独立宣言",
+        "Honors labor movement": "纪念劳工运动",
+        "Commemorates Columbus / Honors Native peoples": "纪念哥伦布/尊重原住民",
+        "Honors military veterans": "纪念退伍军人",
+        "Harvest festival": "丰收节",
+        "African American celebration": "非裔美国人庆典",
+
+        // Australia Specific
+        "National day": "国庆日",
+        "Traditional celebration": "传统庆典",
+        "Workers' rights": "劳动者权利",
+        "Commemorates ANZAC": "纪念澳新军团",
+        "Aboriginal cultures": "原住民文化",
+        "Official celebration": "官方庆典",
+        "Indigenous observance": "原住民纪念日",
+        "Famous horse race": "著名赛马",
+        "Day after Christmas": "圣诞节后一天",
+
+        // Australian state notes
+        "Western Australia": "西澳大利亚州",
+        "Victoria": "维多利亚州",
+        "Queensland": "昆士兰州",
+        "Queensland, South Australia, Australian Capital Territory": "昆士兰州、南澳大利亚州、澳大利亚首都领地",
+        "New South Wales, Victoria": "新南威尔士州、维多利亚州",
+        "New South Wales, South Australia, Australian Capital Territory": "新南威尔士州、南澳大利亚州、澳大利亚首都领地",
+
+        // Brazil Specific
+        "Back to school period": "返校季",
+        "Brazilian carnival": "巴西狂欢节",
+        "National hero day": "国家英雄日",
+        "Workers' Day": "劳动节",
+        "Book promotional event": "图书促销活动",
+        "Traditional June festival": "传统六月节",
+        "Brazilian Independence": "巴西独立日",
+        "Gift promotional period": "礼品促销期",
+        "Republic proclamation": "共和国宣言",
+        "Retail event": "零售活动",
+        "Retail Event": "零售活动",
+
+        // Canada Specific
+        "Provincial family holiday": "省级家庭假日",
+        "Queen Victoria's birthday": "维多利亚女王诞辰",
+        "Patriots of Lower Canada": "下加拿大爱国者",
+        "Quebec national holiday": "魁北克国庆日",
+        "National day of Canada": "加拿大国庆日",
+        "Provincial holiday": "省级假日",
+        "Newfoundland civic holiday": "纽芬兰市民假日",
+        "Honors Indigenous peoples": "尊重原住民",
+        "Evening before Christmas": "圣诞节前夜",
+        "Post-Christmas sales": "圣诞节后促销",
+
+        // Canadian province notes
+        "Excluding Quebec": "不包括魁北克省",
+        "Excludes Nova Scotia, Prince Edward Island, Quebec": "不包括新斯科舍省、爱德华王子岛省、魁北克省",
+        "Quebec only": "仅限魁北克省",
+        "Excludes Quebec, Prince Edward Island, Newfoundland and Labrador": "不包括魁北克省、爱德华王子岛省、纽芬兰与拉布拉多省",
+        "Newfoundland and Labrador only": "仅限纽芬兰与拉布拉多省",
+
+        // France Specific
+        "Victory in Europe Day": "欧洲胜利日",
+        "Bastille Day": "巴士底日",
+        "End of World War I": "第一次世界大战结束",
+
+        // Germany Specific
+        "Father's Day and Ascension": "父亲节和耶稣升天日",
+        "National Day": "国庆日",
+        "Traditional gift-giving": "传统送礼",
+        "Christmas and Boxing Day": "圣诞节和节礼日",
+
+        // Italy Specific
+        "Liberation from Nazi occupation": "从纳粹占领中解放",
+        "Italian National Day": "意大利国庆日",
+        "Mid-August holiday": "八月中旬假日",
+        "Christmas and St. Stephen's Day": "圣诞节和圣斯德望日",
+
+        // Japan Specific
+        "New Year celebration": "新年庆典",
+        "Celebrates young adults": "庆祝成年",
+        "Celebrates Japan's founding": "庆祝日本建国",
+        "Emperor's birthday": "天皇诞辰",
+        "Return gift day": "回礼日",
+        "Spring equinox": "春分",
+        "Honors Emperor Shōwa": "纪念昭和天皇",
+        "Constitution anniversary": "宪法纪念日",
+        "Nature appreciation": "感恩自然",
+        "Ocean appreciation": "感恩海洋",
+        "Mountain appreciation": "感恩山岳",
+        "Honors elderly": "敬老",
+        "Autumn equinox": "秋分",
+        "Promotes sports": "推广体育",
+        "Promotes culture": "推广文化",
+        "Thanks for labor": "感谢劳动",
+
+        // Mexico Specific
+        "Honors Benito Juárez": "纪念贝尼托·华雷斯",
+        "Mexican Independence": "墨西哥独立日",
+        "Revolution anniversary": "革命纪念日",
+
+        // Netherlands Specific
+        "King's birthday celebration": "国王诞辰庆典",
+        "Traditional gift-giving celebration": "传统送礼庆典",
+
+        // Spain Specific
+        "Madrid community day": "马德里社区日",
+        "Madrid patron saint": "马德里守护圣人",
+        "Midsummer celebration": "仲夏庆典",
+        "Running of the bulls": "奔牛节",
+        "Patron saint of Spain": "西班牙守护圣人",
+        "Catalonia National Day": "加泰罗尼亚国庆日",
+        "Spanish National Day": "西班牙国庆日",
+        "Madrid patron saint day": "马德里守护圣人日",
+        "Spanish Constitution Day": "西班牙宪法日",
+
+        // UK Specific
+        "First Monday of May": "五月第一个星期一",
+        "Last Monday of May": "五月最后一个星期一",
+        "Last Monday of August": "八月最后一个星期一",
+        "Mothering Sunday": "母亲节星期日",
+
+        // Brazil special descriptions
+"'Consumer Day' references can only be used on March 15th </br> 'Consumer Week Warm Up' references can only be used between March 2nd - March 9th </br> 'Consumer Month' references can be used anytime during the month of March": "'消费者日'引用只能在3月15日使用 </br> '消费者周预热'引用只能在3月2日至9日之间使用 </br> '消费者月'引用可以在3月份的任何时间使用",
+"'Mother's Day' references can only be used between April 27th - May 10th </br> 'Mother's Day Week' references can only be used between May 4th - May 10th </br> 'Mother's Day Month' references can be used anytime during the month of May </br> 'Mother's Day Warm Up' references are not allowed": "'母亲节'引用只能在4月27日至5月10日之间使用 </br> '母亲节周'引用只能在5月4日至10日之间使用 </br> '母亲节月'引用可以在5月份的任何时间使用 </br> 不允许使用'母亲节预热'引用",
+"'Valentine Day' references can only be used between June 1st - June 12th </br> 'Valentine's Day Week' references can only be used between June 6th - June 12th </br> 'Valentine's Day Month' references can be used anytime during the month of June </br> 'Valentine's Day Warm Up' references are not allowed": "'情人节'引用只能在6月1日至12日之间使用 </br> '情人节周'引用只能在6月6日至12日之间使用 </br> '情人节月'引用可以在6月份的任何时间使用 </br> 不允许使用'情人节预热'引用",
+"'Father's Day' references can only be used between July 27th - August 9th </br> 'Father's Day Week' references can only be used between August 3rd - August 9th </br> 'Father's Day Month' references can be used anytime during the month of August </br> 'Father's Day Warm Up' references are not allowed": "'父亲节'引用只能在7月27日至8月9日之间使用 </br> '父亲节周'引用只能在8月3日至9日之间使用 </br> '父亲节月'引用可以在8月份的任何时间使用 </br> 不允许使用'父亲节预热'引用",
+"'Children's Day' references can only be used between September 21st - October 12th </br> 'Children's Day Week' references can only be used between October 5th - October 12th </br> 'Children's Day Month' references can be used anytime during the month of October </br> 'Children's Day Warm Up' references are not allowed": "'儿童节'引用只能在9月21日至10月12日之间使用 </br> '儿童节周'引用只能在10月5日至12日之间使用 </br> '儿童节月'引用可以在10月份的任何时间使用 </br> 不允许使用'儿童节预热'引用"
+        }
+    },
 };
 
 // Get translated text
