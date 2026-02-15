@@ -60,6 +60,9 @@ body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-g
 .calendar-header{text-align:center;margin-bottom:30px}
 .calendar-header h1{font-size:2em;margin-bottom:10px;background:linear-gradient(90deg,var(--accent-primary),var(--accent-secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .calendar-header p{color:var(--text-secondary);font-size:1em;display:block;margin-bottom:px}
+.text-multi{color:var(--accent-multi);font-weight:600}
+.text-single{color:var(--accent-single);font-weight:600}
+.text-retail{color:var(--accent-placeholder);font-weight:600}
 
 /* Theme Toggle */
 .theme-toggle{position:fixed;top:20px;right:20px;background:var(--accent-primary);border:none;color:white;width:50px;height:50px;border-radius:50%;cursor:pointer;font-size:1.5em;transition:all 0.3s ease;box-shadow:0 4px 15px var(--shadow-color);z-index:1000;display:flex;align-items:center;justify-content:center}
@@ -257,10 +260,10 @@ const translations = {
 },
         // Titles
         calendarTitle: "🌍 International Peak Events Calendar",
-        calendarSubtitle1: "Multi-Day events start 8 weeks before the first day of the event and last 1 week following the last day of the event",
-        calendarSubtitle2: "Single-Day events start 8 weeks before the first day of the event and last 24 hours",
+       calendarSubtitle1: '<span class="text-multi">Multi-Day events</span> start 8 weeks before the first day of the event and last 1 week following the last day of the event',
+        calendarSubtitle2: '<span class="text-single">Single-Day events</span> start 8 weeks before the first day of the event and last 24 hours',
         calendarSubtitle3: "If next day is a public/bank holiday then it can end 48 hours after",
-        calendarSubtitle4: "Ads referencing Retail Events should run during the established months of the events, + or - 7 days on either side (start and end date)",
+        calendarSubtitle4: 'Ads referencing <span class="text-retail">Retail Events</span> should run during the established months of the events, + or - 7 days on either side (start and end date)',
 
         // UI Labels
         selectCountry: "Select Country:",
@@ -505,10 +508,10 @@ const translations = {
 },
         // Titles
         calendarTitle: "🌍 Calendario Internacional de Eventos Principales",
-        calendarSubtitle1: "Los eventos de varios días comienzan 8 semanas antes del primer día del evento y duran 1 semana después del último día del evento",
-        calendarSubtitle2: "Los eventos de un solo día comienzan 8 semanas antes del primer día del evento y duran 24 horas",
+        calendarSubtitle1: 'Los <span class="text-multi">eventos de varios días</span> comienzan 8 semanas antes del primer día del evento y duran 1 semana después del último día del evento',
+        calendarSubtitle2: 'Los <span class="text-single">eventos de un solo día</span> comienzan 8 semanas antes del primer día del evento y duran 24 horas',
         calendarSubtitle3: "Si el día siguiente es un día festivo/feriado bancario, puede terminar 48 horas después",
-        calendarSubtitle4: "Los anuncios que hacen referencia a Eventos Comerciales deben publicarse durante los meses establecidos de los eventos, + o - 7 días a cada lado (fecha de inicio y finalización)",
+        calendarSubtitle4: 'Los anuncios que hacen referencia a <span class="text-retail">Eventos Comerciales</span> deben publicarse durante los meses establecidos de los eventos, + o - 7 días a cada lado (fecha de inicio y finalización)',
         
         // UI Labels
         selectCountry: "Seleccionar País:",
@@ -753,10 +756,10 @@ const translations = {
 },
         // Titles
         calendarTitle: "🌍 Calendário Internacional de Eventos Principais",
-        calendarSubtitle1: "Eventos de vários dias começam 8 semanas antes do primeiro dia do evento e duram 1 semana após o último dia do evento",
-        calendarSubtitle2: "Eventos de um único dia começam 8 semanas antes do primeiro dia do evento e duram 24 horas",
+        calendarSubtitle1: '<span class="text-multi">Eventos de vários dias</span> começam 8 semanas antes do primeiro dia do evento e duram 1 semana após o último dia do evento',
+        calendarSubtitle2: '<span class="text-single">Eventos de um único dia</span> começam 8 semanas antes do primeiro dia do evento e duram 24 horas',
         calendarSubtitle3: "Se o dia seguinte for um feriado público/bancário, pode terminar 48 horas depois",
-        calendarSubtitle4: "Anúncios que fazem referência a Eventos de Varejo devem ser veiculados durante os meses estabelecidos dos eventos, + ou - 7 dias de cada lado (data de início e término)",
+        calendarSubtitle4: 'Anúncios que fazem referência a <span class="text-retail">Eventos de Varejo</span> devem ser veiculados durante os meses estabelecidos dos eventos, + ou - 7 dias de cada lado (data de início e término)',
 
         // UI Labels
         selectCountry: "Selecionar País:",
@@ -1001,10 +1004,10 @@ const translations = {
 },
         // Titles
         calendarTitle: "🌍 Calendrier International des Événements Principaux",
-        calendarSubtitle1: "Les événements de plusieurs jours commencent 8 semaines avant le premier jour de l'événement et durent 1 semaine après le dernier jour de l'événement",
-        calendarSubtitle2: "Les événements d'une journée commencent 8 semaines avant le premier jour de l'événement et durent 24 heures",
+        calendarSubtitle1: 'Les <span class="text-multi">événements de plusieurs jours</span> commencent 8 semaines avant le premier jour de l\'événement et durent 1 semaine après le dernier jour de l\'événement',
+        calendarSubtitle2: 'Les <span class="text-single">événements d\'une journée</span> commencent 8 semaines avant le premier jour de l\'événement et durent 24 heures',
         calendarSubtitle3: "Si le jour suivant est un jour férié, l'événement peut se terminer 48 heures après",
-        calendarSubtitle4: "Les publicités faisant référence aux Événements Commerciaux doivent être diffusées pendant les mois établis des événements, + ou - 7 jours de chaque côté (date de début et de fin)",
+        calendarSubtitle4: 'Les publicités faisant référence aux <span class="text-retail">Événements Commerciaux</span> doivent être diffusées pendant les mois établis des événements, + ou - 7 jours de chaque côté (date de début et de fin)',
         
         // UI Labels
         selectCountry: "Sélectionner le pays:",
@@ -1249,10 +1252,10 @@ const translations = {
 },
         // Titles
         calendarTitle: "🌍 Internationaler Kalender für Hauptereignisse",
-        calendarSubtitle1: "Mehrtägige Veranstaltungen beginnen 8 Wochen vor dem ersten Tag der Veranstaltung und dauern 1 Woche nach dem letzten Tag der Veranstaltung",
-        calendarSubtitle2: "Eintägige Veranstaltungen beginnen 8 Wochen vor dem ersten Tag der Veranstaltung und dauern 24 Stunden",
+        calendarSubtitle1: '<span class="text-multi">Mehrtägige Veranstaltungen</span> beginnen 8 Wochen vor dem ersten Tag der Veranstaltung und dauern 1 Woche nach dem letzten Tag der Veranstaltung',
+        calendarSubtitle2: '<span class="text-single">Eintägige Veranstaltungen</span> beginnen 8 Wochen vor dem ersten Tag der Veranstaltung und dauern 24 Stunden',
         calendarSubtitle3: "Wenn der nächste Tag ein Feiertag ist, kann die Veranstaltung 48 Stunden später enden",
-        calendarSubtitle4: "Anzeigen, die sich auf Verkaufsveranstaltungen beziehen, sollten während der festgelegten Monate der Veranstaltungen geschaltet werden, + oder - 7 Tage auf beiden Seiten (Start- und Enddatum)",
+        calendarSubtitle4: 'Anzeigen, die sich auf <span class="text-retail">Verkaufsveranstaltungen</span> beziehen, sollten während der festgelegten Monate der Veranstaltungen geschaltet werden, + oder - 7 Tage auf beiden Seiten (Start- und Enddatum)',
         
         // UI Labels
         selectCountry: "Land auswählen:",
@@ -1498,10 +1501,10 @@ const translations = {
 
         // Title
         calendarTitle: "🌍 Calendario Internazionale degli Eventi Principali",
-        calendarSubtitle1: "Gli eventi di più giorni iniziano 8 settimane prima del primo giorno dell'evento e durano 1 settimana dopo l'ultimo giorno dell'evento",
-        calendarSubtitle2: "Gli eventi di un solo giorno iniziano 8 settimane prima del primo giorno dell'evento e durano 24 ore",
+        calendarSubtitle1: 'Gli <span class="text-multi">eventi di più giorni</span> iniziano 8 settimane prima del primo giorno dell\'evento e durano 1 settimana dopo l\'ultimo giorno dell\'evento',
+        calendarSubtitle2: 'Gli <span class="text-single">eventi di un solo giorno</span> iniziano 8 settimane prima del primo giorno dell\'evento e durano 24 ore',
         calendarSubtitle3: "Se il giorno successivo è un giorno festivo, l'evento può terminare 48 ore dopo",
-        calendarSubtitle4: "Gli annunci che fanno riferimento a Eventi Commerciali dovrebbero essere pubblicati durante i mesi stabiliti degli eventi, + o - 7 giorni su entrambi i lati (data di inizio e fine)",
+        calendarSubtitle4: 'Gli annunci che fanno riferimento a <span class="text-retail">Eventi Commerciali</span> dovrebbero essere pubblicati durante i mesi stabiliti degli eventi, + o - 7 giorni su entrambi i lati (data di inizio e fine)',
         
         // UI Labels
         selectCountry: "Seleziona Paese:",
@@ -1747,10 +1750,10 @@ const translations = {
 
         // Titles
         calendarTitle: "🌍 国際ピークイベントカレンダー",
-        calendarSubtitle1: "複数日イベントはイベント初日の8週間前に開始し、最終日から1週間後まで続きます",
-        calendarSubtitle2: "単日イベントはイベント初日の8週間前に開始し、24時間続きます",
+        calendarSubtitle1: '<span class="text-multi">複数日イベント</span>はイベント初日の8週間前に開始し、最終日から1週間後まで続きます',
+        calendarSubtitle2: '<span class="text-single">単日イベント</span>はイベント初日の8週間前に開始し、24時間続きます',
         calendarSubtitle3: "翌日が祝日の場合、48時間後に終了することができます",
-        calendarSubtitle4: "小売イベントに言及する広告は、イベントの設定された月の間に掲載する必要があります。開始日と終了日の前後7日間の余裕があります",
+        calendarSubtitle4: '<span class="text-retail">小売イベント</span>に言及する広告は、イベントの設定された月の間に掲載する必要があります。開始日と終了日の前後7日間の余裕があります',
         
         // UI Labels
         selectCountry: "国を選択:",
@@ -1996,10 +1999,10 @@ const translations = {
 
         // Titles
         calendarTitle: "🌍 Internationale Kalender voor Belangrijke Evenementen",
-        calendarSubtitle1: "Meerdaagse evenementen beginnen 8 weken voor de eerste dag van het evenement en duren 1 week na de laatste dag van het evenement",
-        calendarSubtitle2: "Eendaagse evenementen beginnen 8 weken voor de eerste dag van het evenement en duren 24 uur",
+        calendarSubtitle1: '<span class="text-multi">Meerdaagse evenementen</span> beginnen 8 weken voor de eerste dag van het evenement en duren 1 week na de laatste dag van het evenement',
+        calendarSubtitle2: '<span class="text-single">Eendaagse evenementen</span> beginnen 8 weken voor de eerste dag van het evenement en duren 24 uur',
         calendarSubtitle3: "Als de volgende dag een feestdag is, kan het evenement 48 uur later eindigen",
-        calendarSubtitle4: "Advertenties die verwijzen naar Winkelevenementen moeten worden weergegeven tijdens de vastgestelde maanden van de evenementen, + of - 7 dagen aan beide zijden (start- en einddatum)",
+        calendarSubtitle4: 'Advertenties die verwijzen naar <span class="text-retail">Winkelevenementen</span> moeten worden weergegeven tijdens de vastgestelde maanden van de evenementen, + of - 7 dagen aan beide zijden (start- en einddatum)',
         
         // UI Labels
         selectCountry: "Selecteer Land:",
@@ -2245,10 +2248,10 @@ const translations = {
 
         // Title
         calendarTitle: "🌍 Internationell Kalender för Huvudevenemang",
-        calendarSubtitle1: "Flerdagars evenemang börjar 8 veckor före evenemangets första dag och varar 1 vecka efter evenemangets sista dag",
-        calendarSubtitle2: "Endags evenemang börjar 8 veckor före evenemangets första dag och varar 24 timmar",
+        calendarSubtitle1: '<span class="text-multi">Flerdagars evenemang</span> börjar 8 veckor före evenemangets första dag och varar 1 vecka efter evenemangets sista dag',
+        calendarSubtitle2: '<span class="text-single">Endags evenemang</span> börjar 8 veckor före evenemangets första dag och varar 24 timmar',
         calendarSubtitle3: "Om nästa dag är en helgdag kan evenemanget sluta 48 timmar senare",
-        calendarSubtitle4: "Annonser som refererar till Detaljhandelsevenemang bör visas under de fastställda månaderna för evenemangen, + eller - 7 dagar på vardera sidan (start- och slutdatum)",
+        calendarSubtitle4: 'Annonser som refererar till <span class="text-retail">Detaljhandelsevenemang</span> bör visas under de fastställda månaderna för evenemangen, + eller - 7 dagar på vardera sidan (start- och slutdatum)',
         
         // UI Labels
         selectCountry: "Välj Land:",
@@ -2493,10 +2496,10 @@ zh: {
 
     // Titles
     calendarTitle: "🌍 国际重大活动日历",
-    calendarSubtitle1: "多日活动在活动首日前8周开始，并在活动最后一天后持续1周",
-    calendarSubtitle2: "单日活动在活动首日前8周开始，持续24小时",
+    calendarSubtitle1: '<span class="text-multi">多日活动</span>在活动首日前8周开始，并在活动最后一天后持续1周',
+    calendarSubtitle2: '<span class="text-single">单日活动</span>在活动首日前8周开始，持续24小时',
     calendarSubtitle3: "如果第二天是公共/银行假日，则可在48小时后结束",
-    calendarSubtitle4: "引用零售活动的广告应在活动的既定月份期间投放，起止日期前后各 + 或 - 7天",
+    calendarSubtitle4: '引用<span class="text-retail">零售活动</span>的广告应在活动的既定月份期间投放，起止日期前后各 + 或 - 7天',
 
     // UI Labels
     selectCountry: "选择国家：",
@@ -2856,17 +2859,16 @@ function updateUILanguage() {
     if (calendarTitle) calendarTitle.textContent = t('calendarTitle');
 
     const calendarSubtitle1 = document.getElementById('calendarSubtitle1');
-    if (calendarSubtitle1) calendarSubtitle1.textContent = t('calendarSubtitle1');
+    if (calendarSubtitle1) calendarSubtitle1.innerHTML = t('calendarSubtitle1');
 
     const calendarSubtitle2 = document.getElementById('calendarSubtitle2');
-    if (calendarSubtitle2) calendarSubtitle2.textContent = t('calendarSubtitle2');
+    if (calendarSubtitle2) calendarSubtitle2.innerHTML = t('calendarSubtitle2');
 
     const calendarSubtitle3 = document.getElementById('calendarSubtitle3');
     if (calendarSubtitle3) calendarSubtitle3.textContent = t('calendarSubtitle3');
-    
+
     const calendarSubtitle4 = document.getElementById('calendarSubtitle4');
-    if (calendarSubtitle4) calendarSubtitle4
-        .textContent = t('calendarSubtitle4');
+    if (calendarSubtitle4) calendarSubtitle4.innerHTML = t('calendarSubtitle4');
 
     // Update country dropdown
     updateCountryDropdown();
